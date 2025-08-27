@@ -2,6 +2,9 @@
 
 This file contains commands and practices for maintaining this Flutter project locally to avoid CI failures.
 
+## General
+When creating commits, don't mention Claude (i.e., list claude as co-author, etc.)
+
 ## Pre-commit Checks
 
 Run these commands locally before committing changes:
