@@ -38,21 +38,21 @@ flutter test
 - All tests must pass for CI to succeed
 - Add tests for new functionality
 
-### 5. Build Verification
-```bash
-flutter build apk --debug    # Android debug build
-flutter build web           # Web build
-```
-- Verifies the app builds successfully
-- Catches build-time errors early
-
 ## Recommended Workflow
 
-Before each commit:
+Before each commit (essential):
 1. `dart format .` - Format code
 2. `flutter analyze` - Check for issues
 3. `flutter test` - Run tests
 4. `flutter pub get` - Ensure dependencies are current
+
+### Optional Build Verification
+```bash
+flutter build apk --debug    # Android debug build (primary target)
+```
+- Verifies the app builds successfully
+- Can be slow, not required for every commit
+- Run when making significant changes or before releases
 
 ## Project Configuration
 
