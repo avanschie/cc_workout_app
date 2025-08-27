@@ -40,11 +40,13 @@ flutter test
 
 ## Recommended Workflow
 
-Before each commit (essential):
-1. `dart format .` - Format code
-2. `flutter analyze` - Check for issues
-3. `flutter test` - Run tests
-4. `flutter pub get` - Ensure dependencies are current
+Before each commit (essential - run in this exact order):
+1. `flutter pub get` - Ensure dependencies are current
+2. `dart format .` - Format code
+3. `flutter analyze` - Check for issues (must have zero warnings/errors)
+4. `flutter test` - Run tests (all tests must pass)
+
+**IMPORTANT**: Each step must complete successfully before proceeding to the next. The CI will fail if any of these steps produce errors or warnings.
 
 ### Optional Build Verification
 ```bash
