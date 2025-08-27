@@ -1,0 +1,83 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": [
+    "config:base",
+    ":dependencyDashboard",
+    ":semanticCommits",
+    ":separatePatchReleases"
+  ],
+  "timezone": "Europe/Zurich",
+  "schedule": ["before 6am on Monday"],
+  "prHourlyLimit": 2,
+  "prConcurrentLimit": 5,
+  "packageRules": [
+    {
+      "matchManagers": ["pub"],
+      "matchDepTypes": ["dependencies"],
+      "groupName": "Flutter dependencies",
+      "schedule": ["before 6am on Monday"],
+      "reviewersFromCodeOwners": true,
+      "addLabels": ["dependencies", "flutter"]
+    },
+    {
+      "matchManagers": ["pub"],
+      "matchDepTypes": ["dev_dependencies"],
+      "groupName": "Flutter dev dependencies",
+      "schedule": ["before 6am on Monday"],
+      "matchUpdateTypes": ["patch"],
+      "addLabels": ["dependencies", "flutter", "dev"]
+    },
+    {
+      "matchManagers": ["pub"],
+      "matchPackageNames": ["flutter_lints"],
+      "groupName": "Flutter lints",
+      "addLabels": ["dependencies", "linting"]
+    },
+    {
+      "matchManagers": ["gradle", "gradle-wrapper"],
+      "matchDepTypes": ["dependencies", "plugin"],
+      "groupName": "Android dependencies",
+      "schedule": ["before 6am on Monday"],
+      "addLabels": ["dependencies", "android"]
+    },
+    {
+      "matchManagers": ["gradle-wrapper"],
+      "matchPackageNames": ["gradle"],
+      "matchUpdateTypes": ["patch", "minor"],
+      "addLabels": ["gradle-wrapper"]
+    },
+    {
+      "matchManagers": ["cocoapods"],
+      "groupName": "iOS dependencies",
+      "schedule": ["before 6am on Monday"],
+      "addLabels": ["dependencies", "ios"]
+    },
+    {
+      "matchDepTypes": ["action"],
+      "groupName": "GitHub Actions",
+      "matchUpdateTypes": ["patch", "minor"],
+      "addLabels": ["github-actions"]
+    }
+  ],
+  "vulnerabilityAlerts": {
+    "enabled": true,
+    "addLabels": ["security", "vulnerability"]
+  },
+  "lockFileMaintenance": {
+    "enabled": true,
+    "schedule": ["before 6am on Saturday"],
+    "addLabels": ["lockfile-maintenance"]
+  },
+  "dependencyDashboardTitle": "Dependency Dashboard",
+  "commitMessagePrefix": "chore(deps):",
+  "commitMessageTopic": "update {{depName}}",
+  "commitMessageExtra": "to {{newVersion}}",
+  "prTitle": "chore(deps): update {{depName}} to {{newVersion}}",
+  "ignorePaths": [
+    "**/node_modules/**",
+    "**/bower_components/**",
+    "**/vendor/**",
+    "**/build/**",
+    "**/.dart_tool/**"
+  ]
+}
