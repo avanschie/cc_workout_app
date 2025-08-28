@@ -68,22 +68,22 @@
 ## Phase 3: Core Models & Services
 
 ### 3.1 Data Models
-- [ ] Create `LiftEntry` model with:
+- [x] Create `LiftEntry` model with:
   - id, userId, lift, reps, weightKg, performedAt, createdAt
   - Validation methods
   - JSON serialization (if using freezed)
-- [ ] Create `RepMax` model for rep_maxes view data
+- [x] Create `RepMax` model for rep_maxes view data
 
 ### 3.2 Enums & Constants
-- [ ] Create `LiftType` enum (squat, bench, deadlift) matching database enum
-- [ ] Define validation constants (min/max reps, weight limits)
+- [x] Create `LiftType` enum (squat, bench, deadlift) matching database enum
+- [x] Define validation constants (min/max reps, weight limits)
 
 ### 3.3 Repository Pattern
-- [ ] Create `AuthRepository` interface and implementation
-- [ ] Create `LiftEntriesRepository` interface and implementation
-- [ ] Create `RepMaxesRepository` interface and implementation
-- [ ] Implement CRUD operations for lift entries
-- [ ] Add error handling for network/database operations
+- [x] Create `AuthRepository` interface and implementation
+- [x] Create `LiftEntriesRepository` interface and implementation
+- [x] Create `RepMaxesRepository` interface and implementation
+- [x] Implement CRUD operations for lift entries
+- [x] Add error handling for network/database operations
 
 ## Phase 4: Authentication Feature
 
