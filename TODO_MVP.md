@@ -1,0 +1,229 @@
+# TODO: Powerlifting Rep Max Tracker MVP
+
+## Phase 1: Project Setup & Dependencies
+
+### 1.1 Flutter Project Structure
+- [ ] Verify Flutter stable channel installation
+- [ ] Set up feature-first folder structure:
+  ```
+  lib/
+  ├── core/
+  │   ├── config/
+  │   ├── constants/
+  │   └── utils/
+  ├── features/
+  │   ├── auth/
+  │   ├── lifts/
+  │   └── rep_maxes/
+  ├── shared/
+  │   ├── models/
+  │   ├── providers/
+  │   └── widgets/
+  └── main.dart
+  ```
+
+### 1.2 Dependencies
+- [ ] Add `flutter_riverpod` to pubspec.yaml
+- [ ] Add `supabase_flutter` to pubspec.yaml
+- [ ] Add `intl` package for date handling
+- [ ] Add `freezed` and `json_serializable` (optional for models)
+- [ ] Add dev dependencies: `build_runner`, `freezed_annotation`, `json_annotation`
+- [ ] Run `flutter pub get`
+
+### 1.3 Environment Configuration
+- [ ] Set up environment variables for Supabase:
+  - `SUPABASE_URL`
+  - `SUPABASE_ANON_KEY`
+- [ ] Configure `--dart-define` usage
+- [ ] Create environment configuration helper
+
+## Phase 2: Supabase Backend Setup
+
+### 2.1 Database Schema
+- [ ] Create `lifts` table with columns:
+  - `id` (UUID, primary key)
+  - `user_id` (UUID, foreign key to auth.users)
+  - `lift_type` (TEXT: 'squat', 'bench', 'deadlift')
+  - `reps` (INTEGER: 1-10)
+  - `weight_kg` (NUMERIC/DOUBLE)
+  - `lift_date` (DATE)
+  - `created_at` (TIMESTAMP)
+  - `updated_at` (TIMESTAMP)
+
+### 2.2 Row Level Security (RLS)
+- [ ] Enable RLS on `lifts` table
+- [ ] Create policy: users can only read/write their own lifts
+- [ ] Test RLS policies
+
+### 2.3 Authentication Setup
+- [ ] Configure Supabase Auth with magic link
+- [ ] Set up email templates (optional)
+- [ ] Test authentication flow
+
+## Phase 3: Core Models & Services
+
+### 3.1 Data Models
+- [ ] Create `Lift` model with:
+  - id, userId, liftType, reps, weightKg, liftDate
+  - Validation methods
+  - JSON serialization (if using freezed)
+
+### 3.2 Enums & Constants
+- [ ] Create `LiftType` enum (squat, bench, deadlift)
+- [ ] Define validation constants (min/max reps, weight limits)
+
+### 3.3 Repository Pattern
+- [ ] Create `AuthRepository` interface and implementation
+- [ ] Create `LiftsRepository` interface and implementation
+- [ ] Implement CRUD operations for lifts
+- [ ] Add error handling for network/database operations
+
+## Phase 4: Authentication Feature
+
+### 4.1 Auth State Management
+- [ ] Create Riverpod providers for auth state
+- [ ] Implement sign in with magic link
+- [ ] Implement sign out functionality
+- [ ] Handle persistent sessions
+
+### 4.2 Auth UI
+- [ ] Create sign-in screen with email input
+- [ ] Add loading states and error handling
+- [ ] Create email verification prompt screen
+- [ ] Implement navigation flow for authenticated/unauthenticated states
+
+## Phase 5: Lifts Feature (Data Entry)
+
+### 5.1 Lift Entry State Management
+- [ ] Create Riverpod providers for lift operations
+- [ ] Implement lift creation/editing logic
+- [ ] Add form validation providers
+
+### 5.2 Lift Entry UI
+- [ ] Create "Add Lift" screen with:
+  - Lift type selector (squat/bench/deadlift)
+  - Reps input (1-10)
+  - Weight input (kg)
+  - Date picker
+  - Save/Cancel buttons
+- [ ] Implement input validation:
+  - Reps: 1-10 range
+  - Weight: > 0
+  - Date: required
+- [ ] Add loading indicators during save
+- [ ] Handle save errors with user feedback
+
+### 5.3 Lifts List (Optional for MVP)
+- [ ] Create lifts history screen
+- [ ] Display recent lifts with edit/delete options
+- [ ] Add empty state when no lifts exist
+
+## Phase 6: Rep Maxes Feature
+
+### 6.1 Rep Max Calculations
+- [ ] Create service to calculate best weight per rep (1-10) for each lift type
+- [ ] Implement efficient queries to get max weights
+- [ ] Handle edge cases (no data for certain rep ranges)
+
+### 6.2 Rep Maxes State Management
+- [ ] Create Riverpod providers for rep max data
+- [ ] Implement data refresh/reload functionality
+
+### 6.3 Rep Maxes UI
+- [ ] Create Rep Maxes screen showing:
+  - Grid/table layout for S/B/D
+  - Best weight for reps 1-10
+  - Clear labels and units (kg)
+- [ ] Add loading states
+- [ ] Handle empty states (no lifts recorded)
+- [ ] Add pull-to-refresh functionality
+
+## Phase 7: Navigation & App Structure
+
+### 7.1 Main App Structure
+- [ ] Set up main.dart with Riverpod integration
+- [ ] Configure Supabase initialization
+- [ ] Implement theme and material design
+
+### 7.2 Navigation
+- [ ] Set up bottom navigation or drawer
+- [ ] Define routes for:
+  - Auth screens
+  - Add Lift screen
+  - Rep Maxes screen
+  - (Optional) Lifts history
+- [ ] Handle deep linking and navigation state
+
+## Phase 8: Error Handling & Polish
+
+### 8.1 Error Handling
+- [ ] Implement global error handling
+- [ ] Add user-friendly error messages
+- [ ] Handle network connectivity issues
+- [ ] Add retry mechanisms where appropriate
+
+### 8.2 Loading States
+- [ ] Add loading indicators for all async operations
+- [ ] Implement skeleton screens where appropriate
+- [ ] Add pull-to-refresh on data screens
+
+### 8.3 Validation & User Feedback
+- [ ] Implement client-side validation
+- [ ] Add form field validation messages
+- [ ] Show success messages after operations
+- [ ] Add confirmation dialogs for destructive actions
+
+## Phase 9: Testing & Quality Assurance
+
+### 9.1 Testing
+- [ ] Write unit tests for models and services
+- [ ] Write widget tests for key UI components
+- [ ] Write integration tests for critical flows
+- [ ] Test on both iOS and Android
+
+### 9.2 Performance & Optimization
+- [ ] Optimize database queries
+- [ ] Implement proper state management patterns
+- [ ] Test app performance and memory usage
+
+## Phase 10: App Release Preparation
+
+### 10.1 App Configuration
+- [ ] Set app name in pubspec.yaml and native configs
+- [ ] Design and set app icon
+- [ ] Set version to 0.1.0
+- [ ] Configure app permissions
+
+### 10.2 Platform-Specific Setup
+- [ ] Configure iOS bundle identifier and settings
+- [ ] Configure Android package name and settings
+- [ ] Test on physical devices
+- [ ] Prepare app store assets (if releasing)
+
+## Phase 11: Final Testing & Deployment
+
+### 11.1 End-to-End Testing
+- [ ] Test complete user journey: sign up → add lifts → view rep maxes
+- [ ] Test offline behavior and error recovery
+- [ ] Verify data persistence and RLS
+
+### 11.2 Documentation
+- [ ] Update README with setup instructions
+- [ ] Document environment variable setup
+- [ ] Add troubleshooting guide
+
+## Definition of Done Checklist
+
+- [ ] User can sign in/out (magic link) and stay signed in
+- [ ] User can create lift entries with: lift, reps, weight (kg), date  
+- [ ] Data persists in Supabase with RLS (only owner can read/write)
+- [ ] Rep Maxes screen shows best weight per rep (1–10) for S/B/D
+- [ ] Input validation: reps 1–10, weight > 0, date required
+- [ ] Error handling & empty states; loading indicators present
+- [ ] Works on iOS and Android devices/emulators
+- [ ] App icon & name set; version 0.1.0
+
+---
+
+**Estimated Timeline:** 2-3 weeks for a solo developer working part-time
+**Priority Order:** Follow phases 1-6 for core MVP, then 7-11 for polish and release
