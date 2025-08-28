@@ -21,6 +21,16 @@
   - Cloud-first using Supabase Postgres; keep queries simple/typed.
   - SBD only (`squat`, `bench`, `deadlift`); reps 1–10; weight in kg (double).
   - Dates stored as `date` (no time zone confusion).
+- **Development Workflow**
+  - After any code change, run: `flutter analyze` (must pass with no errors/warnings)
+  - Format code with: `dart format .`
+  - Run tests with: `flutter test` (all tests must pass)
+  - Commit messages should not reference Claude/AI and use regular author attribution
+- **Testing Requirements**
+  - Write tests for every new feature implementation
+  - All tests must pass before considering feature complete
+  - Include unit tests for models, services, and business logic
+  - Include widget tests for UI components
 
 ---
 
