@@ -1,72 +1,143 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
   "extends": [
-    "config:base",
+    "config:recommended",
     ":dependencyDashboard",
     ":semanticCommits",
     ":separatePatchReleases"
   ],
   "timezone": "Europe/Zurich",
-  "schedule": ["before 6am on Monday"],
+  "schedule": [
+    "before 6am on Monday"
+  ],
   "prHourlyLimit": 2,
   "prConcurrentLimit": 5,
   "packageRules": [
     {
-      "matchManagers": ["pub"],
-      "matchDepTypes": ["dependencies"],
+      "matchManagers": [
+        "pub"
+      ],
+      "matchDepTypes": [
+        "dependencies"
+      ],
       "groupName": "Flutter dependencies",
-      "schedule": ["before 6am on Monday"],
+      "schedule": [
+        "before 6am on Monday"
+      ],
       "reviewersFromCodeOwners": true,
-      "addLabels": ["dependencies", "flutter"]
+      "addLabels": [
+        "dependencies",
+        "flutter"
+      ]
     },
     {
-      "matchManagers": ["pub"],
-      "matchDepTypes": ["dev_dependencies"],
+      "matchManagers": [
+        "pub"
+      ],
+      "matchDepTypes": [
+        "dev_dependencies"
+      ],
       "groupName": "Flutter dev dependencies",
-      "schedule": ["before 6am on Monday"],
-      "matchUpdateTypes": ["patch"],
-      "addLabels": ["dependencies", "flutter", "dev"]
+      "schedule": [
+        "before 6am on Monday"
+      ],
+      "matchUpdateTypes": [
+        "patch"
+      ],
+      "addLabels": [
+        "dependencies",
+        "flutter",
+        "dev"
+      ]
     },
     {
-      "matchManagers": ["pub"],
-      "matchPackageNames": ["flutter_lints"],
+      "matchManagers": [
+        "pub"
+      ],
+      "matchPackageNames": [
+        "flutter_lints"
+      ],
       "groupName": "Flutter lints",
-      "addLabels": ["dependencies", "linting"]
+      "addLabels": [
+        "dependencies",
+        "linting"
+      ]
     },
     {
-      "matchManagers": ["gradle", "gradle-wrapper"],
-      "matchDepTypes": ["dependencies", "plugin"],
+      "matchManagers": [
+        "gradle",
+        "gradle-wrapper"
+      ],
+      "matchDepTypes": [
+        "dependencies",
+        "plugin"
+      ],
       "groupName": "Android dependencies",
-      "schedule": ["before 6am on Monday"],
-      "addLabels": ["dependencies", "android"]
+      "schedule": [
+        "before 6am on Monday"
+      ],
+      "addLabels": [
+        "dependencies",
+        "android"
+      ]
     },
     {
-      "matchManagers": ["gradle-wrapper"],
-      "matchPackageNames": ["gradle"],
-      "matchUpdateTypes": ["patch", "minor"],
-      "addLabels": ["gradle-wrapper"]
+      "matchManagers": [
+        "gradle-wrapper"
+      ],
+      "matchPackageNames": [
+        "gradle"
+      ],
+      "matchUpdateTypes": [
+        "patch",
+        "minor"
+      ],
+      "addLabels": [
+        "gradle-wrapper"
+      ]
     },
     {
-      "matchManagers": ["cocoapods"],
+      "matchManagers": [
+        "cocoapods"
+      ],
       "groupName": "iOS dependencies",
-      "schedule": ["before 6am on Monday"],
-      "addLabels": ["dependencies", "ios"]
+      "schedule": [
+        "before 6am on Monday"
+      ],
+      "addLabels": [
+        "dependencies",
+        "ios"
+      ]
     },
     {
-      "matchDepTypes": ["action"],
+      "matchDepTypes": [
+        "action"
+      ],
       "groupName": "GitHub Actions",
-      "matchUpdateTypes": ["patch", "minor"],
-      "addLabels": ["github-actions"]
+      "matchUpdateTypes": [
+        "patch",
+        "minor"
+      ],
+      "addLabels": [
+        "github-actions"
+      ]
     }
   ],
   "vulnerabilityAlerts": {
     "enabled": true,
-    "addLabels": ["security", "vulnerability"]
+    "addLabels": [
+      "security",
+      "vulnerability"
+    ]
   },
   "lockFileMaintenance": {
     "enabled": true,
-    "schedule": ["before 6am on Saturday"],
-    "addLabels": ["lockfile-maintenance"]
+    "schedule": [
+      "before 6am on Saturday"
+    ],
+    "addLabels": [
+      "lockfile-maintenance"
+    ]
   },
   "dependencyDashboardTitle": "Dependency Dashboard",
   "commitMessagePrefix": "chore(deps):",
