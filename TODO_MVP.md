@@ -31,11 +31,11 @@
 - [x] Run `flutter pub get`
 
 ### 1.3 Environment Configuration
-- [ ] Set up environment variables for Supabase:
+- [x] Set up environment variables for Supabase:
   - `SUPABASE_URL`
   - `SUPABASE_ANON_KEY`
-- [ ] Configure `--dart-define` usage
-- [ ] Create environment configuration helper
+- [x] Configure `--dart-define` usage
+- [x] Create environment configuration helper
 
 ## Phase 2: Supabase Backend Setup
 
