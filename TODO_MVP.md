@@ -3,8 +3,8 @@
 ## Phase 1: Project Setup & Dependencies
 
 ### 1.1 Flutter Project Structure
-- [ ] Verify Flutter stable channel installation
-- [ ] Set up feature-first folder structure:
+- [x] Verify Flutter stable channel installation
+- [x] Set up feature-first folder structure:
   ```
   lib/
   ├── core/
@@ -23,12 +23,12 @@
   ```
 
 ### 1.2 Dependencies
-- [ ] Add `flutter_riverpod` to pubspec.yaml
-- [ ] Add `supabase_flutter` to pubspec.yaml
-- [ ] Add `intl` package for date handling
-- [ ] Add `freezed` and `json_serializable` (optional for models)
-- [ ] Add dev dependencies: `build_runner`, `freezed_annotation`, `json_annotation`
-- [ ] Run `flutter pub get`
+- [x] Add `flutter_riverpod` to pubspec.yaml
+- [x] Add `supabase_flutter` to pubspec.yaml
+- [x] Add `intl` package for date handling
+- [x] Add `freezed` and `json_serializable` (optional for models)
+- [x] Add dev dependencies: `build_runner`, `freezed_annotation`, `json_annotation`
+- [x] Run `flutter pub get`
 
 ### 1.3 Environment Configuration
 - [ ] Set up environment variables for Supabase:
