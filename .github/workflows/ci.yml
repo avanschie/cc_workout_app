@@ -3,13 +3,20 @@ name: CI
 on:
   push:
     branches: [ main ]
+    paths-ignore:
+      - '**.md'
+      - 'docs/**'
   pull_request:
     branches: [ main ]
+    types: [opened, synchronize, reopened]
+    paths-ignore:
+      - '**.md'
+      - 'docs/**'
 
-# Cancel previous workflow runs when new commits are pushed
+# Cancel previous workflow runs when new commits are pushed (except on main branch)
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
-  cancel-in-progress: true
+  cancel-in-progress: ${{ github.ref != 'refs/heads/main' }}
 
 jobs:
   test:
@@ -27,14 +34,14 @@ jobs:
         channel: 'stable'
         cache: true
 
+    - name: Verify formatting
+      run: dart format --set-exit-if-changed .
+
     - name: Get dependencies
       run: flutter pub get
 
-    - name: Verify formatting
-      run: dart format --output=none --set-exit-if-changed .
-
     - name: Analyze project source
-      run: flutter analyze
+      run: flutter analyze --fatal-warnings
 
     - name: Run tests
       run: flutter test
