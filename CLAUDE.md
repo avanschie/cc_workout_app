@@ -17,11 +17,16 @@
   - Immutable models, DTO mappers for Supabase rows.
 - **Env**
   - Configure `SUPABASE_URL` and `SUPABASE_ANON_KEY` via `--dart-define`.
+  - **Local Development**: Use `supabase start` to run local Supabase, then:
+    - `SUPABASE_URL=http://127.0.0.1:54321`
+    - `SUPABASE_ANON_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZS1kZW1vIiwicm9sZSI6ImFub24iLCJleHAiOjE5ODM4MTI5OTZ9.CRXP1A7WOeoJeXxjNni43kdQwgnWNReilDMblYTn_I0`
 - **Data Model**
   - Cloud-first using Supabase Postgres; keep queries simple/typed.
   - SBD only (`squat`, `bench`, `deadlift`); reps 1–10; weight in kg (double).
   - Dates stored as `date` (no time zone confusion).
 - **Development Workflow**
+  - Start local Supabase: `supabase start`
+  - Run app locally: `flutter run --dart-define=SUPABASE_URL=http://127.0.0.1:54321 --dart-define=SUPABASE_ANON_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZS1kZW1vIiwicm9sZSI6ImFub24iLCJleHAiOjE5ODM4MTI5OTZ9.CRXP1A7WOeoJeXxjNni43kdQwgnWNReilDMblYTn_I0`
   - After any code change, run: `flutter analyze` (must pass with no errors/warnings)
   - Format code with: `dart format .`
   - Run tests with: `flutter test` (all tests must pass)

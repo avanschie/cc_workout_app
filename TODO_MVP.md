@@ -40,22 +40,27 @@
 ## Phase 2: Supabase Backend Setup
 
 ### 2.1 Database Schema
-- [ ] Create `lifts` table with columns:
+- [x] Create `lift_entries` table with columns:
   - `id` (UUID, primary key)
   - `user_id` (UUID, foreign key to auth.users)
-  - `lift_type` (TEXT: 'squat', 'bench', 'deadlift')
-  - `reps` (INTEGER: 1-10)
-  - `weight_kg` (NUMERIC/DOUBLE)
-  - `lift_date` (DATE)
-  - `created_at` (TIMESTAMP)
-  - `updated_at` (TIMESTAMP)
+  - `lift` (lift_type enum: 'squat', 'bench', 'deadlift')
+  - `reps` (int2: 1-10)
+  - `weight_kg` (numeric(6,2))
+  - `performed_at` (date)
+  - `created_at` (timestamptz)
+- [x] Create `lift_type` enum for type safety
+- [x] Create `rep_maxes` view for best weight per (user, lift, reps)
 
 ### 2.2 Row Level Security (RLS)
-- [ ] Enable RLS on `lifts` table
-- [ ] Create policy: users can only read/write their own lifts
-- [ ] Test RLS policies
+- [x] Enable RLS on `lift_entries` table
+- [x] Create policies: users can only read/write their own lifts (SELECT, INSERT, UPDATE, DELETE)
+- [ ] Test RLS policies with actual users
 
-### 2.3 Authentication Setup
+### 2.3 Seed Data
+- [x] Create seed.sql with sample lift entries for testing
+- [x] Apply seed data to local database
+
+### 2.4 Authentication Setup
 - [ ] Configure Supabase Auth with magic link
 - [ ] Set up email templates (optional)
 - [ ] Test authentication flow
@@ -63,19 +68,21 @@
 ## Phase 3: Core Models & Services
 
 ### 3.1 Data Models
-- [ ] Create `Lift` model with:
-  - id, userId, liftType, reps, weightKg, liftDate
+- [ ] Create `LiftEntry` model with:
+  - id, userId, lift, reps, weightKg, performedAt, createdAt
   - Validation methods
   - JSON serialization (if using freezed)
+- [ ] Create `RepMax` model for rep_maxes view data
 
 ### 3.2 Enums & Constants
-- [ ] Create `LiftType` enum (squat, bench, deadlift)
+- [ ] Create `LiftType` enum (squat, bench, deadlift) matching database enum
 - [ ] Define validation constants (min/max reps, weight limits)
 
 ### 3.3 Repository Pattern
 - [ ] Create `AuthRepository` interface and implementation
-- [ ] Create `LiftsRepository` interface and implementation
-- [ ] Implement CRUD operations for lifts
+- [ ] Create `LiftEntriesRepository` interface and implementation
+- [ ] Create `RepMaxesRepository` interface and implementation
+- [ ] Implement CRUD operations for lift entries
 - [ ] Add error handling for network/database operations
 
 ## Phase 4: Authentication Feature
