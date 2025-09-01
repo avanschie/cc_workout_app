@@ -30,7 +30,7 @@
   - After any code change, run: `flutter analyze` (must pass with NO errors AND NO warnings - CI fails on warnings)
   - Format code with: `dart format .`
   - Run tests with: `flutter test` (all tests must pass)
-  - ALWAYS update TODO_MVP.md to mark completed features/tasks as [x] done before committing
+  - ALWAYS update TODO_MVP.md to mark completed features/tasks as [x] done IMMEDIATELY after completing them (not just before committing)
   - Commit messages should not reference Claude/AI and use regular author attribution
 - **Testing Requirements**
   - Write tests for every new feature implementation

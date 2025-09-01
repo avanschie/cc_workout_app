@@ -148,9 +148,9 @@
 ## Phase 7: Navigation & App Structure
 
 ### 7.1 Main App Structure
-- [ ] Set up main.dart with Riverpod integration
-- [ ] Configure Supabase initialization
-- [ ] Implement theme and material design
+- [x] Set up main.dart with Riverpod integration
+- [x] Configure Supabase initialization
+- [x] Implement theme and material design
 
 ### 7.2 Navigation
 - [ ] Set up bottom navigation or drawer
