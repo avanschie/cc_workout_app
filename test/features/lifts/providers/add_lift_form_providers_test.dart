@@ -56,7 +56,7 @@ void main() {
 
       final state = container.read(addLiftFormProvider);
       expect(state.reps, equals(15));
-      expect(state.repsError, contains('between 1 and 10'));
+      expect(state.repsError, equals('Maximum 10 reps allowed'));
     });
 
     test('setReps with empty string shows required error', () {
@@ -72,7 +72,7 @@ void main() {
 
       final state = container.read(addLiftFormProvider);
       expect(state.reps, isNull);
-      expect(state.repsError, equals('Please enter a valid number'));
+      expect(state.repsError, equals('Please enter a valid whole number'));
     });
 
     test('setWeight with valid input updates weight', () {

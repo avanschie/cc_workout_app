@@ -101,19 +101,27 @@ class AddLiftFormNotifier extends AutoDisposeNotifier<AddLiftFormState> {
       return;
     }
 
-    final reps = int.tryParse(repsText);
+    // Handle leading/trailing whitespace
+    final cleanText = repsText.trim();
+    if (cleanText.isEmpty) {
+      state = state.copyWith(reps: null, repsError: 'Reps is required');
+      return;
+    }
+
+    final reps = int.tryParse(cleanText);
     if (reps == null) {
       state = state.copyWith(
         reps: null,
-        repsError: 'Please enter a valid number',
+        repsError: 'Please enter a valid whole number',
       );
       return;
     }
 
     String? error;
-    if (reps < ValidationConstants.minReps ||
-        reps > ValidationConstants.maxReps) {
-      error = ValidationConstants.repsRangeError;
+    if (reps < ValidationConstants.minReps) {
+      error = 'Minimum ${ValidationConstants.minReps} rep required';
+    } else if (reps > ValidationConstants.maxReps) {
+      error = 'Maximum ${ValidationConstants.maxReps} reps allowed';
     }
 
     state = state.copyWith(reps: reps, repsError: error);
@@ -125,20 +133,30 @@ class AddLiftFormNotifier extends AutoDisposeNotifier<AddLiftFormState> {
       return;
     }
 
-    final weight = double.tryParse(weightText);
+    // Handle leading/trailing whitespace and common formatting
+    final cleanText = weightText.trim().replaceAll(',', '.');
+    if (cleanText.isEmpty) {
+      state = state.copyWith(weightKg: null, weightError: 'Weight is required');
+      return;
+    }
+
+    final weight = double.tryParse(cleanText);
     if (weight == null) {
       state = state.copyWith(
         weightKg: null,
-        weightError: 'Please enter a valid weight',
+        weightError: 'Please enter a valid number (e.g., 100 or 100.5)',
       );
       return;
     }
 
     String? error;
     if (weight <= ValidationConstants.minWeight) {
-      error = ValidationConstants.weightRangeError;
+      error = 'Weight must be greater than ${ValidationConstants.minWeight} kg';
     } else if (weight > ValidationConstants.maxWeight) {
-      error = ValidationConstants.weightMaxError;
+      error = 'Weight cannot exceed ${ValidationConstants.maxWeight} kg';
+    } else if (weight.toString().split('.').length > 1 &&
+        weight.toString().split('.')[1].length > 2) {
+      error = 'Weight can have at most 2 decimal places';
     }
 
     state = state.copyWith(weightKg: weight, weightError: error);

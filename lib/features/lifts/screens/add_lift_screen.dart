@@ -4,6 +4,7 @@ import 'package:intl/intl.dart';
 import 'package:cc_workout_app/shared/models/lift_type.dart';
 import 'package:cc_workout_app/features/lifts/providers/add_lift_form_providers.dart';
 import 'package:cc_workout_app/features/lifts/providers/lift_entries_providers.dart';
+import 'package:cc_workout_app/core/utils/snackbar_utils.dart';
 
 class AddLiftScreen extends ConsumerStatefulWidget {
   const AddLiftScreen({super.key});
@@ -68,6 +69,9 @@ class _AddLiftScreenState extends ConsumerState<AddLiftScreen> {
             border: const OutlineInputBorder(),
             hintText: 'Select lift type',
             errorText: formState.liftTypeError,
+            helperText: 'Choose the exercise you performed',
+            prefixIcon: const Icon(Icons.fitness_center),
+            errorMaxLines: 2,
           ),
           items: LiftType.values.map((liftType) {
             return DropdownMenuItem(
@@ -99,10 +103,19 @@ class _AddLiftScreenState extends ConsumerState<AddLiftScreen> {
             border: const OutlineInputBorder(),
             hintText: 'Enter reps (1-10)',
             errorText: formState.repsError,
+            helperText: 'Number of repetitions performed',
+            prefixIcon: const Icon(Icons.repeat),
+            errorMaxLines: 2,
           ),
           keyboardType: TextInputType.number,
           onChanged: (value) {
             formNotifier.setReps(value);
+          },
+          validator: (value) {
+            if (formState.repsError != null) {
+              return formState.repsError;
+            }
+            return null;
           },
         ),
       ],
@@ -128,10 +141,19 @@ class _AddLiftScreenState extends ConsumerState<AddLiftScreen> {
             hintText: 'Enter weight in kg',
             errorText: formState.weightError,
             suffixText: 'kg',
+            helperText: 'Weight lifted in kilograms',
+            prefixIcon: const Icon(Icons.fitness_center),
+            errorMaxLines: 2,
           ),
           keyboardType: const TextInputType.numberWithOptions(decimal: true),
           onChanged: (value) {
             formNotifier.setWeight(value);
+          },
+          validator: (value) {
+            if (formState.weightError != null) {
+              return formState.weightError;
+            }
+            return null;
           },
         ),
       ],
@@ -160,6 +182,9 @@ class _AddLiftScreenState extends ConsumerState<AddLiftScreen> {
               hintText: 'Select date',
               errorText: formState.dateError,
               suffixIcon: const Icon(Icons.calendar_today),
+              helperText: 'Date when the lift was performed',
+              prefixIcon: const Icon(Icons.event),
+              errorMaxLines: 2,
             ),
             child: Text(
               formState.performedAt != null
@@ -214,12 +239,19 @@ class _AddLiftScreenState extends ConsumerState<AddLiftScreen> {
     final formNotifier = ref.read(addLiftFormProvider.notifier);
     final createLiftNotifier = ref.read(createLiftEntryProvider.notifier);
 
+    // Validate Flutter form
+    if (!_formKey.currentState!.validate()) {
+      SnackBarUtils.showWarning(context, 'Please fix the errors in the form');
+      return;
+    }
+
     // Validate all fields first
     formNotifier.validateAll();
 
     // Check if form is still valid after validation
     final validatedFormState = ref.read(addLiftFormProvider);
     if (!validatedFormState.isValid) {
+      SnackBarUtils.showWarning(context, 'Please complete all required fields');
       return;
     }
 
@@ -233,12 +265,7 @@ class _AddLiftScreenState extends ConsumerState<AddLiftScreen> {
 
         // Show success message
         if (mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              content: Text('Lift saved successfully!'),
-              backgroundColor: Colors.green,
-            ),
-          );
+          SnackBarUtils.showSuccess(context, 'Lift saved successfully!');
 
           // Clear form and navigate back with success result
           formNotifier.clearForm();
@@ -249,11 +276,13 @@ class _AddLiftScreenState extends ConsumerState<AddLiftScreen> {
       if (mounted) {
         debugPrint('Save lift error: $e');
         debugPrint('Stack trace: $stackTrace');
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('Failed to save lift: ${e.toString()}'),
-            backgroundColor: Colors.red,
-            duration: const Duration(seconds: 5),
+
+        SnackBarUtils.showError(
+          context,
+          'Failed to save lift: ${e.toString()}',
+          action: SnackBarAction(
+            label: 'Retry',
+            onPressed: () => _handleSave(),
           ),
         );
       }

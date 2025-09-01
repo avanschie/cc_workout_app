@@ -6,6 +6,9 @@ import 'package:cc_workout_app/features/lifts/screens/add_lift_screen.dart';
 import 'package:cc_workout_app/shared/models/lift_type.dart';
 import 'package:cc_workout_app/shared/models/rep_max.dart';
 import 'package:cc_workout_app/features/rep_maxes/providers/rep_max_providers.dart';
+import 'package:cc_workout_app/shared/widgets/skeleton_widgets.dart';
+import 'package:cc_workout_app/shared/widgets/network_status_banner.dart';
+import 'package:cc_workout_app/shared/widgets/error_boundary.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -29,7 +32,7 @@ void main() async {
         : EnvConfig.supabaseAnonKey,
   );
 
-  runApp(const ProviderScope(child: MainApp()));
+  runApp(const ProviderScope(child: ErrorBoundary(child: MainApp())));
 }
 
 class MainApp extends StatelessWidget {
@@ -74,7 +77,7 @@ class MainApp extends StatelessWidget {
         ),
       ),
       themeMode: ThemeMode.system,
-      home: const HomeScreen(),
+      home: const NetworkStatusBanner(child: HomeScreen()),
     );
   }
 }
@@ -96,8 +99,8 @@ class HomeScreen extends ConsumerWidget {
           await ref.read(repMaxTableNotifierProvider.notifier).refresh();
         },
         child: repMaxTableAsync.when(
-          loading: () => const Center(child: CircularProgressIndicator()),
-          error: (error, stackTrace) => _buildErrorState(context, error),
+          loading: () => const SkeletonRepMaxTable(),
+          error: (error, stackTrace) => _buildErrorState(context, error, ref),
           data: (repMaxTable) => _buildMainContent(context, repMaxTable),
         ),
       ),
@@ -118,7 +121,7 @@ class HomeScreen extends ConsumerWidget {
     );
   }
 
-  Widget _buildErrorState(BuildContext context, Object error) {
+  Widget _buildErrorState(BuildContext context, Object error, WidgetRef ref) {
     return SingleChildScrollView(
       physics: const AlwaysScrollableScrollPhysics(),
       child: Container(
@@ -143,6 +146,14 @@ class HomeScreen extends ConsumerWidget {
                 error.toString(),
                 textAlign: TextAlign.center,
                 style: Theme.of(context).textTheme.bodyMedium,
+              ),
+              const SizedBox(height: 24),
+              ElevatedButton.icon(
+                onPressed: () {
+                  ref.read(repMaxTableNotifierProvider.notifier).refresh();
+                },
+                icon: const Icon(Icons.refresh),
+                label: const Text('Retry'),
               ),
             ],
           ),

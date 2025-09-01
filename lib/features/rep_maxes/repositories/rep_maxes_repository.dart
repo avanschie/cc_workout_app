@@ -1,6 +1,8 @@
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:cc_workout_app/shared/models/rep_max.dart';
 import 'package:cc_workout_app/shared/models/lift_type.dart';
+import 'package:cc_workout_app/core/utils/retry_utils.dart';
+import 'package:cc_workout_app/core/utils/error_handler.dart';
 
 abstract class RepMaxesRepository {
   Future<List<RepMax>> getAllRepMaxes();
@@ -15,67 +17,58 @@ class SupabaseRepMaxesRepository implements RepMaxesRepository {
 
   @override
   Future<List<RepMax>> getAllRepMaxes() async {
-    try {
-      final response = await _supabase.from('rep_maxes').select();
+    return RetryUtils.retry(() async {
+      try {
+        final response = await _supabase.from('rep_maxes').select();
 
-      return response
-          .map<RepMax>((row) => RepMax.fromSupabaseRow(row))
-          .toList();
-    } on PostgrestException catch (e) {
-      throw RepMaxesRepositoryException(
-        'Failed to fetch rep maxes: ${e.message}',
-      );
-    } catch (e) {
-      throw RepMaxesRepositoryException(
-        'An unexpected error occurred while fetching rep maxes',
-      );
-    }
+        return response
+            .map<RepMax>((row) => RepMax.fromSupabaseRow(row))
+            .toList();
+      } catch (e, stackTrace) {
+        final appError = ErrorHandler.handleError(e, stackTrace);
+        throw RepMaxesRepositoryException(appError.message);
+      }
+    });
   }
 
   @override
   Future<List<RepMax>> getRepMaxesByLiftType(LiftType liftType) async {
-    try {
-      final response = await _supabase
-          .from('rep_maxes')
-          .select()
-          .eq('lift', liftType.value)
-          .order('reps');
+    return RetryUtils.retry(() async {
+      try {
+        final response = await _supabase
+            .from('rep_maxes')
+            .select()
+            .eq('lift', liftType.value)
+            .order('reps');
 
-      return response
-          .map<RepMax>((row) => RepMax.fromSupabaseRow(row))
-          .toList();
-    } on PostgrestException catch (e) {
-      throw RepMaxesRepositoryException(
-        'Failed to fetch rep maxes by lift type: ${e.message}',
-      );
-    } catch (e) {
-      throw RepMaxesRepositoryException(
-        'An unexpected error occurred while fetching rep maxes by lift type',
-      );
-    }
+        return response
+            .map<RepMax>((row) => RepMax.fromSupabaseRow(row))
+            .toList();
+      } catch (e, stackTrace) {
+        final appError = ErrorHandler.handleError(e, stackTrace);
+        throw RepMaxesRepositoryException(appError.message);
+      }
+    });
   }
 
   @override
   Future<RepMax?> getRepMaxForLiftAndReps(LiftType liftType, int reps) async {
-    try {
-      final response = await _supabase
-          .from('rep_maxes')
-          .select()
-          .eq('lift', liftType.value)
-          .eq('reps', reps)
-          .maybeSingle();
+    return RetryUtils.retry(() async {
+      try {
+        final response = await _supabase
+            .from('rep_maxes')
+            .select()
+            .eq('lift', liftType.value)
+            .eq('reps', reps)
+            .maybeSingle();
 
-      if (response == null) return null;
-      return RepMax.fromSupabaseRow(response);
-    } on PostgrestException catch (e) {
-      throw RepMaxesRepositoryException(
-        'Failed to fetch rep max for lift and reps: ${e.message}',
-      );
-    } catch (e) {
-      throw RepMaxesRepositoryException(
-        'An unexpected error occurred while fetching rep max for lift and reps',
-      );
-    }
+        if (response == null) return null;
+        return RepMax.fromSupabaseRow(response);
+      } catch (e, stackTrace) {
+        final appError = ErrorHandler.handleError(e, stackTrace);
+        throw RepMaxesRepositoryException(appError.message);
+      }
+    });
   }
 }
 

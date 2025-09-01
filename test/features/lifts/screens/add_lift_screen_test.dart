@@ -91,8 +91,11 @@ void main() {
       await tester.enterText(weightField, '0');
       await tester.pump();
 
-      expect(find.textContaining('between 1 and 10'), findsOneWidget);
-      expect(find.textContaining('greater than 0'), findsOneWidget);
+      expect(find.textContaining('Maximum 10 reps allowed'), findsOneWidget);
+      expect(
+        find.textContaining('Weight must be greater than 0'),
+        findsOneWidget,
+      );
     });
 
     testWidgets('date picker opens when date field is tapped', (

@@ -1,6 +1,8 @@
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:cc_workout_app/shared/models/lift_entry.dart';
 import 'package:cc_workout_app/shared/models/lift_type.dart';
+import 'package:cc_workout_app/core/utils/retry_utils.dart';
+import 'package:cc_workout_app/core/utils/error_handler.dart';
 
 abstract class LiftEntriesRepository {
   Future<List<LiftEntry>> getAllLiftEntries();
@@ -17,49 +19,43 @@ class SupabaseLiftEntriesRepository implements LiftEntriesRepository {
 
   @override
   Future<List<LiftEntry>> getAllLiftEntries() async {
-    try {
-      final response = await _supabase
-          .from('lift_entries')
-          .select()
-          .order('performed_at', ascending: false)
-          .order('created_at', ascending: false);
+    return RetryUtils.retry(() async {
+      try {
+        final response = await _supabase
+            .from('lift_entries')
+            .select()
+            .order('performed_at', ascending: false)
+            .order('created_at', ascending: false);
 
-      return response
-          .map<LiftEntry>((row) => LiftEntry.fromSupabaseRow(row))
-          .toList();
-    } on PostgrestException catch (e) {
-      throw LiftEntriesRepositoryException(
-        'Failed to fetch lift entries: ${e.message}',
-      );
-    } catch (e) {
-      throw LiftEntriesRepositoryException(
-        'An unexpected error occurred while fetching lift entries',
-      );
-    }
+        return response
+            .map<LiftEntry>((row) => LiftEntry.fromSupabaseRow(row))
+            .toList();
+      } catch (e, stackTrace) {
+        final appError = ErrorHandler.handleError(e, stackTrace);
+        throw LiftEntriesRepositoryException(appError.message);
+      }
+    });
   }
 
   @override
   Future<List<LiftEntry>> getLiftEntriesByType(LiftType liftType) async {
-    try {
-      final response = await _supabase
-          .from('lift_entries')
-          .select()
-          .eq('lift', liftType.value)
-          .order('performed_at', ascending: false)
-          .order('created_at', ascending: false);
+    return RetryUtils.retry(() async {
+      try {
+        final response = await _supabase
+            .from('lift_entries')
+            .select()
+            .eq('lift', liftType.value)
+            .order('performed_at', ascending: false)
+            .order('created_at', ascending: false);
 
-      return response
-          .map<LiftEntry>((row) => LiftEntry.fromSupabaseRow(row))
-          .toList();
-    } on PostgrestException catch (e) {
-      throw LiftEntriesRepositoryException(
-        'Failed to fetch lift entries by type: ${e.message}',
-      );
-    } catch (e) {
-      throw LiftEntriesRepositoryException(
-        'An unexpected error occurred while fetching lift entries by type',
-      );
-    }
+        return response
+            .map<LiftEntry>((row) => LiftEntry.fromSupabaseRow(row))
+            .toList();
+      } catch (e, stackTrace) {
+        final appError = ErrorHandler.handleError(e, stackTrace);
+        throw LiftEntriesRepositoryException(appError.message);
+      }
+    });
   }
 
   @override
@@ -68,25 +64,22 @@ class SupabaseLiftEntriesRepository implements LiftEntriesRepository {
       throw LiftEntriesRepositoryException('Invalid lift entry data');
     }
 
-    try {
-      final rowData = liftEntry.toSupabaseRow();
+    return RetryUtils.retry(() async {
+      try {
+        final rowData = liftEntry.toSupabaseRow();
 
-      final response = await _supabase
-          .from('lift_entries')
-          .insert(rowData)
-          .select()
-          .single();
+        final response = await _supabase
+            .from('lift_entries')
+            .insert(rowData)
+            .select()
+            .single();
 
-      return LiftEntry.fromSupabaseRow(response);
-    } on PostgrestException catch (e) {
-      throw LiftEntriesRepositoryException(
-        'Failed to create lift entry: ${e.message} (Code: ${e.code})',
-      );
-    } catch (e) {
-      throw LiftEntriesRepositoryException(
-        'An unexpected error occurred while creating lift entry: $e',
-      );
-    }
+        return LiftEntry.fromSupabaseRow(response);
+      } catch (e, stackTrace) {
+        final appError = ErrorHandler.handleError(e, stackTrace);
+        throw LiftEntriesRepositoryException(appError.message);
+      }
+    });
   }
 
   @override
@@ -95,39 +88,33 @@ class SupabaseLiftEntriesRepository implements LiftEntriesRepository {
       throw LiftEntriesRepositoryException('Invalid lift entry data');
     }
 
-    try {
-      final response = await _supabase
-          .from('lift_entries')
-          .update(liftEntry.toSupabaseRow())
-          .eq('id', liftEntry.id)
-          .select()
-          .single();
+    return RetryUtils.retry(() async {
+      try {
+        final response = await _supabase
+            .from('lift_entries')
+            .update(liftEntry.toSupabaseRow())
+            .eq('id', liftEntry.id)
+            .select()
+            .single();
 
-      return LiftEntry.fromSupabaseRow(response);
-    } on PostgrestException catch (e) {
-      throw LiftEntriesRepositoryException(
-        'Failed to update lift entry: ${e.message}',
-      );
-    } catch (e) {
-      throw LiftEntriesRepositoryException(
-        'An unexpected error occurred while updating lift entry',
-      );
-    }
+        return LiftEntry.fromSupabaseRow(response);
+      } catch (e, stackTrace) {
+        final appError = ErrorHandler.handleError(e, stackTrace);
+        throw LiftEntriesRepositoryException(appError.message);
+      }
+    });
   }
 
   @override
   Future<void> deleteLiftEntry(String id) async {
-    try {
-      await _supabase.from('lift_entries').delete().eq('id', id);
-    } on PostgrestException catch (e) {
-      throw LiftEntriesRepositoryException(
-        'Failed to delete lift entry: ${e.message}',
-      );
-    } catch (e) {
-      throw LiftEntriesRepositoryException(
-        'An unexpected error occurred while deleting lift entry',
-      );
-    }
+    return RetryUtils.retry(() async {
+      try {
+        await _supabase.from('lift_entries').delete().eq('id', id);
+      } catch (e, stackTrace) {
+        final appError = ErrorHandler.handleError(e, stackTrace);
+        throw LiftEntriesRepositoryException(appError.message);
+      }
+    });
   }
 }
 
