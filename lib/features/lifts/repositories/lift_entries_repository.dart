@@ -69,20 +69,22 @@ class SupabaseLiftEntriesRepository implements LiftEntriesRepository {
     }
 
     try {
+      final rowData = liftEntry.toSupabaseRow();
+
       final response = await _supabase
           .from('lift_entries')
-          .insert(liftEntry.toSupabaseRow())
+          .insert(rowData)
           .select()
           .single();
 
       return LiftEntry.fromSupabaseRow(response);
     } on PostgrestException catch (e) {
       throw LiftEntriesRepositoryException(
-        'Failed to create lift entry: ${e.message}',
+        'Failed to create lift entry: ${e.message} (Code: ${e.code})',
       );
     } catch (e) {
       throw LiftEntriesRepositoryException(
-        'An unexpected error occurred while creating lift entry',
+        'An unexpected error occurred while creating lift entry: $e',
       );
     }
   }

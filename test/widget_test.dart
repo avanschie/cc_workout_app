@@ -1,13 +1,18 @@
+import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:cc_workout_app/main.dart';
 
 void main() {
-  testWidgets('App displays Hello World text', (WidgetTester tester) async {
-    // Build our app and trigger a frame.
-    await tester.pumpWidget(const MainApp());
+  testWidgets('App displays main screen content', (WidgetTester tester) async {
+    await tester.pumpWidget(const ProviderScope(child: MainApp()));
 
-    // Verify that our app shows the Hello World text.
-    expect(find.text('Hello World!'), findsOneWidget);
+    expect(find.text('Powerlifting Rep Max Tracker'), findsOneWidget);
+    expect(
+      find.text('Track your S/B/D lifts and view rep maxes'),
+      findsOneWidget,
+    );
+    expect(find.byType(FloatingActionButton), findsOneWidget);
   });
 }

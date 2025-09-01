@@ -27,7 +27,7 @@
 - **Development Workflow**
   - Start local Supabase: `supabase start`
   - Run app locally: `flutter run --dart-define=SUPABASE_URL=http://127.0.0.1:54321 --dart-define=SUPABASE_ANON_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZS1kZW1vIiwicm9sZSI6ImFub24iLCJleHAiOjE5ODM4MTI5OTZ9.CRXP1A7WOeoJeXxjNni43kdQwgnWNReilDMblYTn_I0`
-  - After any code change, run: `flutter analyze` (must pass with no errors/warnings)
+  - After any code change, run: `flutter analyze` (must pass with NO errors AND NO warnings - CI fails on warnings)
   - Format code with: `dart format .`
   - Run tests with: `flutter test` (all tests must pass)
   - ALWAYS update TODO_MVP.md to mark completed features/tasks as [x] done before committing
@@ -37,6 +37,13 @@
   - All tests must pass before considering feature complete
   - Include unit tests for models, services, and business logic
   - Include widget tests for UI components
+- **Development & Debugging Best Practices**
+  - **Android Emulator**: Use `10.0.2.2:54321` instead of `127.0.0.1:54321` for local Supabase
+  - **RLS During Development**: Can disable RLS with `ALTER TABLE table_name DISABLE ROW LEVEL SECURITY;` for easier local development
+  - **Form Validation**: When using `copyWith()` with nullable error fields, use sentinel values (like `Object()`) to distinguish between "don't change" and "set to null"
+  - **Debugging Strategy**: When claiming to fix an issue, ALWAYS verify with tests or reproduction steps before claiming success
+  - **Code Quality**: ALWAYS fix ALL warnings from `flutter analyze` - CI treats warnings as failures
+  - **State Management**: Avoid mixing TextEditingController with Riverpod state - use either controllers OR state, not both
 
 ---
 

@@ -1,0 +1,262 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:intl/intl.dart';
+import 'package:cc_workout_app/shared/models/lift_type.dart';
+import 'package:cc_workout_app/features/lifts/providers/add_lift_form_providers.dart';
+import 'package:cc_workout_app/features/lifts/providers/lift_entries_providers.dart';
+
+class AddLiftScreen extends ConsumerStatefulWidget {
+  const AddLiftScreen({super.key});
+
+  @override
+  ConsumerState<AddLiftScreen> createState() => _AddLiftScreenState();
+}
+
+class _AddLiftScreenState extends ConsumerState<AddLiftScreen> {
+  final _formKey = GlobalKey<FormState>();
+
+  @override
+  Widget build(BuildContext context) {
+    final formState = ref.watch(addLiftFormProvider);
+    final formNotifier = ref.read(addLiftFormProvider.notifier);
+    final createLiftState = ref.watch(createLiftEntryProvider);
+
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Add Lift'),
+        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
+      ),
+      body: SingleChildScrollView(
+        padding: const EdgeInsets.all(16.0),
+        child: Form(
+          key: _formKey,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              _buildLiftTypeDropdown(formState, formNotifier),
+              const SizedBox(height: 16),
+              _buildRepsField(formState, formNotifier),
+              const SizedBox(height: 16),
+              _buildWeightField(formState, formNotifier),
+              const SizedBox(height: 16),
+              _buildDateField(formState, formNotifier),
+              const SizedBox(height: 32),
+              _buildSaveButton(formState, createLiftState),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildLiftTypeDropdown(
+    AddLiftFormState formState,
+    AddLiftFormNotifier formNotifier,
+  ) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const Text(
+          'Lift Type',
+          style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
+        ),
+        const SizedBox(height: 8),
+        DropdownButtonFormField<LiftType>(
+          key: ValueKey(formState.liftType),
+          initialValue: formState.liftType,
+          decoration: InputDecoration(
+            border: const OutlineInputBorder(),
+            hintText: 'Select lift type',
+            errorText: formState.liftTypeError,
+          ),
+          items: LiftType.values.map((liftType) {
+            return DropdownMenuItem(
+              value: liftType,
+              child: Text(liftType.displayName),
+            );
+          }).toList(),
+          onChanged: (value) => formNotifier.setLiftType(value),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildRepsField(
+    AddLiftFormState formState,
+    AddLiftFormNotifier formNotifier,
+  ) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const Text(
+          'Reps',
+          style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
+        ),
+        const SizedBox(height: 8),
+        TextFormField(
+          initialValue: formState.reps?.toString() ?? '',
+          decoration: InputDecoration(
+            border: const OutlineInputBorder(),
+            hintText: 'Enter reps (1-10)',
+            errorText: formState.repsError,
+          ),
+          keyboardType: TextInputType.number,
+          onChanged: (value) {
+            formNotifier.setReps(value);
+          },
+        ),
+      ],
+    );
+  }
+
+  Widget _buildWeightField(
+    AddLiftFormState formState,
+    AddLiftFormNotifier formNotifier,
+  ) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const Text(
+          'Weight (kg)',
+          style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
+        ),
+        const SizedBox(height: 8),
+        TextFormField(
+          initialValue: formState.weightKg?.toString() ?? '',
+          decoration: InputDecoration(
+            border: const OutlineInputBorder(),
+            hintText: 'Enter weight in kg',
+            errorText: formState.weightError,
+            suffixText: 'kg',
+          ),
+          keyboardType: const TextInputType.numberWithOptions(decimal: true),
+          onChanged: (value) {
+            formNotifier.setWeight(value);
+          },
+        ),
+      ],
+    );
+  }
+
+  Widget _buildDateField(
+    AddLiftFormState formState,
+    AddLiftFormNotifier formNotifier,
+  ) {
+    final dateFormatter = DateFormat('MMM d, yyyy');
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const Text(
+          'Date Performed',
+          style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
+        ),
+        const SizedBox(height: 8),
+        InkWell(
+          onTap: () => _selectDate(formNotifier),
+          child: InputDecorator(
+            decoration: InputDecoration(
+              border: const OutlineInputBorder(),
+              hintText: 'Select date',
+              errorText: formState.dateError,
+              suffixIcon: const Icon(Icons.calendar_today),
+            ),
+            child: Text(
+              formState.performedAt != null
+                  ? dateFormatter.format(formState.performedAt!)
+                  : 'Select date',
+              style: TextStyle(
+                color: formState.performedAt != null
+                    ? Theme.of(context).textTheme.bodyLarge?.color
+                    : Theme.of(context).hintColor,
+              ),
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildSaveButton(
+    AddLiftFormState formState,
+    AsyncValue<void> createLiftState,
+  ) {
+    final isLoading = createLiftState.isLoading;
+
+    return ElevatedButton(
+      onPressed: isLoading || !formState.isValid ? null : _handleSave,
+      style: ElevatedButton.styleFrom(minimumSize: const Size.fromHeight(48)),
+      child: isLoading
+          ? const SizedBox(
+              height: 20,
+              width: 20,
+              child: CircularProgressIndicator(strokeWidth: 2),
+            )
+          : const Text('Save Lift', style: TextStyle(fontSize: 16)),
+    );
+  }
+
+  Future<void> _selectDate(AddLiftFormNotifier formNotifier) async {
+    final currentFormState = ref.read(addLiftFormProvider);
+    final selectedDate = await showDatePicker(
+      context: context,
+      initialDate: currentFormState.performedAt ?? DateTime.now(),
+      firstDate: DateTime(2020),
+      lastDate: DateTime.now(),
+    );
+
+    if (selectedDate != null) {
+      formNotifier.setPerformedAt(selectedDate);
+    }
+  }
+
+  Future<void> _handleSave() async {
+    final formNotifier = ref.read(addLiftFormProvider.notifier);
+    final createLiftNotifier = ref.read(createLiftEntryProvider.notifier);
+
+    // Validate all fields first
+    formNotifier.validateAll();
+
+    // Check if form is still valid after validation
+    final validatedFormState = ref.read(addLiftFormProvider);
+    if (!validatedFormState.isValid) {
+      return;
+    }
+
+    try {
+      // For development: use hardcoded test user (RLS disabled)
+      const devUserId = '550e8400-e29b-41d4-a716-446655440001';
+      final liftEntry = validatedFormState.toLiftEntry(devUserId);
+
+      if (liftEntry != null) {
+        await createLiftNotifier.createLiftEntry(liftEntry);
+
+        // Show success message
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text('Lift saved successfully!'),
+              backgroundColor: Colors.green,
+            ),
+          );
+
+          // Clear form and navigate back
+          formNotifier.clearForm();
+          Navigator.of(context).pop();
+        }
+      }
+    } catch (e, stackTrace) {
+      if (mounted) {
+        debugPrint('Save lift error: $e');
+        debugPrint('Stack trace: $stackTrace');
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Failed to save lift: ${e.toString()}'),
+            backgroundColor: Colors.red,
+            duration: const Duration(seconds: 5),
+          ),
+        );
+      }
+    }
+  }
+}

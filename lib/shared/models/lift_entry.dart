@@ -35,15 +35,25 @@ class LiftEntry with _$LiftEntry {
   }
 
   Map<String, dynamic> toSupabaseRow() {
-    return {
-      'id': id,
+    final row = <String, dynamic>{
       'user_id': userId,
       'lift': lift.value,
       'reps': reps,
       'weight_kg': weightKg,
       'performed_at': performedAt.toIso8601String().split('T')[0], // Date only
-      'created_at': createdAt.toIso8601String(),
     };
+
+    // Only include ID if it's not empty (for updates)
+    if (id.isNotEmpty) {
+      row['id'] = id;
+    }
+
+    // Only include created_at if it's not the default
+    if (createdAt != DateTime.fromMillisecondsSinceEpoch(0)) {
+      row['created_at'] = createdAt.toIso8601String();
+    }
+
+    return row;
   }
 
   bool get isValid {

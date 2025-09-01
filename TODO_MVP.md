@@ -102,23 +102,23 @@
 ## Phase 5: Lifts Feature (Data Entry)
 
 ### 5.1 Lift Entry State Management
-- [ ] Create Riverpod providers for lift operations
-- [ ] Implement lift creation/editing logic
-- [ ] Add form validation providers
+- [x] Create Riverpod providers for lift operations
+- [x] Implement lift creation/editing logic
+- [x] Add form validation providers
 
 ### 5.2 Lift Entry UI
-- [ ] Create "Add Lift" screen with:
+- [x] Create "Add Lift" screen with:
   - Lift type selector (squat/bench/deadlift)
   - Reps input (1-10)
   - Weight input (kg)
   - Date picker
   - Save/Cancel buttons
-- [ ] Implement input validation:
+- [x] Implement input validation:
   - Reps: 1-10 range
   - Weight: > 0
   - Date: required
-- [ ] Add loading indicators during save
-- [ ] Handle save errors with user feedback
+- [x] Add loading indicators during save
+- [x] Handle save errors with user feedback
 
 ### 5.3 Lifts List (Optional for MVP)
 - [ ] Create lifts history screen
