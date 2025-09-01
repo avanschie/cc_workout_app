@@ -58,9 +58,7 @@ void main() {
       );
     }
 
-    testWidgets('should display app bar with title', (
-      tester,
-    ) async {
+    testWidgets('should display app bar with title', (tester) async {
       when(
         mockService.getFullRepMaxTable(),
       ).thenAnswer((_) async => sampleRepMaxTable);

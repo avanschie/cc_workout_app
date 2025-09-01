@@ -124,181 +124,204 @@ class HomeScreen extends ConsumerWidget {
     BuildContext context,
     Map<LiftType, Map<int, RepMax>> repMaxTable,
   ) {
-    final hasAnyData = repMaxTable.values.any((table) => table.isNotEmpty);
-
-    return SingleChildScrollView(
-      physics: const AlwaysScrollableScrollPhysics(),
-      padding: const EdgeInsets.all(16.0),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const Text(
-            'Your Rep Maxes',
-            style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-          ),
-          const SizedBox(height: 8),
-          Text(
-            hasAnyData
-                ? 'Personal records for each rep count'
-                : 'Start logging lifts to build your rep max records',
-            style: Theme.of(context).textTheme.bodyMedium,
-          ),
-          const SizedBox(height: 24),
-          ...LiftType.values.map(
-            (liftType) => Column(
-              children: [
-                _buildLiftTypeSection(
-                  context,
-                  liftType,
-                  repMaxTable[liftType] ?? {},
-                ),
-                const SizedBox(height: 24),
-              ],
-            ),
-          ),
-        ],
-      ),
-    );
+    return _buildModernRepMaxTable(context, repMaxTable);
   }
 
-  Widget _buildLiftTypeSection(
+  Widget _buildModernRepMaxTable(
     BuildContext context,
-    LiftType liftType,
-    Map<int, RepMax> repMaxes,
+    Map<LiftType, Map<int, RepMax>> repMaxTable,
   ) {
     return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Row(
-          children: [
-            Icon(
-              _getLiftIcon(liftType),
-              size: 24,
-              color: Theme.of(context).colorScheme.primary,
-            ),
-            const SizedBox(width: 8),
-            Text(
-              liftType.displayName,
-              style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
-            ),
-          ],
+        // Header row with modern styling
+        Container(
+          width: double.infinity,
+          padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
+          decoration: BoxDecoration(
+            color: Theme.of(context).colorScheme.surfaceContainerHigh,
+            boxShadow: [
+              BoxShadow(
+                color: Theme.of(
+                  context,
+                ).colorScheme.shadow.withValues(alpha: 0.08),
+                offset: const Offset(0, 1),
+                blurRadius: 2,
+              ),
+            ],
+          ),
+          child: Row(
+            children: [
+              Expanded(
+                flex: 1,
+                child: FittedBox(
+                  fit: BoxFit.scaleDown,
+                  alignment: Alignment.centerLeft,
+                  child: Text(
+                    'Reps',
+                    style: Theme.of(context).textTheme.titleSmall?.copyWith(
+                      fontWeight: FontWeight.w600,
+                      color: Theme.of(context).colorScheme.onSurface,
+                    ),
+                    maxLines: 1,
+                  ),
+                ),
+              ),
+              ...LiftType.values.map(
+                (liftType) => Expanded(
+                  flex: 3,
+                  child: FittedBox(
+                    fit: BoxFit.scaleDown,
+                    child: Text(
+                      _getShortLiftName(liftType),
+                      style: Theme.of(context).textTheme.titleSmall?.copyWith(
+                        fontWeight: FontWeight.w600,
+                        color: Theme.of(context).colorScheme.onSurface,
+                      ),
+                      textAlign: TextAlign.center,
+                      maxLines: 1,
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
         ),
-        const SizedBox(height: 12),
-        _buildRepMaxGrid(context, repMaxes),
+        // Data rows - using Expanded to fill remaining space
+        Expanded(
+          child: ListView.builder(
+            physics: const NeverScrollableScrollPhysics(), // Disable scrolling
+            itemCount: 10,
+            itemBuilder: (context, index) {
+              final reps = index + 1;
+              return _buildModernRepMaxRow(context, reps, repMaxTable, index);
+            },
+          ),
+        ),
       ],
     );
   }
 
-  Widget _buildRepMaxGrid(BuildContext context, Map<int, RepMax> repMaxes) {
+  Widget _buildModernRepMaxRow(
+    BuildContext context,
+    int reps,
+    Map<LiftType, Map<int, RepMax>> repMaxTable,
+    int index,
+  ) {
+    final hasAnyDataInRow = LiftType.values.any(
+      (liftType) => repMaxTable[liftType]?[reps] != null,
+    );
+
     return Container(
+      width: double.infinity,
+      height: 50, // Fixed height for consistent sizing
+      padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
       decoration: BoxDecoration(
-        border: Border.all(color: Theme.of(context).dividerColor),
-        borderRadius: BorderRadius.circular(8),
+        color: index % 2 == 1
+            ? Theme.of(context).colorScheme.surfaceContainerLowest
+            : null,
       ),
-      child: Column(
+      child: Row(
         children: [
-          Container(
-            padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
-            decoration: BoxDecoration(
-              color: Theme.of(context).colorScheme.surfaceContainerHighest,
-              borderRadius: const BorderRadius.only(
-                topLeft: Radius.circular(7),
-                topRight: Radius.circular(7),
+          Expanded(
+            flex: 1,
+            child: Container(
+              padding: const EdgeInsets.symmetric(vertical: 6, horizontal: 8),
+              decoration: BoxDecoration(
+                color: hasAnyDataInRow
+                    ? Theme.of(
+                        context,
+                      ).colorScheme.primary.withValues(alpha: 0.1)
+                    : Theme.of(context).colorScheme.surfaceContainerHigh,
+                borderRadius: BorderRadius.circular(6),
+              ),
+              child: FittedBox(
+                fit: BoxFit.scaleDown,
+                child: Text(
+                  '$reps',
+                  style: Theme.of(context).textTheme.titleSmall?.copyWith(
+                    fontWeight: FontWeight.w600,
+                    color: hasAnyDataInRow
+                        ? Theme.of(context).colorScheme.primary
+                        : Theme.of(
+                            context,
+                          ).colorScheme.onSurface.withValues(alpha: 0.6),
+                  ),
+                  textAlign: TextAlign.center,
+                  maxLines: 1,
+                ),
               ),
             ),
-            child: const Row(
-              children: [
-                Expanded(
-                  child: Text(
-                    'Reps',
-                    style: TextStyle(fontWeight: FontWeight.w600),
-                  ),
-                ),
-                Expanded(
-                  child: Text(
-                    'Best Weight',
-                    style: TextStyle(fontWeight: FontWeight.w600),
-                    textAlign: TextAlign.right,
-                  ),
-                ),
-              ],
-            ),
           ),
-          ...List.generate(10, (index) {
-            final reps = index + 1;
-            final repMax = repMaxes[reps];
-            return _buildRepMaxRow(context, reps, repMax, index % 2 == 1);
+          ...LiftType.values.map((liftType) {
+            final repMax = repMaxTable[liftType]?[reps];
+            final hasData = repMax != null;
+
+            return Expanded(
+              flex: 3,
+              child: Container(
+                margin: const EdgeInsets.symmetric(horizontal: 3),
+                padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 6),
+                decoration: BoxDecoration(
+                  color: hasData
+                      ? Theme.of(
+                          context,
+                        ).colorScheme.primary.withValues(alpha: 0.05)
+                      : null,
+                  borderRadius: BorderRadius.circular(6),
+                  border: hasData
+                      ? Border.all(
+                          color: Theme.of(
+                            context,
+                          ).colorScheme.primary.withValues(alpha: 0.2),
+                          width: 1,
+                        )
+                      : null,
+                ),
+                child: FittedBox(
+                  fit: BoxFit.scaleDown,
+                  child: Text(
+                    hasData ? '${_formatWeight(repMax.weightKg)} kg' : '—',
+                    style: Theme.of(context).textTheme.titleSmall?.copyWith(
+                      fontWeight: hasData ? FontWeight.w700 : FontWeight.w400,
+                      color: hasData
+                          ? Theme.of(context).colorScheme.primary
+                          : Theme.of(
+                              context,
+                            ).colorScheme.onSurface.withValues(alpha: 0.4),
+                    ),
+                    textAlign: TextAlign.center,
+                    maxLines: 1,
+                  ),
+                ),
+              ),
+            );
           }),
         ],
       ),
     );
   }
 
-  Widget _buildRepMaxRow(
-    BuildContext context,
-    int reps,
-    RepMax? repMax,
-    bool isEven,
-  ) {
-    final hasData = repMax != null;
+  String _formatWeight(double weight) {
+    // Always show up to 2 decimal places, but remove unnecessary trailing zeros
+    String formatted = weight.toStringAsFixed(2);
 
-    return Container(
-      padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
-      decoration: BoxDecoration(
-        color: isEven
-            ? Theme.of(context).colorScheme.surfaceContainerLow
-            : null,
-        border: Border(
-          bottom: BorderSide(
-            color: Theme.of(context).dividerColor.withValues(alpha: 0.5),
-            width: 0.5,
-          ),
-        ),
-      ),
-      child: Row(
-        children: [
-          Expanded(
-            child: Text(
-              '$reps',
-              style: TextStyle(
-                fontSize: 16,
-                fontWeight: hasData ? FontWeight.w500 : FontWeight.normal,
-                color: hasData
-                    ? Theme.of(context).textTheme.bodyLarge?.color
-                    : Theme.of(
-                        context,
-                      ).textTheme.bodyMedium?.color?.withValues(alpha: 0.6),
-              ),
-            ),
-          ),
-          Expanded(
-            child: Text(
-              hasData ? '${repMax.weightKg.toStringAsFixed(1)} kg' : '—',
-              style: TextStyle(
-                fontSize: 16,
-                fontWeight: hasData ? FontWeight.w600 : FontWeight.normal,
-                color: hasData
-                    ? Theme.of(context).colorScheme.primary
-                    : Theme.of(
-                        context,
-                      ).textTheme.bodyMedium?.color?.withValues(alpha: 0.6),
-              ),
-              textAlign: TextAlign.right,
-            ),
-          ),
-        ],
-      ),
-    );
+    // Remove trailing zeros and decimal point if not needed
+    if (formatted.contains('.')) {
+      formatted = formatted.replaceAll(RegExp(r'0+$'), '');
+      formatted = formatted.replaceAll(RegExp(r'\.$'), '');
+    }
+
+    return formatted;
   }
 
-  IconData _getLiftIcon(LiftType liftType) {
+  String _getShortLiftName(LiftType liftType) {
     switch (liftType) {
       case LiftType.squat:
-        return Icons.fitness_center;
+        return 'Squat';
       case LiftType.bench:
-        return Icons.airline_seat_flat;
+        return 'Bench';
       case LiftType.deadlift:
-        return Icons.accessibility_new;
+        return 'Deadlift';
     }
   }
 }

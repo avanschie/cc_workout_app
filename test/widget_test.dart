@@ -38,13 +38,8 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(find.text('Powerlifting Tracker'), findsOneWidget);
-    expect(find.text('Your Rep Maxes'), findsOneWidget);
-    expect(
-      find.text('Start logging lifts to build your rep max records'),
-      findsOneWidget,
-    );
     expect(find.text('Squat'), findsOneWidget);
-    expect(find.text('Bench Press'), findsOneWidget);
+    expect(find.text('Bench'), findsOneWidget);
     expect(find.text('Deadlift'), findsOneWidget);
     expect(
       find.text('—'),
@@ -87,9 +82,7 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(find.text('Powerlifting Tracker'), findsOneWidget);
-    expect(find.text('Your Rep Maxes'), findsOneWidget);
-    expect(find.text('Personal records for each rep count'), findsOneWidget);
-    expect(find.text('200.0 kg'), findsOneWidget);
+    expect(find.text('200 kg'), findsOneWidget);
     expect(find.byType(FloatingActionButton), findsOneWidget);
   });
 }
