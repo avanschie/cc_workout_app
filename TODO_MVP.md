@@ -137,13 +137,13 @@
 - [x] Implement data refresh/reload functionality
 
 ### 6.3 Rep Maxes UI
-- [ ] Create Rep Maxes screen showing:
+- [x] Create Rep Maxes screen showing:
   - Grid/table layout for S/B/D
   - Best weight for reps 1-10
   - Clear labels and units (kg)
-- [ ] Add loading states
-- [ ] Handle empty states (no lifts recorded)
-- [ ] Add pull-to-refresh functionality
+- [x] Add loading states
+- [x] Handle empty states (no lifts recorded)
+- [x] Add pull-to-refresh functionality
 
 ## Phase 7: Navigation & App Structure
 

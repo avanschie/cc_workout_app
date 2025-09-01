@@ -22,7 +22,7 @@ class RepMax with _$RepMax {
       lift: LiftType.fromString(row['lift'] as String),
       reps: row['reps'] as int,
       weightKg: (row['weight_kg'] as num).toDouble(),
-      lastPerformedAt: DateTime.parse(row['last_performed_at'] as String),
+      lastPerformedAt: DateTime.parse(row['performed_at'] as String),
     );
   }
 }

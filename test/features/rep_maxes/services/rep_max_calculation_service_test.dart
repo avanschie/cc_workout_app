@@ -52,7 +52,9 @@ void main() {
 
     group('calculateAllRepMaxes', () {
       test('should return all rep maxes from repository', () async {
-        when(mockRepository.getAllRepMaxes()).thenAnswer((_) async => sampleRepMaxes);
+        when(
+          mockRepository.getAllRepMaxes(),
+        ).thenAnswer((_) async => sampleRepMaxes);
 
         final result = await service.calculateAllRepMaxes();
 
@@ -63,7 +65,9 @@ void main() {
 
     group('calculateRepMaxesByLift', () {
       test('should group rep maxes by lift type and sort by reps', () async {
-        when(mockRepository.getAllRepMaxes()).thenAnswer((_) async => sampleRepMaxes);
+        when(
+          mockRepository.getAllRepMaxes(),
+        ).thenAnswer((_) async => sampleRepMaxes);
 
         final result = await service.calculateRepMaxesByLift();
 
@@ -71,7 +75,7 @@ void main() {
         expect(result[LiftType.squat]?.length, equals(2));
         expect(result[LiftType.bench]?.length, equals(1));
         expect(result[LiftType.deadlift]?.length, equals(1));
-        
+
         expect(result[LiftType.squat]?[0].reps, equals(1));
         expect(result[LiftType.squat]?[1].reps, equals(5));
       });
@@ -93,9 +97,10 @@ void main() {
         final squatRepMaxes = sampleRepMaxes
             .where((rm) => rm.lift == LiftType.squat)
             .toList();
-        
-        when(mockRepository.getRepMaxesByLiftType(LiftType.squat))
-            .thenAnswer((_) async => squatRepMaxes);
+
+        when(
+          mockRepository.getRepMaxesByLiftType(LiftType.squat),
+        ).thenAnswer((_) async => squatRepMaxes);
 
         final result = await service.calculateRepMaxesForLift(LiftType.squat);
 
@@ -107,21 +112,28 @@ void main() {
     group('getRepMaxForLiftAndReps', () {
       test('should return rep max for specific lift and reps', () async {
         final expectedRepMax = sampleRepMaxes[0];
-        
-        when(mockRepository.getRepMaxForLiftAndReps(LiftType.squat, 1))
-            .thenAnswer((_) async => expectedRepMax);
+
+        when(
+          mockRepository.getRepMaxForLiftAndReps(LiftType.squat, 1),
+        ).thenAnswer((_) async => expectedRepMax);
 
         final result = await service.getRepMaxForLiftAndReps(LiftType.squat, 1);
 
         expect(result, equals(expectedRepMax));
-        verify(mockRepository.getRepMaxForLiftAndReps(LiftType.squat, 1)).called(1);
+        verify(
+          mockRepository.getRepMaxForLiftAndReps(LiftType.squat, 1),
+        ).called(1);
       });
 
       test('should return null when no rep max exists', () async {
-        when(mockRepository.getRepMaxForLiftAndReps(LiftType.bench, 10))
-            .thenAnswer((_) async => null);
+        when(
+          mockRepository.getRepMaxForLiftAndReps(LiftType.bench, 10),
+        ).thenAnswer((_) async => null);
 
-        final result = await service.getRepMaxForLiftAndReps(LiftType.bench, 10);
+        final result = await service.getRepMaxForLiftAndReps(
+          LiftType.bench,
+          10,
+        );
 
         expect(result, isNull);
       });
@@ -131,7 +143,7 @@ void main() {
           () => service.getRepMaxForLiftAndReps(LiftType.squat, 0),
           throwsA(isA<ArgumentError>()),
         );
-        
+
         expect(
           () => service.getRepMaxForLiftAndReps(LiftType.squat, 11),
           throwsA(isA<ArgumentError>()),
@@ -157,9 +169,10 @@ void main() {
             lastPerformedAt: DateTime(2023, 1, 2),
           ),
         ];
-        
-        when(mockRepository.getRepMaxesByLiftType(LiftType.squat))
-            .thenAnswer((_) async => squatRepMaxes);
+
+        when(
+          mockRepository.getRepMaxesByLiftType(LiftType.squat),
+        ).thenAnswer((_) async => squatRepMaxes);
 
         final result = await service.getRepMaxTableForLift(LiftType.squat);
 
@@ -192,9 +205,10 @@ void main() {
             lastPerformedAt: DateTime(2023, 1, 3),
           ),
         ];
-        
-        when(mockRepository.getRepMaxesByLiftType(LiftType.squat))
-            .thenAnswer((_) async => invalidRepMaxes);
+
+        when(
+          mockRepository.getRepMaxesByLiftType(LiftType.squat),
+        ).thenAnswer((_) async => invalidRepMaxes);
 
         final result = await service.getRepMaxTableForLift(LiftType.squat);
 
@@ -205,7 +219,9 @@ void main() {
 
     group('getFullRepMaxTable', () {
       test('should return complete rep max table for all lifts', () async {
-        when(mockRepository.getAllRepMaxes()).thenAnswer((_) async => sampleRepMaxes);
+        when(
+          mockRepository.getAllRepMaxes(),
+        ).thenAnswer((_) async => sampleRepMaxes);
 
         final result = await service.getFullRepMaxTable();
 

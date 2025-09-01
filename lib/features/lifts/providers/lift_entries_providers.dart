@@ -3,6 +3,7 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:cc_workout_app/shared/models/lift_entry.dart';
 import 'package:cc_workout_app/shared/models/lift_type.dart';
 import 'package:cc_workout_app/features/lifts/repositories/lift_entries_repository.dart';
+import 'package:cc_workout_app/features/rep_maxes/providers/rep_max_providers.dart';
 
 final supabaseClientProvider = Provider<SupabaseClient>((ref) {
   return Supabase.instance.client;
@@ -37,6 +38,12 @@ class CreateLiftEntryNotifier extends AutoDisposeAsyncNotifier<void> {
       await repository.createLiftEntry(liftEntry);
       ref.invalidate(liftEntriesProvider);
       ref.invalidate(liftEntriesByTypeProvider);
+      // Invalidate rep maxes since they depend on lift entries
+      ref.invalidate(allRepMaxesProvider);
+      ref.invalidate(repMaxesByLiftProvider);
+      ref.invalidate(fullRepMaxTableProvider);
+      ref.invalidate(repMaxNotifierProvider);
+      ref.invalidate(repMaxTableNotifierProvider);
       state = const AsyncValue.data(null);
     } catch (error, stackTrace) {
       state = AsyncValue.error(error, stackTrace);
@@ -61,6 +68,12 @@ class UpdateLiftEntryNotifier extends AutoDisposeAsyncNotifier<void> {
       await repository.updateLiftEntry(liftEntry);
       ref.invalidate(liftEntriesProvider);
       ref.invalidate(liftEntriesByTypeProvider);
+      // Invalidate rep maxes since they depend on lift entries
+      ref.invalidate(allRepMaxesProvider);
+      ref.invalidate(repMaxesByLiftProvider);
+      ref.invalidate(fullRepMaxTableProvider);
+      ref.invalidate(repMaxNotifierProvider);
+      ref.invalidate(repMaxTableNotifierProvider);
       state = const AsyncValue.data(null);
     } catch (error, stackTrace) {
       state = AsyncValue.error(error, stackTrace);
@@ -85,6 +98,12 @@ class DeleteLiftEntryNotifier extends AutoDisposeAsyncNotifier<void> {
       await repository.deleteLiftEntry(id);
       ref.invalidate(liftEntriesProvider);
       ref.invalidate(liftEntriesByTypeProvider);
+      // Invalidate rep maxes since they depend on lift entries
+      ref.invalidate(allRepMaxesProvider);
+      ref.invalidate(repMaxesByLiftProvider);
+      ref.invalidate(fullRepMaxTableProvider);
+      ref.invalidate(repMaxNotifierProvider);
+      ref.invalidate(repMaxTableNotifierProvider);
       state = const AsyncValue.data(null);
     } catch (error, stackTrace) {
       state = AsyncValue.error(error, stackTrace);

@@ -30,7 +30,7 @@ void main() {
         'lift': 'bench',
         'reps': 5,
         'weight_kg': 120.5,
-        'last_performed_at': '2023-11-15T14:30:00.000Z',
+        'performed_at': '2023-11-15T14:30:00.000Z',
       };
 
       final repMax = RepMax.fromSupabaseRow(row);
@@ -51,7 +51,7 @@ void main() {
         'lift': 'squat',
         'reps': 1,
         'weight_kg': 200, // Integer
-        'last_performed_at': '2023-12-01T10:00:00.000Z',
+        'performed_at': '2023-12-01T10:00:00.000Z',
       };
 
       final repMax = RepMax.fromSupabaseRow(row);
@@ -71,7 +71,7 @@ void main() {
           'lift': liftString,
           'reps': 1,
           'weight_kg': 100.0,
-          'last_performed_at': '2023-12-01T12:00:00.000Z',
+          'performed_at': '2023-12-01T12:00:00.000Z',
         };
 
         final repMax = RepMax.fromSupabaseRow(row);

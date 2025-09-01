@@ -240,9 +240,9 @@ class _AddLiftScreenState extends ConsumerState<AddLiftScreen> {
             ),
           );
 
-          // Clear form and navigate back
+          // Clear form and navigate back with success result
           formNotifier.clearForm();
-          Navigator.of(context).pop();
+          Navigator.of(context).pop(true);
         }
       }
     } catch (e, stackTrace) {
