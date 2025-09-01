@@ -128,13 +128,13 @@
 ## Phase 6: Rep Maxes Feature
 
 ### 6.1 Rep Max Calculations
-- [ ] Create service to calculate best weight per rep (1-10) for each lift type
-- [ ] Implement efficient queries to get max weights
-- [ ] Handle edge cases (no data for certain rep ranges)
+- [x] Create service to calculate best weight per rep (1-10) for each lift type
+- [x] Implement efficient queries to get max weights
+- [x] Handle edge cases (no data for certain rep ranges)
 
 ### 6.2 Rep Maxes State Management
-- [ ] Create Riverpod providers for rep max data
-- [ ] Implement data refresh/reload functionality
+- [x] Create Riverpod providers for rep max data
+- [x] Implement data refresh/reload functionality
 
 ### 6.3 Rep Maxes UI
 - [ ] Create Rep Maxes screen showing:
