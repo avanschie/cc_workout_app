@@ -36,6 +36,14 @@
   - `SUPABASE_ANON_KEY`
 - [x] Configure `--dart-define` usage
 - [x] Create environment configuration helper
+- [x] Implement multi-environment setup:
+  - [x] Create Environment enum and EnvironmentConfig class
+  - [x] Add local environment (hardcoded for Android emulator)
+  - [x] Add staging environment (uses --dart-define)
+  - [x] Create lib/main_local.dart entry point
+  - [x] Create lib/main_staging.dart entry point
+  - [x] Set up VSCode launch configurations (.vscode/launch.json)
+  - [x] Add visual environment banner for debug builds
 
 ## Phase 2: Supabase Backend Setup
 

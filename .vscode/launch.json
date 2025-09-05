@@ -1,0 +1,27 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Local Development",
+      "request": "launch",
+      "type": "dart",
+      "program": "lib/main_local.dart",
+      "args": [
+        "--flavor",
+        "development"
+      ],
+      "console": "debugConsole"
+    },
+    {
+      "name": "Staging",
+      "request": "launch",
+      "type": "dart",
+      "program": "lib/main_staging.dart",
+      "args": [
+        "--dart-define=SUPABASE_URL=https://rpntfvfemtsfolxweufs.supabase.co",
+        "--dart-define=SUPABASE_ANON_KEY=sb_publishable_LjCvkObpXcY_kG-aefy80w_uYUTp93q"
+      ],
+      "console": "debugConsole"
+    }
+  ]
+}

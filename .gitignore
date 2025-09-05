@@ -11,7 +11,12 @@
 .svn/
 .swiftpm/
 migrate_working_dir/
+# Environment files (never commit credentials!)
 .env
+.env.local
+.env.staging  
+.env.production
+*.env
 
 # IntelliJ related
 *.iml
