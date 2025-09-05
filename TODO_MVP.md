@@ -120,10 +120,14 @@
 - [x] Add loading indicators during save
 - [x] Handle save errors with user feedback
 
-### 5.3 Lifts List (Optional for MVP)
-- [ ] Create lifts history screen
-- [ ] Display recent lifts with edit/delete options
-- [ ] Add empty state when no lifts exist
+### 5.3 Lifts History Feature
+- [x] Create lifts history screen showing chronological list of all lifts (newest first)
+- [x] Display lift information: lift type (squat/bench/deadlift), reps, weight (kg), date
+- [x] Implement edit functionality for existing lift entries
+- [x] Implement delete functionality with confirmation dialog
+- [x] Add empty state when no lifts exist
+- [ ] Add search/filter capabilities (optional)
+- [x] Implement pagination or lazy loading for large datasets
 
 ## Phase 6: Rep Maxes Feature
 
@@ -152,14 +156,18 @@
 - [x] Configure Supabase initialization
 - [x] Implement theme and material design
 
-### 7.2 Navigation
-- [ ] Set up bottom navigation or drawer
-- [ ] Define routes for:
-  - Auth screens
-  - Add Lift screen
-  - Rep Maxes screen
-  - (Optional) Lifts history
+### 7.2 Navigation & Bottom Tabs
+- [x] Implement bottom navigation bar with 2 main tabs:
+  - **Rep Maxes Tab**: Shows the current rep maxes table (main view)
+  - **History Tab**: Shows chronological lift history
+- [x] Set up tab-based navigation structure
+- [x] Define routes for:
+  - Auth screens (sign in/out)
+  - Bottom nav container (main app shell)
+  - Add Lift screen (accessible from both tabs via FAB or button)
+  - Individual lift edit screens
 - [ ] Handle deep linking and navigation state
+- [x] Ensure proper tab state persistence during app lifecycle
 
 ## Phase 8: Error Handling & Polish
 

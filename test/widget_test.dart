@@ -37,7 +37,11 @@ void main() {
 
     await tester.pumpAndSettle();
 
-    expect(find.text('Powerlifting Tracker'), findsOneWidget);
+    expect(
+      find.text('Rep Maxes'),
+      findsWidgets,
+    ); // Shows in app bar and navigation
+    expect(find.text('History'), findsOneWidget); // History tab in navigation
 
     // Should show table even with empty data
     expect(find.text('Squat'), findsOneWidget);
@@ -84,7 +88,11 @@ void main() {
 
     await tester.pumpAndSettle();
 
-    expect(find.text('Powerlifting Tracker'), findsOneWidget);
+    expect(
+      find.text('Rep Maxes'),
+      findsWidgets,
+    ); // Shows in app bar and navigation
+    expect(find.text('History'), findsOneWidget); // History tab in navigation
     expect(find.text('200 kg'), findsOneWidget);
     expect(find.byType(FloatingActionButton), findsOneWidget);
   });

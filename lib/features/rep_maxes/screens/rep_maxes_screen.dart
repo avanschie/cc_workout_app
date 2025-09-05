@@ -17,6 +17,8 @@ class RepMaxesScreen extends ConsumerWidget {
       appBar: AppBar(
         title: const Text('Rep Maxes'),
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
+        automaticallyImplyLeading:
+            false, // Remove back button since we're in a tab
         actions: [
           IconButton(
             icon: const Icon(Icons.refresh),
