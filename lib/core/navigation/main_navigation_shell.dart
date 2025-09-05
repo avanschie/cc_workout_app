@@ -41,7 +41,7 @@ class MainNavigationShell extends ConsumerWidget {
           ref.read(navigationIndexProvider.notifier).state = index;
         },
         elevation: 8,
-        height: 80,
+        height: 65,
         destinations: const [
           NavigationDestination(
             icon: Icon(Icons.timeline),
