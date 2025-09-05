@@ -81,7 +81,7 @@ void main() {
       expect(find.textContaining(errorMessage), findsOneWidget);
     });
 
-    testWidgets('should display empty state when no data exists', (
+    testWidgets('should display table even when completely empty', (
       tester,
     ) async {
       final emptyRepMaxTable = {
@@ -95,12 +95,14 @@ void main() {
       await tester.pumpWidget(createTestWidget());
       await tester.pumpAndSettle();
 
-      expect(find.byIcon(Icons.fitness_center), findsOneWidget);
-      expect(find.text('No Rep Maxes Yet'), findsOneWidget);
-      expect(
-        find.text('Start logging your lifts to see your rep maxes here!'),
-        findsOneWidget,
-      );
+      // Should still show table headers
+      expect(find.text('Reps'), findsOneWidget);
+      expect(find.text('Squat'), findsOneWidget);
+      expect(find.text('Bench'), findsOneWidget);
+      expect(find.text('Deadlift'), findsOneWidget);
+
+      // All cells should show dashes for empty data
+      expect(find.text('—'), findsWidgets);
     });
 
     testWidgets('should display rep max table with data', (tester) async {
@@ -111,39 +113,39 @@ void main() {
       await tester.pumpWidget(createTestWidget());
       await tester.pumpAndSettle();
 
-      expect(find.text('Best Weight Per Rep Range'), findsOneWidget);
-      expect(
-        find.text('Your personal records for each rep count'),
-        findsOneWidget,
-      );
+      // Check for the table header
+      expect(find.text('Reps'), findsOneWidget);
 
-      for (final liftType in LiftType.values) {
-        expect(find.text(liftType.displayName), findsOneWidget);
-      }
+      // Check for lift type headers in the compact table
+      expect(find.text('Squat'), findsOneWidget);
+      expect(find.text('Bench'), findsOneWidget);
+      expect(find.text('Deadlift'), findsOneWidget);
 
-      expect(find.text('Reps'), findsWidgets);
-      expect(find.text('Best Weight'), findsWidgets);
-
-      expect(find.text('200.0 kg'), findsOneWidget);
-      expect(find.text('180.0 kg'), findsOneWidget);
-      expect(find.text('150.0 kg'), findsOneWidget);
+      // Check for weight values in the table
+      expect(find.text('200 kg'), findsOneWidget);
+      expect(find.text('180 kg'), findsOneWidget);
+      expect(find.text('150 kg'), findsOneWidget);
     });
 
-    testWidgets('should display empty message for lift types with no data', (
-      tester,
-    ) async {
-      when(
-        mockService.getFullRepMaxTable(),
-      ).thenAnswer((_) async => sampleRepMaxTable);
+    testWidgets(
+      'should display table with empty cells for lift types with no data',
+      (tester) async {
+        when(
+          mockService.getFullRepMaxTable(),
+        ).thenAnswer((_) async => sampleRepMaxTable);
 
-      await tester.pumpWidget(createTestWidget());
-      await tester.pumpAndSettle();
+        await tester.pumpWidget(createTestWidget());
+        await tester.pumpAndSettle();
 
-      expect(
-        find.text('No data yet - start logging deadlift lifts!'),
-        findsOneWidget,
-      );
-    });
+        // The table should show all lift column headers
+        expect(find.text('Squat'), findsOneWidget);
+        expect(find.text('Bench'), findsOneWidget);
+        expect(find.text('Deadlift'), findsOneWidget);
+
+        // Empty cells are represented with "—" dash
+        expect(find.text('—'), findsWidgets);
+      },
+    );
 
     testWidgets('should display all rep ranges (1-10) in tables', (
       tester,

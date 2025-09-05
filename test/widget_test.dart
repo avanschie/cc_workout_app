@@ -38,6 +38,8 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(find.text('Powerlifting Tracker'), findsOneWidget);
+
+    // Should show table even with empty data
     expect(find.text('Squat'), findsOneWidget);
     expect(find.text('Bench'), findsOneWidget);
     expect(find.text('Deadlift'), findsOneWidget);
@@ -45,6 +47,7 @@ void main() {
       find.text('—'),
       findsWidgets,
     ); // Should show dashes for empty entries
+
     expect(find.byType(FloatingActionButton), findsOneWidget);
   });
 
