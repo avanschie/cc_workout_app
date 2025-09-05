@@ -6,6 +6,7 @@ import 'package:cc_workout_app/shared/models/lift_type.dart';
 import 'package:cc_workout_app/features/lifts/providers/history_providers.dart';
 import 'package:cc_workout_app/features/lifts/screens/edit_lift_screen.dart';
 import 'package:cc_workout_app/core/utils/snackbar_utils.dart';
+import 'package:cc_workout_app/shared/constants/lift_colors.dart';
 
 class HistoryScreen extends ConsumerWidget {
   const HistoryScreen({super.key});
@@ -315,23 +316,8 @@ class _LiftBadge extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    String abbreviation;
-    Color backgroundColor;
-
-    switch (liftType) {
-      case LiftType.squat:
-        abbreviation = 'SQ';
-        backgroundColor = Colors.blue.shade300;
-        break;
-      case LiftType.bench:
-        abbreviation = 'BP';
-        backgroundColor = Colors.red.shade300;
-        break;
-      case LiftType.deadlift:
-        abbreviation = 'DL';
-        backgroundColor = Colors.green.shade300;
-        break;
-    }
+    final abbreviation = LiftColors.getAbbreviation(liftType);
+    final backgroundColor = LiftColors.getColor(liftType);
 
     return Container(
       width: 32,

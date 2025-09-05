@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:cc_workout_app/shared/models/lift_type.dart';
 import 'package:cc_workout_app/shared/models/rep_max.dart';
+import 'package:cc_workout_app/shared/constants/lift_colors.dart';
 
 class RepMaxTableWidget extends StatelessWidget {
   final Map<LiftType, Map<int, RepMax>> repMaxTable;
@@ -62,14 +63,28 @@ class RepMaxTableWidget extends StatelessWidget {
               flex: 3,
               child: FittedBox(
                 fit: BoxFit.scaleDown,
-                child: Text(
-                  _getShortLiftName(liftType),
-                  style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                    fontWeight: FontWeight.w600,
-                    color: Theme.of(context).colorScheme.onSurface,
-                  ),
-                  textAlign: TextAlign.center,
-                  maxLines: 1,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Container(
+                      width: 4,
+                      height: 16,
+                      decoration: BoxDecoration(
+                        color: LiftColors.getColor(liftType),
+                        borderRadius: BorderRadius.circular(2),
+                      ),
+                    ),
+                    const SizedBox(width: 8),
+                    Text(
+                      _getShortLiftName(liftType),
+                      style: Theme.of(context).textTheme.titleSmall?.copyWith(
+                        fontWeight: FontWeight.w600,
+                        color: Theme.of(context).colorScheme.onSurface,
+                      ),
+                      textAlign: TextAlign.center,
+                      maxLines: 1,
+                    ),
+                  ],
                 ),
               ),
             ),
@@ -128,6 +143,7 @@ class RepMaxTableWidget extends StatelessWidget {
           ...LiftType.values.map((liftType) {
             final repMax = repMaxTable[liftType]?[reps];
             final hasData = repMax != null;
+            final liftColor = LiftColors.getColor(liftType);
 
             return Expanded(
               flex: 3,
@@ -135,17 +151,11 @@ class RepMaxTableWidget extends StatelessWidget {
                 margin: const EdgeInsets.symmetric(horizontal: 3),
                 padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 6),
                 decoration: BoxDecoration(
-                  color: hasData
-                      ? Theme.of(
-                          context,
-                        ).colorScheme.primary.withValues(alpha: 0.05)
-                      : null,
+                  color: hasData ? liftColor.withValues(alpha: 0.08) : null,
                   borderRadius: BorderRadius.circular(6),
                   border: hasData
                       ? Border.all(
-                          color: Theme.of(
-                            context,
-                          ).colorScheme.primary.withValues(alpha: 0.2),
+                          color: liftColor.withValues(alpha: 0.25),
                           width: 1,
                         )
                       : null,
@@ -157,7 +167,7 @@ class RepMaxTableWidget extends StatelessWidget {
                     style: Theme.of(context).textTheme.titleSmall?.copyWith(
                       fontWeight: hasData ? FontWeight.w700 : FontWeight.w400,
                       color: hasData
-                          ? Theme.of(context).colorScheme.primary
+                          ? liftColor.withValues(alpha: 0.9)
                           : Theme.of(
                               context,
                             ).colorScheme.onSurface.withValues(alpha: 0.4),
