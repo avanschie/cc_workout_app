@@ -2,33 +2,49 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:cc_workout_app/core/config/env_config.dart';
-import 'package:cc_workout_app/core/navigation/main_navigation_shell.dart';
+import 'package:cc_workout_app/features/auth/application/providers/auth_providers.dart';
+import 'package:cc_workout_app/features/auth/presentation/screens/auth_gate.dart';
+import 'package:cc_workout_app/features/auth/presentation/screens/sign_in_screen.dart';
+import 'package:cc_workout_app/features/auth/presentation/screens/sign_up_screen.dart';
+import 'package:cc_workout_app/features/auth/presentation/screens/forgot_password_screen.dart';
 import 'package:cc_workout_app/shared/widgets/network_status_banner.dart';
 import 'package:cc_workout_app/shared/widgets/error_boundary.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  // Debug: Check environment variables
-  debugPrint('Supabase URL: ${EnvConfig.supabaseUrl}');
-  debugPrint('Supabase configured: ${EnvConfig.isConfigured}');
-
+  // Check if we have environment configuration, otherwise create production config
   if (!EnvConfig.isConfigured) {
-    debugPrint(
-      'Warning: Supabase not configured via --dart-define. Using fallback values for local development.',
-    );
+    try {
+      // Try to create production config from environment variables
+      final productionConfig = EnvConfig.createProductionConfig();
+      EnvConfig.initialize(Environment.production, productionConfig);
+    } catch (e) {
+      // Fallback to local configuration for development
+      debugPrint('Production config not available, using local config: $e');
+      EnvConfig.initialize(Environment.local, EnvironmentConfig.local);
+    }
   }
 
+  debugPrint('Environment: ${EnvConfig.config.name}');
+  debugPrint('Supabase URL: ${EnvConfig.config.supabaseUrl}');
+
   await Supabase.initialize(
-    url: EnvConfig.supabaseUrl.isEmpty
-        ? 'http://10.0.2.2:54321'
-        : EnvConfig.supabaseUrl,
-    anonKey: EnvConfig.supabaseAnonKey.isEmpty
-        ? 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZS1kZW1vIiwicm9sZSI6ImFub24iLCJleHAiOjE5ODM4MTI5OTZ9.CRXP1A7WOeoJeXxjNni43kdQwgnWNReilDMblYTn_I0'
-        : EnvConfig.supabaseAnonKey,
+    url: EnvConfig.config.supabaseUrl,
+    anonKey: EnvConfig.config.supabaseAnonKey,
   );
 
-  runApp(const ProviderScope(child: ErrorBoundary(child: MainApp())));
+  runApp(
+    ProviderScope(
+      overrides: [
+        // Override the Supabase client provider with the initialized instance
+        supabaseClientProvider.overrideWithValue(Supabase.instance.client),
+        // Add auth repository provider overrides
+        ...getAuthProviderOverrides(),
+      ],
+      child: const ErrorBoundary(child: MainApp()),
+    ),
+  );
 }
 
 class MainApp extends StatelessWidget {
@@ -73,7 +89,15 @@ class MainApp extends StatelessWidget {
         ),
       ),
       themeMode: ThemeMode.system,
-      home: const NetworkStatusBanner(child: MainNavigationShell()),
+      home: const AuthGate(),
+      routes: {
+        '/sign-in': (context) =>
+            const NetworkStatusBanner(child: SignInScreen()),
+        '/sign-up': (context) =>
+            const NetworkStatusBanner(child: SignUpScreen()),
+        '/forgot-password': (context) =>
+            const NetworkStatusBanner(child: ForgotPasswordScreen()),
+      },
     );
   }
 }

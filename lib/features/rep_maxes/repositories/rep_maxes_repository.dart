@@ -19,7 +19,15 @@ class SupabaseRepMaxesRepository implements RepMaxesRepository {
   Future<List<RepMax>> getAllRepMaxes() async {
     return RetryUtils.retry(() async {
       try {
-        final response = await _supabase.from('rep_maxes').select();
+        final userId = _supabase.auth.currentUser?.id;
+        if (userId == null) {
+          throw RepMaxesRepositoryException('User not authenticated');
+        }
+
+        final response = await _supabase
+            .from('rep_maxes')
+            .select()
+            .eq('user_id', userId);
 
         return response
             .map<RepMax>((row) => RepMax.fromSupabaseRow(row))
@@ -35,9 +43,15 @@ class SupabaseRepMaxesRepository implements RepMaxesRepository {
   Future<List<RepMax>> getRepMaxesByLiftType(LiftType liftType) async {
     return RetryUtils.retry(() async {
       try {
+        final userId = _supabase.auth.currentUser?.id;
+        if (userId == null) {
+          throw RepMaxesRepositoryException('User not authenticated');
+        }
+
         final response = await _supabase
             .from('rep_maxes')
             .select()
+            .eq('user_id', userId)
             .eq('lift', liftType.value)
             .order('reps');
 
@@ -55,9 +69,15 @@ class SupabaseRepMaxesRepository implements RepMaxesRepository {
   Future<RepMax?> getRepMaxForLiftAndReps(LiftType liftType, int reps) async {
     return RetryUtils.retry(() async {
       try {
+        final userId = _supabase.auth.currentUser?.id;
+        if (userId == null) {
+          throw RepMaxesRepositoryException('User not authenticated');
+        }
+
         final response = await _supabase
             .from('rep_maxes')
             .select()
+            .eq('user_id', userId)
             .eq('lift', liftType.value)
             .eq('reps', reps)
             .maybeSingle();

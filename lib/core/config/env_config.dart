@@ -6,6 +6,9 @@ class EnvironmentConfig {
     required this.supabaseUrl,
     required this.supabaseAnonKey,
     required this.enableLogging,
+    this.requireEmailVerification = true,
+    this.enableAutoSignIn = false,
+    this.sessionTimeoutMinutes = 60,
   });
 
   final String name;
@@ -13,12 +16,20 @@ class EnvironmentConfig {
   final String supabaseAnonKey;
   final bool enableLogging;
 
+  // Auth-specific settings
+  final bool requireEmailVerification;
+  final bool enableAutoSignIn;
+  final int sessionTimeoutMinutes;
+
   static const local = EnvironmentConfig(
     name: 'Local',
     supabaseUrl: 'http://10.0.2.2:54321',
     supabaseAnonKey:
         'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZS1kZW1vIiwicm9sZSI6ImFub24iLCJleHAiOjE5ODM4MTI5OTZ9.CRXP1A7WOeoJeXxjNni43kdQwgnWNReilDMblYTn_I0',
     enableLogging: true,
+    requireEmailVerification: false, // Skip email verification for local dev
+    enableAutoSignIn: true, // Allow auto sign-in for local dev
+    sessionTimeoutMinutes: 120, // Longer sessions for local dev
   );
 
   static EnvironmentConfig staging({
@@ -29,6 +40,9 @@ class EnvironmentConfig {
     supabaseUrl: supabaseUrl,
     supabaseAnonKey: supabaseAnonKey,
     enableLogging: true,
+    requireEmailVerification: true, // Require email verification in staging
+    enableAutoSignIn: false,
+    sessionTimeoutMinutes: 60,
   );
 
   static EnvironmentConfig production({
@@ -39,6 +53,10 @@ class EnvironmentConfig {
     supabaseUrl: supabaseUrl,
     supabaseAnonKey: supabaseAnonKey,
     enableLogging: false,
+    requireEmailVerification:
+        true, // Always require email verification in production
+    enableAutoSignIn: false,
+    sessionTimeoutMinutes: 30, // Shorter sessions for production security
   );
 }
 

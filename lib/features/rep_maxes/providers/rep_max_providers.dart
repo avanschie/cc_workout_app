@@ -1,13 +1,13 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:cc_workout_app/shared/models/lift_type.dart';
 import 'package:cc_workout_app/shared/models/rep_max.dart';
+import 'package:cc_workout_app/features/auth/application/providers/auth_providers.dart';
 import 'package:cc_workout_app/features/rep_maxes/repositories/rep_maxes_repository.dart';
 import 'package:cc_workout_app/features/rep_maxes/services/rep_max_calculation_service.dart';
 
 final repMaxesRepositoryProvider = Provider<RepMaxesRepository>((ref) {
-  final supabase = Supabase.instance.client;
-  return SupabaseRepMaxesRepository(supabase);
+  final supabaseClient = ref.watch(supabaseClientProvider);
+  return SupabaseRepMaxesRepository(supabaseClient);
 });
 
 final repMaxCalculationServiceProvider = Provider<RepMaxCalculationService>((

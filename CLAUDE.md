@@ -14,6 +14,8 @@
   - `freezed`, `json_serializable` (optional for models)
 - **Architecture**
   - Feature-first folders, repository pattern, Riverpod providers.
+  - 4-layer architecture: data/domain/application/presentation layers.
+  - AsyncNotifier for auth state management following Andrea Bizzotto patterns.
   - Immutable models, DTO mappers for Supabase rows.
 - **Env**
   - Configure `SUPABASE_URL` and `SUPABASE_ANON_KEY` via `--dart-define`.
@@ -44,12 +46,22 @@
   - **Debugging Strategy**: When claiming to fix an issue, ALWAYS verify with tests or reproduction steps before claiming success
   - **Code Quality**: ALWAYS fix ALL warnings from `flutter analyze` - CI treats warnings as failures
   - **State Management**: Avoid mixing TextEditingController with Riverpod state - use either controllers OR state, not both
+  - **Authentication**: Email/password auth with environment-specific behavior:
+    - Local: Auto-login as `john@example.com` (password: `password123`) on app start
+    - Test users: `john@example.com` and `jane@example.com` (both use `password123`)
+    - Auto-login disabled after manual logout (prevents infinite loop, resets on app restart)
+    - Staging: Optional email verification for testing
+    - Production: Mandatory email verification and full security
+  - **Auth Architecture**: 
+    - AsyncNotifier pattern with auth stream as single source of truth
+    - Auth state listener always updates state to prevent deadlocks
+    - Proper error handling and form validation
 
 ---
 
 ## Definitions of Done (MVP)
 
-- User can sign in/out (magic link) and stay signed in.
+- User can sign in/out (email/password) and stay signed in.
 - User can create lift entries with: lift, reps, weight (kg), date.
 - Data persists in Supabase with RLS (only owner can read/write).
 - Rep Maxes screen shows best weight per rep (1–10) for S/B/D.

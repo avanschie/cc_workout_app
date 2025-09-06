@@ -96,16 +96,24 @@
 ## Phase 4: Authentication Feature
 
 ### 4.1 Auth State Management
-- [ ] Create Riverpod providers for auth state
-- [ ] Implement sign in with magic link
-- [ ] Implement sign out functionality
-- [ ] Handle persistent sessions
+- [x] Create Riverpod providers for auth state (AsyncNotifier pattern with AuthController)
+- [x] Implement sign in with email/password (replaced magic link with better UX)
+- [x] Implement sign up with email/password/display name
+- [x] Implement password reset functionality
+- [x] Implement sign out functionality
+- [x] Handle persistent sessions with environment-specific behavior
+- [x] Add auto-login for local development environment
 
 ### 4.2 Auth UI
-- [ ] Create sign-in screen with email input
-- [ ] Add loading states and error handling
-- [ ] Create email verification prompt screen
-- [ ] Implement navigation flow for authenticated/unauthenticated states
+- [x] Create sign-in screen with email/password input and validation
+- [x] Create sign-up screen with form validation and password strength indicator
+- [x] Create forgot password screen with step-by-step instructions
+- [x] Create auth loading screen with environment indicators
+- [x] Add comprehensive loading states and error handling with specific error messages
+- [x] Create AuthGate for routing between auth/main app based on auth state
+- [x] Implement navigation flow for authenticated/unauthenticated states
+- [x] Add reusable form components with real-time validation
+- [x] Integrate with MainNavigationShell (user menu, sign out, profile display)
 
 ## Phase 5: Lifts Feature (Data Entry)
 

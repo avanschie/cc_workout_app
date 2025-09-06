@@ -5,6 +5,8 @@ import 'package:cc_workout_app/features/rep_maxes/providers/rep_max_providers.da
 import 'package:cc_workout_app/features/lifts/screens/add_lift_screen.dart';
 import 'package:cc_workout_app/features/lifts/screens/history_screen.dart';
 import 'package:cc_workout_app/features/lifts/providers/history_providers.dart';
+import 'package:cc_workout_app/features/auth/application/providers/auth_providers.dart';
+import 'package:cc_workout_app/core/utils/snackbar_utils.dart';
 
 /// Provider to track the current navigation tab index
 final navigationIndexProvider = StateProvider<int>((ref) => 0);
@@ -24,8 +26,72 @@ class MainNavigationShell extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final currentIndex = ref.watch(navigationIndexProvider);
+    final currentUser = ref.watch(currentUserProvider);
+    final theme = Theme.of(context);
 
     return Scaffold(
+      appBar: AppBar(
+        title: const Text('Rep Max Tracker'),
+        actions: [
+          // User menu with sign out option
+          PopupMenuButton<String>(
+            tooltip: 'User menu',
+            icon: CircleAvatar(
+              radius: 16,
+              backgroundColor: theme.colorScheme.primary,
+              child: Icon(
+                Icons.person,
+                size: 20,
+                color: theme.colorScheme.onPrimary,
+              ),
+            ),
+            onSelected: (value) => _handleMenuAction(context, ref, value),
+            itemBuilder: (context) => [
+              PopupMenuItem(
+                value: 'profile',
+                child: Row(
+                  children: [
+                    const Icon(Icons.person_outline),
+                    const SizedBox(width: 12),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Text(
+                          currentUser?.displayName ??
+                              currentUser?.email ??
+                              'User',
+                          style: theme.textTheme.bodyMedium?.copyWith(
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                        if (currentUser?.displayName != null)
+                          Text(
+                            currentUser!.email,
+                            style: theme.textTheme.bodySmall?.copyWith(
+                              color: theme.colorScheme.onSurfaceVariant,
+                            ),
+                          ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+              const PopupMenuDivider(),
+              const PopupMenuItem(
+                value: 'sign_out',
+                child: Row(
+                  children: [
+                    Icon(Icons.logout),
+                    SizedBox(width: 12),
+                    Text('Sign Out'),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
       body: IndexedStack(
         index: currentIndex,
         children: [
@@ -67,6 +133,58 @@ class MainNavigationShell extends ConsumerWidget {
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
     );
+  }
+
+  /// Handles user menu actions
+  void _handleMenuAction(BuildContext context, WidgetRef ref, String action) {
+    switch (action) {
+      case 'profile':
+        // Future: Navigate to profile screen
+        SnackBarUtils.showInfo(context, 'Profile screen coming soon!');
+        break;
+      case 'sign_out':
+        _handleSignOut(context, ref);
+        break;
+    }
+  }
+
+  /// Handles the sign out action with confirmation dialog
+  Future<void> _handleSignOut(BuildContext context, WidgetRef ref) async {
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Sign Out'),
+        content: const Text('Are you sure you want to sign out?'),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(false),
+            child: const Text('Cancel'),
+          ),
+          FilledButton(
+            onPressed: () => Navigator.of(context).pop(true),
+            child: const Text('Sign Out'),
+          ),
+        ],
+      ),
+    );
+
+    if (confirmed == true) {
+      try {
+        final authController = ref.read(authControllerProvider);
+        await authController.signOut();
+
+        if (context.mounted) {
+          SnackBarUtils.showSuccess(context, 'Signed out successfully');
+        }
+      } catch (e) {
+        if (context.mounted) {
+          SnackBarUtils.showError(
+            context,
+            'Failed to sign out. Please try again.',
+          );
+        }
+      }
+    }
   }
 
   /// Handles the add lift action by navigating to AddLiftScreen

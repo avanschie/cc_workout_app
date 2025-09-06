@@ -6,10 +6,6 @@
       "request": "launch",
       "type": "dart",
       "program": "lib/main_local.dart",
-      "args": [
-        "--flavor",
-        "development"
-      ],
       "console": "debugConsole"
     },
     {

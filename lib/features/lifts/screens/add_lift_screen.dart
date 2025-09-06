@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 import 'package:cc_workout_app/shared/models/lift_type.dart';
+import 'package:cc_workout_app/features/auth/application/providers/auth_providers.dart';
 import 'package:cc_workout_app/features/lifts/providers/add_lift_form_providers.dart';
 import 'package:cc_workout_app/features/lifts/providers/lift_entries_providers.dart';
 import 'package:cc_workout_app/core/utils/snackbar_utils.dart';
@@ -256,9 +257,21 @@ class _AddLiftScreenState extends ConsumerState<AddLiftScreen> {
     }
 
     try {
-      // For development: use hardcoded test user (RLS disabled)
-      const devUserId = '550e8400-e29b-41d4-a716-446655440001';
-      final liftEntry = validatedFormState.toLiftEntry(devUserId);
+      // Get the current authenticated user
+      final authState = ref.read(authStateProvider);
+      final currentUser = authState.valueOrNull;
+
+      if (currentUser == null) {
+        if (mounted) {
+          SnackBarUtils.showError(
+            context,
+            'You must be signed in to add lifts',
+          );
+        }
+        return;
+      }
+
+      final liftEntry = validatedFormState.toLiftEntry(currentUser.id);
 
       if (liftEntry != null) {
         await createLiftNotifier.createLiftEntry(liftEntry);
