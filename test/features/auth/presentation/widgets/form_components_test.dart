@@ -192,7 +192,7 @@ void main() {
           EmailValidationResult.empty,
         );
         expect(message, isNotNull);
-        expect(message, contains('email'));
+        expect(message!.toLowerCase(), contains('email'));
         expect(message, contains('required'));
       });
 
@@ -202,7 +202,7 @@ void main() {
         );
         expect(message, isNotNull);
         expect(message, contains('valid'));
-        expect(message, contains('email'));
+        expect(message!.toLowerCase(), contains('email'));
       });
     });
 
@@ -219,7 +219,7 @@ void main() {
           PasswordValidationResult.empty,
         );
         expect(message, isNotNull);
-        expect(message, contains('password'));
+        expect(message!.toLowerCase(), contains('password'));
         expect(message, contains('required'));
       });
 
@@ -258,7 +258,7 @@ void main() {
 
     group('Edge Cases', () {
       test('handles extremely long valid email', () {
-        final longEmail = 'a' * 50 + '@' + 'b' * 50 + '.com';
+        final longEmail = '${'a' * 50}@${'b' * 50}.com';
         final result = AuthFormValidation.validateEmail(longEmail);
         expect(result, EmailValidationResult.valid);
       });

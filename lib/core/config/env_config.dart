@@ -40,7 +40,8 @@ class EnvironmentConfig {
     supabaseUrl: supabaseUrl,
     supabaseAnonKey: supabaseAnonKey,
     enableLogging: true,
-    requireEmailVerification: true, // Require email verification in staging
+    requireEmailVerification:
+        true, // Required for tests - disable in Supabase dashboard if needed
     enableAutoSignIn: false,
     sessionTimeoutMinutes: 60,
   );

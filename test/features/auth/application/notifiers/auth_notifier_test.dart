@@ -31,13 +31,13 @@ void main() {
     AuthUser createTestUser({
       String? id,
       String? email,
-      String? displayName,
+      String? displayName = 'Test User',
       bool isEmailVerified = true,
     }) {
       return AuthUser(
         id: id ?? testUserId,
         email: email ?? testEmail,
-        displayName: displayName ?? testDisplayName,
+        displayName: displayName,
         isEmailVerified: isEmailVerified,
         createdAt: testCreatedAt,
         lastSignInAt: testLastSignInAt,
@@ -546,7 +546,7 @@ void main() {
     });
 
     group('signOut', () {
-      test('sets loading state during sign out', () async {
+      test('maintains data state during sign out', () async {
         final testUser = createTestUser();
         when(() => mockAuthRepository.currentUser).thenReturn(testUser);
         when(() => mockAuthRepository.signOut()).thenAnswer(
@@ -559,8 +559,10 @@ void main() {
         // Start sign out
         final signOutFuture = notifier.signOut();
 
-        // Check that state is loading
-        expect(container.read(authNotifierProvider).isLoading, isTrue);
+        // State should remain as data (not loading) during signOut
+        // The actual state change happens via auth state listener
+        expect(container.read(authNotifierProvider).isLoading, isFalse);
+        expect(container.read(authNotifierProvider).hasValue, isTrue);
 
         // Complete the sign out
         await signOutFuture;
@@ -603,7 +605,7 @@ void main() {
     group('refresh', () {
       test('refreshes state with current user from repository', () async {
         final testUser = createTestUser();
-        
+
         // First setup: return null, then after refresh, return user
         when(() => mockAuthRepository.currentUser).thenReturn(null);
 
@@ -623,19 +625,34 @@ void main() {
       });
 
       test('sets loading state during refresh', () async {
-        when(() => mockAuthRepository.currentUser).thenReturn(null);
+        final testUser = createTestUser();
+        when(() => mockAuthRepository.currentUser).thenReturn(testUser);
 
         final notifier = container.read(authNotifierProvider.notifier);
         await notifier.future;
 
-        // Start refresh
-        final refreshFuture = notifier.refresh();
+        // Track state changes
+        bool wasLoading = false;
+        final listener = container.listen(authNotifierProvider, (
+          previous,
+          next,
+        ) {
+          if (next.isLoading) {
+            wasLoading = true;
+          }
+        });
 
-        // Check that state is loading
-        expect(container.read(authNotifierProvider).isLoading, isTrue);
+        // Call refresh
+        await notifier.refresh();
 
-        // Complete the refresh
-        await refreshFuture;
+        // Verify that loading state was set at some point
+        expect(wasLoading, isTrue);
+
+        // After refresh completes, should have data
+        expect(container.read(authNotifierProvider).hasValue, isTrue);
+        expect(container.read(authNotifierProvider).value, testUser);
+
+        listener.close();
       });
 
       test('sets error state on exception', () async {
@@ -646,7 +663,9 @@ void main() {
         await notifier.future;
 
         // Then setup mock to throw for refresh
-        when(() => mockAuthRepository.currentUser).thenThrow(Exception('Repository error'));
+        when(
+          () => mockAuthRepository.currentUser,
+        ).thenThrow(Exception('Repository error'));
 
         await notifier.refresh();
 

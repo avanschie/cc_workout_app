@@ -48,7 +48,10 @@
   - **State Management**: Avoid mixing TextEditingController with Riverpod state - use either controllers OR state, not both
   - **Authentication**: Email/password auth with environment-specific behavior:
     - Local: Auto-login as `john@example.com` (password: `password123`) on app start
-    - Test users: `john@example.com` and `jane@example.com` (both use `password123`)
+    - Local test users: `john@example.com` and `jane@example.com` (both use `password123`)
+    - **IMPORTANT for Staging/Production**: Cannot use `example.com` domain - Supabase blocks these as invalid
+      - Use real-looking emails like `testuser@gmail.com`, `john.doe@test.com`, etc.
+      - You don't need to own the email address for testing (unless email verification is enabled)
     - Auto-login disabled after manual logout (prevents infinite loop, resets on app restart)
     - Staging: Optional email verification for testing
     - Production: Mandatory email verification and full security

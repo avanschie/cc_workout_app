@@ -8,9 +8,8 @@ import 'package:supabase_flutter/supabase_flutter.dart'
     show AuthException;
 import 'package:cc_workout_app/core/config/env_config.dart';
 import 'package:cc_workout_app/features/auth/data/repositories/supabase_auth_repository.dart';
-import 'package:cc_workout_app/features/auth/domain/entities/auth_user.dart'
-    as domain;
-import 'package:cc_workout_app/features/auth/domain/exceptions/auth_exceptions.dart';
+import 'package:cc_workout_app/features/auth/domain/exceptions/auth_exceptions.dart'
+    as domain_exceptions;
 
 // Mock classes
 class MockSupabaseClient extends Mock implements SupabaseClient {}
@@ -23,7 +22,6 @@ void main() {
   group('SupabaseAuthRepository', () {
     late MockSupabaseClient mockSupabaseClient;
     late MockGoTrueClient mockAuth;
-    late MockEnvConfig mockEnvConfig;
     late SupabaseAuthRepository repository;
     late StreamController<AuthState> authStateController;
 
@@ -65,7 +63,7 @@ void main() {
 
     setUpAll(() {
       // Register fallback values for mocktail
-      registerFallbackValue(const OtpType.magiclink());
+      registerFallbackValue(OtpType.magiclink);
     });
 
     setUp(() {
@@ -78,12 +76,18 @@ void main() {
         () => mockAuth.onAuthStateChange,
       ).thenAnswer((_) => authStateController.stream);
 
+      // Mock currentUser to return null by default (needed for constructor)
+      when(() => mockAuth.currentUser).thenReturn(null);
+
+      // Mock currentSession to return null by default (needed for constructor)
+      when(() => mockAuth.currentSession).thenReturn(null);
+
       repository = SupabaseAuthRepository(mockSupabaseClient);
     });
 
     tearDown(() {
-      authStateController.close();
       repository.dispose();
+      authStateController.close();
     });
 
     group('currentUser', () {
@@ -93,7 +97,9 @@ void main() {
         final result = repository.currentUser;
 
         expect(result, isNull);
-        verify(() => mockAuth.currentUser).called(1);
+        verify(
+          () => mockAuth.currentUser,
+        ).called(2); // Once in constructor, once in getter
       });
 
       test('returns domain AuthUser when user is signed in', () {
@@ -106,7 +112,9 @@ void main() {
         expect(result!.id, testId);
         expect(result.email, testEmail);
         expect(result.displayName, testDisplayName);
-        verify(() => mockAuth.currentUser).called(1);
+        verify(
+          () => mockAuth.currentUser,
+        ).called(2); // Once in constructor, once in getter
       });
 
       test('handles user with null email', () {
@@ -210,7 +218,7 @@ void main() {
       });
 
       test(
-        'throws InvalidCredentialsException on invalid credentials',
+        'throws domain_exceptions.InvalidCredentialsException on invalid credentials',
         () async {
           when(
             () => mockAuth.signInWithOtp(
@@ -227,7 +235,7 @@ void main() {
           expect(
             () => repository.signInWithMagicLink(testEmail),
             throwsA(
-              isA<InvalidCredentialsException>().having(
+              isA<domain_exceptions.InvalidCredentialsException>().having(
                 (e) => e.code,
                 'code',
                 '400',
@@ -237,59 +245,71 @@ void main() {
         },
       );
 
-      test('throws UserNotFoundException on user not found', () async {
-        when(
-          () => mockAuth.signInWithOtp(
-            email: any(named: 'email'),
-            shouldCreateUser: any(named: 'shouldCreateUser'),
-          ),
-        ).thenThrow(
-          const supabase.AuthException('User not found', statusCode: '404'),
-        );
+      test(
+        'throws domain_exceptions.UserNotFoundException on user not found',
+        () async {
+          when(
+            () => mockAuth.signInWithOtp(
+              email: any(named: 'email'),
+              shouldCreateUser: any(named: 'shouldCreateUser'),
+            ),
+          ).thenThrow(
+            const supabase.AuthException('User not found', statusCode: '404'),
+          );
 
-        expect(
-          () => repository.signInWithMagicLink(testEmail),
-          throwsA(isA<UserNotFoundException>()),
-        );
-      });
+          expect(
+            () => repository.signInWithMagicLink(testEmail),
+            throwsA(isA<domain_exceptions.UserNotFoundException>()),
+          );
+        },
+      );
 
-      test('throws TooManyRequestsException on rate limit', () async {
-        when(
-          () => mockAuth.signInWithOtp(
-            email: any(named: 'email'),
-            shouldCreateUser: any(named: 'shouldCreateUser'),
-          ),
-        ).thenThrow(
-          const supabase.AuthException('Too many requests', statusCode: '429'),
-        );
+      test(
+        'throws domain_exceptions.TooManyRequestsException on rate limit',
+        () async {
+          when(
+            () => mockAuth.signInWithOtp(
+              email: any(named: 'email'),
+              shouldCreateUser: any(named: 'shouldCreateUser'),
+            ),
+          ).thenThrow(
+            const supabase.AuthException(
+              'Too many requests',
+              statusCode: '429',
+            ),
+          );
 
-        expect(
-          () => repository.signInWithMagicLink(testEmail),
-          throwsA(isA<TooManyRequestsException>()),
-        );
-      });
+          expect(
+            () => repository.signInWithMagicLink(testEmail),
+            throwsA(isA<domain_exceptions.TooManyRequestsException>()),
+          );
+        },
+      );
 
-      test('throws UnknownAuthException on generic exception', () async {
-        when(
-          () => mockAuth.signInWithOtp(
-            email: any(named: 'email'),
-            shouldCreateUser: any(named: 'shouldCreateUser'),
-          ),
-        ).thenThrow(Exception('Network error'));
+      test(
+        'throws domain_exceptions.UnknownAuthException on generic exception',
+        () async {
+          when(
+            () => mockAuth.signInWithOtp(
+              email: any(named: 'email'),
+              shouldCreateUser: any(named: 'shouldCreateUser'),
+            ),
+          ).thenThrow(Exception('Network error'));
 
-        expect(
-          () => repository.signInWithMagicLink(testEmail),
-          throwsA(
-            isA<UnknownAuthException>().having(
-              (e) => e.message,
-              'message',
-              contains(
-                'An unexpected error occurred during magic link sign in',
+          expect(
+            () => repository.signInWithMagicLink(testEmail),
+            throwsA(
+              isA<domain_exceptions.UnknownAuthException>().having(
+                (e) => e.message,
+                'message',
+                contains(
+                  'An unexpected error occurred during magic link sign in',
+                ),
               ),
             ),
-          ),
-        );
-      });
+          );
+        },
+      );
     });
 
     group('signUpWithEmailPassword', () {
@@ -346,70 +366,79 @@ void main() {
         ).called(1);
       });
 
-      test('throws UnknownAuthException when no user returned', () async {
-        when(
-          () => mockAuth.signUp(
-            email: any(named: 'email'),
-            password: any(named: 'password'),
-            data: any(named: 'data'),
-          ),
-        ).thenAnswer((_) async => createAuthResponse(null));
-
-        expect(
-          () => repository.signUpWithEmailPassword(
-            email: testEmail,
-            password: testPassword,
-          ),
-          throwsA(
-            isA<UnknownAuthException>().having(
-              (e) => e.message,
-              'message',
-              'Sign up failed: no user returned',
+      test(
+        'throws domain_exceptions.UnknownAuthException when no user returned',
+        () async {
+          when(
+            () => mockAuth.signUp(
+              email: any(named: 'email'),
+              password: any(named: 'password'),
+              data: any(named: 'data'),
             ),
-          ),
-        );
-      });
+          ).thenAnswer((_) async => createAuthResponse(null));
 
-      test('throws UserAlreadyExistsException on existing user', () async {
-        when(
-          () => mockAuth.signUp(
-            email: any(named: 'email'),
-            password: any(named: 'password'),
-            data: any(named: 'data'),
-          ),
-        ).thenThrow(
-          const supabase.AuthException(
-            'User already registered',
-            statusCode: '422',
-          ),
-        );
+          expect(
+            () => repository.signUpWithEmailPassword(
+              email: testEmail,
+              password: testPassword,
+            ),
+            throwsA(
+              isA<domain_exceptions.UnknownAuthException>().having(
+                (e) => e.message,
+                'message',
+                contains('Sign up failed: no user returned'),
+              ),
+            ),
+          );
+        },
+      );
 
-        expect(
-          () => repository.signUpWithEmailPassword(
-            email: testEmail,
-            password: testPassword,
-          ),
-          throwsA(isA<UserAlreadyExistsException>()),
-        );
-      });
+      test(
+        'throws domain_exceptions.UserAlreadyExistsException on existing user',
+        () async {
+          when(
+            () => mockAuth.signUp(
+              email: any(named: 'email'),
+              password: any(named: 'password'),
+              data: any(named: 'data'),
+            ),
+          ).thenThrow(
+            const supabase.AuthException(
+              'User already registered',
+              statusCode: '422',
+            ),
+          );
 
-      test('throws WeakPasswordException on weak password', () async {
-        when(
-          () => mockAuth.signUp(
-            email: any(named: 'email'),
-            password: any(named: 'password'),
-            data: any(named: 'data'),
-          ),
-        ).thenThrow(const supabase.AuthException('Password is too weak'));
+          expect(
+            () => repository.signUpWithEmailPassword(
+              email: testEmail,
+              password: testPassword,
+            ),
+            throwsA(isA<domain_exceptions.UserAlreadyExistsException>()),
+          );
+        },
+      );
 
-        expect(
-          () => repository.signUpWithEmailPassword(
-            email: testEmail,
-            password: testPassword,
-          ),
-          throwsA(isA<WeakPasswordException>()),
-        );
-      });
+      test(
+        'throws domain_exceptions.WeakPasswordException on weak password',
+        () async {
+          when(
+            () => mockAuth.signUp(
+              email: any(named: 'email'),
+              password: any(named: 'password'),
+              data: any(named: 'data'),
+            ),
+          ).thenThrow(const supabase.AuthException('Password is too weak'));
+
+          expect(
+            () => repository.signUpWithEmailPassword(
+              email: testEmail,
+              password: testPassword,
+            ),
+            throwsA(isA<domain_exceptions.WeakPasswordException>()),
+          );
+        },
+      );
     });
 
     group('signInWithEmailPassword', () {
@@ -438,7 +467,7 @@ void main() {
       });
 
       test(
-        'throws InvalidCredentialsException when no user returned',
+        'throws domain_exceptions.InvalidCredentialsException when no user returned',
         () async {
           when(
             () => mockAuth.signInWithPassword(
@@ -452,32 +481,35 @@ void main() {
               email: testEmail,
               password: testPassword,
             ),
-            throwsA(isA<InvalidCredentialsException>()),
+            throwsA(isA<domain_exceptions.InvalidCredentialsException>()),
           );
         },
       );
 
-      test('throws InvalidCredentialsException on auth exception', () async {
-        when(
-          () => mockAuth.signInWithPassword(
-            email: any(named: 'email'),
-            password: any(named: 'password'),
-          ),
-        ).thenThrow(
-          const supabase.AuthException(
-            'Invalid email or password',
-            statusCode: '400',
-          ),
-        );
+      test(
+        'throws domain_exceptions.InvalidCredentialsException on auth exception',
+        () async {
+          when(
+            () => mockAuth.signInWithPassword(
+              email: any(named: 'email'),
+              password: any(named: 'password'),
+            ),
+          ).thenThrow(
+            const supabase.AuthException(
+              'Invalid email or password',
+              statusCode: '400',
+            ),
+          );
 
-        expect(
-          () => repository.signInWithEmailPassword(
-            email: testEmail,
-            password: testPassword,
-          ),
-          throwsA(isA<InvalidCredentialsException>()),
-        );
-      });
+          expect(
+            () => repository.signInWithEmailPassword(
+              email: testEmail,
+              password: testPassword,
+            ),
+            throwsA(isA<domain_exceptions.InvalidCredentialsException>()),
+          );
+        },
+      );
     });
 
     group('sendPasswordResetEmail', () {
@@ -498,28 +530,31 @@ void main() {
 
         expect(
           () => repository.sendPasswordResetEmail(testEmail),
-          throwsA(isA<UserNotFoundException>()),
+          throwsA(isA<domain_exceptions.UserNotFoundException>()),
         );
       });
 
-      test('throws UnknownAuthException on generic exception', () async {
-        when(
-          () => mockAuth.resetPasswordForEmail(any()),
-        ).thenThrow(Exception('Network error'));
+      test(
+        'throws domain_exceptions.UnknownAuthException on generic exception',
+        () async {
+          when(
+            () => mockAuth.resetPasswordForEmail(any()),
+          ).thenThrow(Exception('Network error'));
 
-        expect(
-          () => repository.sendPasswordResetEmail(testEmail),
-          throwsA(
-            isA<UnknownAuthException>().having(
-              (e) => e.message,
-              'message',
-              contains(
-                'An unexpected error occurred while sending password reset email',
+          expect(
+            () => repository.sendPasswordResetEmail(testEmail),
+            throwsA(
+              isA<domain_exceptions.UnknownAuthException>().having(
+                (e) => e.message,
+                'message',
+                contains(
+                  'An unexpected error occurred while sending password reset email',
+                ),
               ),
             ),
-          ),
-        );
-      });
+          );
+        },
+      );
     });
 
     group('signOut', () {
@@ -538,24 +573,27 @@ void main() {
 
         expect(
           () => repository.signOut(),
-          throwsA(isA<InvalidSessionException>()),
+          throwsA(isA<domain_exceptions.InvalidSessionException>()),
         );
       });
 
-      test('throws UnknownAuthException on generic exception', () async {
-        when(() => mockAuth.signOut()).thenThrow(Exception('Network error'));
+      test(
+        'throws domain_exceptions.UnknownAuthException on generic exception',
+        () async {
+          when(() => mockAuth.signOut()).thenThrow(Exception('Network error'));
 
-        expect(
-          () => repository.signOut(),
-          throwsA(
-            isA<UnknownAuthException>().having(
-              (e) => e.message,
-              'message',
-              contains('An unexpected error occurred during sign out'),
+          expect(
+            () => repository.signOut(),
+            throwsA(
+              isA<domain_exceptions.UnknownAuthException>().having(
+                (e) => e.message,
+                'message',
+                contains('An unexpected error occurred during sign out'),
+              ),
             ),
-          ),
-        );
-      });
+          );
+        },
+      );
     });
 
     group('refreshSession', () {
@@ -591,16 +629,19 @@ void main() {
         verify(() => mockAuth.refreshSession()).called(1);
       });
 
-      test('throws InvalidSessionException on session errors', () async {
-        when(() => mockAuth.refreshSession()).thenThrow(
-          const supabase.AuthException('Session expired', statusCode: '401'),
-        );
+      test(
+        'throws domain_exceptions.InvalidSessionException on session errors',
+        () async {
+          when(() => mockAuth.refreshSession()).thenThrow(
+            const supabase.AuthException('Session expired', statusCode: '401'),
+          );
 
-        expect(
-          () => repository.refreshSession(),
-          throwsA(isA<InvalidSessionException>()),
-        );
-      });
+          expect(
+            () => repository.refreshSession(),
+            throwsA(isA<domain_exceptions.InvalidSessionException>()),
+          );
+        },
+      );
     });
 
     group('Exception Mapping', () {
@@ -609,114 +650,117 @@ void main() {
           // Invalid credentials
           (
             const supabase.AuthException('invalid login credentials'),
-            InvalidCredentialsException,
+            domain_exceptions.InvalidCredentialsException,
           ),
           (
             const supabase.AuthException('invalid email or password'),
-            InvalidCredentialsException,
+            domain_exceptions.InvalidCredentialsException,
           ),
           (
             const supabase.AuthException('some error', statusCode: '400'),
-            InvalidCredentialsException,
+            domain_exceptions.InvalidCredentialsException,
           ),
 
           // User not found
           (
             const supabase.AuthException('user not found'),
-            UserNotFoundException,
+            domain_exceptions.UserNotFoundException,
           ),
           (
             const supabase.AuthException('error', statusCode: '404'),
-            UserNotFoundException,
+            domain_exceptions.UserNotFoundException,
           ),
 
           // User already exists
           (
             const supabase.AuthException('user already registered'),
-            UserAlreadyExistsException,
+            domain_exceptions.UserAlreadyExistsException,
           ),
           (
             const supabase.AuthException('email already registered'),
-            UserAlreadyExistsException,
+            domain_exceptions.UserAlreadyExistsException,
           ),
           (
             const supabase.AuthException('error', statusCode: '422'),
-            UserAlreadyExistsException,
+            domain_exceptions.UserAlreadyExistsException,
           ),
 
           // Email not confirmed
           (
             const supabase.AuthException('email not confirmed'),
-            EmailNotConfirmedException,
+            domain_exceptions.EmailNotConfirmedException,
           ),
           (
             const supabase.AuthException('email confirmation required'),
-            EmailNotConfirmedException,
+            domain_exceptions.EmailNotConfirmedException,
           ),
 
           // Weak password
           (
             const supabase.AuthException('password is too weak'),
-            WeakPasswordException,
+            domain_exceptions.WeakPasswordException,
           ),
           (
             const supabase.AuthException('weak password'),
-            WeakPasswordException,
+            domain_exceptions.WeakPasswordException,
           ),
 
           // Invalid email
           (
             const supabase.AuthException('invalid email format'),
-            InvalidEmailException,
+            domain_exceptions.InvalidEmailException,
           ),
           (
             const supabase.AuthException('invalid email'),
-            InvalidEmailException,
+            domain_exceptions.InvalidEmailException,
           ),
 
           // Too many requests
           (
             const supabase.AuthException('too many requests'),
-            TooManyRequestsException,
+            domain_exceptions.TooManyRequestsException,
           ),
           (
             const supabase.AuthException('rate limit'),
-            TooManyRequestsException,
+            domain_exceptions.TooManyRequestsException,
           ),
           (
             const supabase.AuthException('error', statusCode: '429'),
-            TooManyRequestsException,
+            domain_exceptions.TooManyRequestsException,
           ),
 
           // Service unavailable
           (
             const supabase.AuthException('service unavailable'),
-            ServiceUnavailableException,
+            domain_exceptions.ServiceUnavailableException,
           ),
           (
             const supabase.AuthException('error', statusCode: '503'),
-            ServiceUnavailableException,
+            domain_exceptions.ServiceUnavailableException,
           ),
           (
             const supabase.AuthException('error', statusCode: '500'),
-            ServiceUnavailableException,
+            domain_exceptions.ServiceUnavailableException,
           ),
 
           // Invalid session
           (
             const supabase.AuthException('session expired'),
-            InvalidSessionException,
+            domain_exceptions.InvalidSessionException,
           ),
           (
             const supabase.AuthException('session invalid'),
-            InvalidSessionException,
+            domain_exceptions.InvalidSessionException,
           ),
 
           // Network error
-          (const supabase.AuthException('network error'), NetworkAuthException),
+          (
+            const supabase.AuthException('network error'),
+            domain_exceptions.NetworkAuthException,
+          ),
           (
             const supabase.AuthException('connection error'),
-            NetworkAuthException,
+            domain_exceptions.NetworkAuthException,
           ),
         ];
 
@@ -731,7 +775,7 @@ void main() {
           expect(
             () => repository.signInWithMagicLink(testEmail),
             throwsA(
-              isA<AuthException>().having(
+              isA<domain_exceptions.AuthException>().having(
                 (e) => e.runtimeType,
                 'type',
                 expectedExceptionType,
@@ -743,29 +787,32 @@ void main() {
         }
       });
 
-      test('maps unknown auth exceptions to UnknownAuthException', () {
-        const unknownException = supabase.AuthException(
-          'Some unknown error message',
-        );
+      test(
+        'maps unknown auth exceptions to domain_exceptions.UnknownAuthException',
+        () {
+          const unknownException = supabase.AuthException(
+            'Some unknown error message',
+          );
 
-        when(
-          () => mockAuth.signInWithOtp(
-            email: any(named: 'email'),
-            shouldCreateUser: any(named: 'shouldCreateUser'),
-          ),
-        ).thenThrow(unknownException);
-
-        expect(
-          () => repository.signInWithMagicLink(testEmail),
-          throwsA(
-            isA<UnknownAuthException>().having(
-              (e) => e.message,
-              'message',
-              unknownException.message,
+          when(
+            () => mockAuth.signInWithOtp(
+              email: any(named: 'email'),
+              shouldCreateUser: any(named: 'shouldCreateUser'),
             ),
-          ),
-        );
-      });
+          ).thenThrow(unknownException);
+
+          expect(
+            () => repository.signInWithMagicLink(testEmail),
+            throwsA(
+              isA<domain_exceptions.UnknownAuthException>().having(
+                (e) => e.message,
+                'message',
+                unknownException.message,
+              ),
+            ),
+          );
+        },
+      );
     });
 
     group('Environment Configuration', () {
@@ -817,13 +864,14 @@ void main() {
 
     group('Dispose', () {
       test('closes auth state stream controller', () {
-        // Verify that dispose doesn't throw
+        // First disposal should work
         expect(() => repository.dispose(), returnsNormally);
 
-        // After dispose, the auth state stream should be closed
-        repository.dispose();
+        // Second disposal should also work (idempotent)
+        expect(() => repository.dispose(), returnsNormally);
 
-        // Try to add to stream - should not cause issues
+        // The mock's stream controller should still be usable
+        // (repository has its own internal controller that gets closed)
         expect(
           () => authStateController.add(
             AuthState(AuthChangeEvent.signedOut, null),

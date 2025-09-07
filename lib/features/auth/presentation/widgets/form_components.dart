@@ -15,7 +15,7 @@ class AuthFormValidation {
 
   /// Email validation regex pattern
   static final RegExp _emailPattern = RegExp(
-    r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$',
+    r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9]+([.-]?[a-zA-Z0-9]+)*\.[a-zA-Z]{2,}$',
   );
 
   /// Validates email format
@@ -166,6 +166,7 @@ class _AuthEmailFieldState extends State<AuthEmailField> {
     }
 
     return TextFormField(
+      key: const Key('email_field'),
       controller: _controller,
       enabled: widget.enabled,
       autofocus: widget.autofocus,
@@ -313,6 +314,11 @@ class _AuthPasswordFieldState extends State<AuthPasswordField> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         TextFormField(
+          key: Key(
+            widget.isConfirmationField
+                ? 'confirm_password_field'
+                : 'password_field',
+          ),
           controller: _controller,
           enabled: widget.enabled,
           autofocus: widget.autofocus,
@@ -480,6 +486,7 @@ class _AuthDisplayNameFieldState extends State<AuthDisplayNameField> {
   @override
   Widget build(BuildContext context) {
     return TextFormField(
+      key: const Key('display_name_field'),
       controller: _controller,
       enabled: widget.enabled,
       autofocus: widget.autofocus,

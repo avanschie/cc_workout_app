@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:flutter/foundation.dart';
 import 'package:supabase_flutter/supabase_flutter.dart' hide AuthException;
 import 'package:supabase_flutter/supabase_flutter.dart'
     as supabase
@@ -14,6 +15,7 @@ import '../models/auth_user_dto.dart';
 class SupabaseAuthRepository implements AuthRepository {
   final SupabaseClient _supabase;
   StreamController<domain.AuthUser?>? _authStateController;
+  StreamSubscription<AuthState>? _authStateSubscription;
 
   SupabaseAuthRepository(this._supabase) {
     _initializeAuthStateStream();
@@ -22,8 +24,44 @@ class SupabaseAuthRepository implements AuthRepository {
   void _initializeAuthStateStream() {
     _authStateController = StreamController<domain.AuthUser?>.broadcast();
 
+    // Check initial session on repository creation
+    if (kDebugMode) {
+      final initialSession = _supabase.auth.currentSession;
+      debugPrint(
+        'DEBUG Auth Repository: Initial session on creation: ${initialSession?.user.email}',
+      );
+      debugPrint(
+        'DEBUG Auth Repository: Initial session token present: ${initialSession?.accessToken != null}',
+      );
+    }
+
+    // Add initial user state if already logged in
+    final currentUser = _supabase.auth.currentUser;
+    if (currentUser != null) {
+      if (kDebugMode) {
+        debugPrint(
+          'DEBUG Auth Repository: Found existing user on init: ${currentUser.email}',
+        );
+      }
+      final userDto = AuthUserDto.fromSupabaseUser(currentUser);
+      _authStateController?.add(userDto.toDomain());
+    }
+
     // Listen to Supabase auth state changes and map to domain entities
-    _supabase.auth.onAuthStateChange.listen((authState) {
+    _authStateSubscription = _supabase.auth.onAuthStateChange.listen((
+      authState,
+    ) {
+      if (kDebugMode) {
+        debugPrint('DEBUG Auth Repository: Auth state changed');
+        debugPrint('DEBUG Auth Repository: Event: ${authState.event}');
+        debugPrint(
+          'DEBUG Auth Repository: User: ${authState.session?.user.email}',
+        );
+        debugPrint(
+          'DEBUG Auth Repository: Session present: ${authState.session != null}',
+        );
+      }
+
       final user = authState.session?.user;
       if (user != null) {
         final userDto = AuthUserDto.fromSupabaseUser(user);
@@ -68,11 +106,24 @@ class SupabaseAuthRepository implements AuthRepository {
     String? displayName,
   }) async {
     try {
+      if (kDebugMode) {
+        debugPrint('DEBUG Auth: Attempting sign up for email: $email');
+        debugPrint('DEBUG Auth: Display name: $displayName');
+      }
+
       final response = await _supabase.auth.signUp(
         email: email,
         password: password,
         data: displayName != null ? {'display_name': displayName} : null,
       );
+
+      if (kDebugMode) {
+        debugPrint('DEBUG Auth: Sign up response received');
+        debugPrint('DEBUG Auth: User ID: ${response.user?.id}');
+        debugPrint(
+          'DEBUG Auth: Email confirmed: ${response.user?.emailConfirmedAt}',
+        );
+      }
 
       if (response.user == null) {
         throw UnknownAuthException('Sign up failed: no user returned');
@@ -80,6 +131,12 @@ class SupabaseAuthRepository implements AuthRepository {
 
       // Handle environment-specific email verification
       final requiresEmailVerification = _requiresEmailVerification();
+      if (kDebugMode) {
+        debugPrint(
+          'DEBUG Auth: Requires email verification: $requiresEmailVerification',
+        );
+      }
+
       if (requiresEmailVerification &&
           response.user!.emailConfirmedAt == null) {
         // In production/staging, email verification is required
@@ -90,8 +147,19 @@ class SupabaseAuthRepository implements AuthRepository {
       final userDto = AuthUserDto.fromSupabaseUser(response.user!);
       return userDto.toDomain();
     } on supabase.AuthException catch (e) {
+      if (kDebugMode) {
+        debugPrint('DEBUG Auth: Supabase AuthException during sign up');
+        debugPrint('DEBUG Auth: Error message: ${e.message}');
+        debugPrint('DEBUG Auth: Error code: ${e.code}');
+        debugPrint('DEBUG Auth: Status code: ${e.statusCode}');
+      }
       throw _mapAuthException(e);
-    } catch (e) {
+    } catch (e, stackTrace) {
+      if (kDebugMode) {
+        debugPrint('DEBUG Auth: Unexpected error during sign up');
+        debugPrint('DEBUG Auth: Error: $e');
+        debugPrint('DEBUG Auth: Stack trace: $stackTrace');
+      }
       throw UnknownAuthException(
         'An unexpected error occurred during sign up: $e',
       );
@@ -104,20 +172,62 @@ class SupabaseAuthRepository implements AuthRepository {
     required String password,
   }) async {
     try {
+      if (kDebugMode) {
+        debugPrint('DEBUG Auth: Attempting sign in for email: $email');
+        final currentSession = _supabase.auth.currentSession;
+        debugPrint(
+          'DEBUG Auth: Current session before signin: ${currentSession?.user.email}',
+        );
+      }
+
       final response = await _supabase.auth.signInWithPassword(
         email: email,
         password: password,
       );
 
+      if (kDebugMode) {
+        debugPrint('DEBUG Auth: Sign in response received');
+        debugPrint('DEBUG Auth: User ID: ${response.user?.id}');
+        debugPrint(
+          'DEBUG Auth: Email confirmed: ${response.user?.emailConfirmedAt}',
+        );
+        debugPrint(
+          'DEBUG Auth: Session access token present: ${response.session?.accessToken != null}',
+        );
+      }
+
       if (response.user == null) {
         throw InvalidCredentialsException();
       }
 
+      // Check if email verification is required
+      if (_requiresEmailVerification() &&
+          response.user!.emailConfirmedAt == null) {
+        if (kDebugMode) {
+          debugPrint(
+            'DEBUG Auth: Email not verified, but allowing login in staging',
+          );
+        }
+      }
+
       final userDto = AuthUserDto.fromSupabaseUser(response.user!);
       return userDto.toDomain();
+    } on InvalidCredentialsException {
+      rethrow;
     } on supabase.AuthException catch (e) {
+      if (kDebugMode) {
+        debugPrint('DEBUG Auth: Supabase AuthException during sign in');
+        debugPrint('DEBUG Auth: Error message: ${e.message}');
+        debugPrint('DEBUG Auth: Error code: ${e.code}');
+        debugPrint('DEBUG Auth: Status code: ${e.statusCode}');
+      }
       throw _mapAuthException(e);
-    } catch (e) {
+    } catch (e, stackTrace) {
+      if (kDebugMode) {
+        debugPrint('DEBUG Auth: Unexpected error during sign in');
+        debugPrint('DEBUG Auth: Error: $e');
+        debugPrint('DEBUG Auth: Stack trace: $stackTrace');
+      }
       throw UnknownAuthException(
         'An unexpected error occurred during sign in: $e',
       );
@@ -244,6 +354,7 @@ class SupabaseAuthRepository implements AuthRepository {
 
   /// Cleanup resources when repository is disposed.
   void dispose() {
+    _authStateSubscription?.cancel();
     _authStateController?.close();
   }
 }

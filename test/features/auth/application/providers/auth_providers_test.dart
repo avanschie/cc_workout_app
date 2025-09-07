@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mocktail/mocktail.dart';
@@ -13,10 +15,13 @@ class MockAuthRepository extends Mock implements AuthRepository {}
 
 class MockSupabaseClient extends Mock implements supabase.SupabaseClient {}
 
+class MockGoTrueClient extends Mock implements supabase.GoTrueClient {}
+
 void main() {
   group('Auth Providers', () {
     late MockAuthRepository mockAuthRepository;
     late MockSupabaseClient mockSupabaseClient;
+    late MockGoTrueClient mockGoTrueClient;
     late ProviderContainer container;
 
     const testUserId = 'test-user-123';
@@ -43,6 +48,13 @@ void main() {
     setUp(() {
       mockAuthRepository = MockAuthRepository();
       mockSupabaseClient = MockSupabaseClient();
+      mockGoTrueClient = MockGoTrueClient();
+
+      // Set up mock Supabase client
+      when(() => mockSupabaseClient.auth).thenReturn(mockGoTrueClient);
+      when(
+        () => mockGoTrueClient.onAuthStateChange,
+      ).thenAnswer((_) => const Stream.empty());
 
       // Set up default mock behaviors
       when(() => mockAuthRepository.currentUser).thenReturn(null);
@@ -105,6 +117,8 @@ void main() {
       test('creates AuthNotifier with dependencies', () async {
         container = ProviderContainer(
           overrides: [
+            supabaseClientProvider.overrideWithValue(mockSupabaseClient),
+            authRepositoryProviderImpl.overrideWithValue(mockAuthRepository),
             authRepositoryProvider.overrideWithValue(mockAuthRepository),
           ],
         );
@@ -123,6 +137,8 @@ void main() {
 
         container = ProviderContainer(
           overrides: [
+            supabaseClientProvider.overrideWithValue(mockSupabaseClient),
+            authRepositoryProviderImpl.overrideWithValue(mockAuthRepository),
             authRepositoryProvider.overrideWithValue(mockAuthRepository),
           ],
         );
@@ -139,6 +155,8 @@ void main() {
       test('provides AsyncValue from authNotifierProvider', () async {
         container = ProviderContainer(
           overrides: [
+            supabaseClientProvider.overrideWithValue(mockSupabaseClient),
+            authRepositoryProviderImpl.overrideWithValue(mockAuthRepository),
             authRepositoryProvider.overrideWithValue(mockAuthRepository),
           ],
         );
@@ -161,6 +179,8 @@ void main() {
 
         container = ProviderContainer(
           overrides: [
+            supabaseClientProvider.overrideWithValue(mockSupabaseClient),
+            authRepositoryProviderImpl.overrideWithValue(mockAuthRepository),
             authRepositoryProvider.overrideWithValue(mockAuthRepository),
           ],
         );
@@ -177,6 +197,8 @@ void main() {
 
         container = ProviderContainer(
           overrides: [
+            supabaseClientProvider.overrideWithValue(mockSupabaseClient),
+            authRepositoryProviderImpl.overrideWithValue(mockAuthRepository),
             authRepositoryProvider.overrideWithValue(mockAuthRepository),
           ],
         );
@@ -199,6 +221,8 @@ void main() {
       test('returns null when not authenticated', () async {
         container = ProviderContainer(
           overrides: [
+            supabaseClientProvider.overrideWithValue(mockSupabaseClient),
+            authRepositoryProviderImpl.overrideWithValue(mockAuthRepository),
             authRepositoryProvider.overrideWithValue(mockAuthRepository),
           ],
         );
@@ -215,6 +239,8 @@ void main() {
 
         container = ProviderContainer(
           overrides: [
+            supabaseClientProvider.overrideWithValue(mockSupabaseClient),
+            authRepositoryProviderImpl.overrideWithValue(mockAuthRepository),
             authRepositoryProvider.overrideWithValue(mockAuthRepository),
           ],
         );
@@ -235,6 +261,8 @@ void main() {
 
         container = ProviderContainer(
           overrides: [
+            supabaseClientProvider.overrideWithValue(mockSupabaseClient),
+            authRepositoryProviderImpl.overrideWithValue(mockAuthRepository),
             authRepositoryProvider.overrideWithValue(mockAuthRepository),
           ],
         );
@@ -251,6 +279,8 @@ void main() {
 
         container = ProviderContainer(
           overrides: [
+            supabaseClientProvider.overrideWithValue(mockSupabaseClient),
+            authRepositoryProviderImpl.overrideWithValue(mockAuthRepository),
             authRepositoryProvider.overrideWithValue(mockAuthRepository),
           ],
         );
@@ -272,6 +302,8 @@ void main() {
       test('returns false when not authenticated', () async {
         container = ProviderContainer(
           overrides: [
+            supabaseClientProvider.overrideWithValue(mockSupabaseClient),
+            authRepositoryProviderImpl.overrideWithValue(mockAuthRepository),
             authRepositoryProvider.overrideWithValue(mockAuthRepository),
           ],
         );
@@ -288,6 +320,8 @@ void main() {
 
         container = ProviderContainer(
           overrides: [
+            supabaseClientProvider.overrideWithValue(mockSupabaseClient),
+            authRepositoryProviderImpl.overrideWithValue(mockAuthRepository),
             authRepositoryProvider.overrideWithValue(mockAuthRepository),
           ],
         );
@@ -305,6 +339,8 @@ void main() {
 
         container = ProviderContainer(
           overrides: [
+            supabaseClientProvider.overrideWithValue(mockSupabaseClient),
+            authRepositoryProviderImpl.overrideWithValue(mockAuthRepository),
             authRepositoryProvider.overrideWithValue(mockAuthRepository),
           ],
         );
@@ -321,6 +357,8 @@ void main() {
 
         container = ProviderContainer(
           overrides: [
+            supabaseClientProvider.overrideWithValue(mockSupabaseClient),
+            authRepositoryProviderImpl.overrideWithValue(mockAuthRepository),
             authRepositoryProvider.overrideWithValue(mockAuthRepository),
           ],
         );
@@ -342,6 +380,8 @@ void main() {
       test('returns false when not loading', () async {
         container = ProviderContainer(
           overrides: [
+            supabaseClientProvider.overrideWithValue(mockSupabaseClient),
+            authRepositoryProviderImpl.overrideWithValue(mockAuthRepository),
             authRepositoryProvider.overrideWithValue(mockAuthRepository),
           ],
         );
@@ -359,6 +399,8 @@ void main() {
 
         container = ProviderContainer(
           overrides: [
+            supabaseClientProvider.overrideWithValue(mockSupabaseClient),
+            authRepositoryProviderImpl.overrideWithValue(mockAuthRepository),
             authRepositoryProvider.overrideWithValue(mockAuthRepository),
           ],
         );
@@ -373,6 +415,8 @@ void main() {
       test('returns null when no error', () async {
         container = ProviderContainer(
           overrides: [
+            supabaseClientProvider.overrideWithValue(mockSupabaseClient),
+            authRepositoryProviderImpl.overrideWithValue(mockAuthRepository),
             authRepositoryProvider.overrideWithValue(mockAuthRepository),
           ],
         );
@@ -389,6 +433,8 @@ void main() {
 
         container = ProviderContainer(
           overrides: [
+            supabaseClientProvider.overrideWithValue(mockSupabaseClient),
+            authRepositoryProviderImpl.overrideWithValue(mockAuthRepository),
             authRepositoryProvider.overrideWithValue(mockAuthRepository),
           ],
         );
@@ -408,17 +454,39 @@ void main() {
     });
 
     group('authStateStreamProvider', () {
-      test('provides auth state changes stream', () {
+      test('provides auth state changes stream', () async {
+        // Set up a stream controller to provide test data
+        final streamController = StreamController<AuthUser?>.broadcast();
+        when(
+          () => mockAuthRepository.authStateChanges,
+        ).thenAnswer((_) => streamController.stream);
+
         container = ProviderContainer(
           overrides: [
+            supabaseClientProvider.overrideWithValue(mockSupabaseClient),
+            authRepositoryProviderImpl.overrideWithValue(mockAuthRepository),
             authRepositoryProvider.overrideWithValue(mockAuthRepository),
           ],
         );
 
-        final streamProvider = container.read(authStateStreamProvider);
+        // Listen to the stream provider to start the subscription
+        final subscription = container.listen(
+          authStateStreamProvider,
+          (_, _) {},
+        );
 
-        expect(streamProvider, isA<AsyncValue<AuthUser?>>());
+        // Emit a value to complete the future
+        streamController.add(null);
+
+        // Wait for the stream to connect
+        await container.read(authStateStreamProvider.future);
+
+        // Verify authStateChanges was called
         verify(() => mockAuthRepository.authStateChanges).called(1);
+
+        // Clean up
+        subscription.close();
+        await streamController.close();
       });
     });
 
@@ -426,6 +494,8 @@ void main() {
       test('creates AuthController with provider reference', () {
         container = ProviderContainer(
           overrides: [
+            supabaseClientProvider.overrideWithValue(mockSupabaseClient),
+            authRepositoryProviderImpl.overrideWithValue(mockAuthRepository),
             authRepositoryProvider.overrideWithValue(mockAuthRepository),
           ],
         );
@@ -443,6 +513,8 @@ void main() {
       setUp(() {
         container = ProviderContainer(
           overrides: [
+            supabaseClientProvider.overrideWithValue(mockSupabaseClient),
+            authRepositoryProviderImpl.overrideWithValue(mockAuthRepository),
             authRepositoryProvider.overrideWithValue(mockAuthRepository),
           ],
         );
@@ -669,6 +741,8 @@ void main() {
 
         container = ProviderContainer(
           overrides: [
+            supabaseClientProvider.overrideWithValue(mockSupabaseClient),
+            authRepositoryProviderImpl.overrideWithValue(mockAuthRepository),
             authRepositoryProvider.overrideWithValue(mockAuthRepository),
           ],
         );

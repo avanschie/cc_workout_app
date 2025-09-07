@@ -166,6 +166,7 @@ class _ForgotPasswordScreenState extends ConsumerState<ForgotPasswordScreen> {
 
         // Send button
         AuthSubmitButton(
+          key: const Key('reset_password_button'),
           onPressed: _handleSendResetEmail,
           text: 'Send Reset Link',
           isLoading: _isLoading,

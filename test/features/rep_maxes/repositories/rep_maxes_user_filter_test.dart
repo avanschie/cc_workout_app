@@ -1,5 +1,4 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:cc_workout_app/shared/models/lift_type.dart';
 
 void main() {
   group('Rep Maxes User Filtering', () {

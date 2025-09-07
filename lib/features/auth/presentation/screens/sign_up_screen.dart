@@ -279,6 +279,7 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
 
   Widget _buildActionButtons(ThemeData theme) {
     return AuthSubmitButton(
+      key: const Key('sign_up_button'),
       onPressed: _acceptedTerms ? _handleSignUp : null,
       text: 'Create Account',
       isLoading: _isLoading,

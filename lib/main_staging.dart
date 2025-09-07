@@ -24,7 +24,25 @@ void main() async {
   await Supabase.initialize(
     url: EnvConfig.config.supabaseUrl,
     anonKey: EnvConfig.config.supabaseAnonKey,
+    authOptions: const FlutterAuthClientOptions(
+      authFlowType: AuthFlowType.pkce,
+      autoRefreshToken: true,
+    ),
+    realtimeClientOptions: const RealtimeClientOptions(
+      logLevel: RealtimeLogLevel.info,
+    ),
+    storageOptions: const StorageClientOptions(retryAttempts: 3),
   );
+
+  // Debug: Check if there's a restored session
+  final session = Supabase.instance.client.auth.currentSession;
+  if (session != null) {
+    debugPrint('DEBUG: Restored session for user: ${session.user.email}');
+    debugPrint('DEBUG: Session expires at: ${session.expiresAt}');
+    debugPrint('DEBUG: Email confirmed: ${session.user.emailConfirmedAt}');
+  } else {
+    debugPrint('DEBUG: No session restored on app startup');
+  }
 
   runApp(
     ProviderScope(

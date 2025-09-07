@@ -181,6 +181,7 @@ class _SignInScreenState extends ConsumerState<SignInScreen> {
       children: [
         // Sign In Button
         AuthSubmitButton(
+          key: const Key('sign_in_button'),
           onPressed: _handleSignIn,
           text: 'Sign In',
           isLoading: _isLoading,

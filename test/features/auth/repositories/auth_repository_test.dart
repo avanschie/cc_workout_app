@@ -21,11 +21,15 @@ void main() {
 
       // Set up the mock client before creating the repository
       when(mockSupabaseClient.auth).thenReturn(mockAuth);
-      
+
       // Mock the auth state change stream
-      when(mockAuth.onAuthStateChange).thenAnswer(
-        (_) => const Stream.empty(),
-      );
+      when(mockAuth.onAuthStateChange).thenAnswer((_) => const Stream.empty());
+
+      // Mock currentSession to return null by default
+      when(mockAuth.currentSession).thenReturn(null);
+
+      // Mock currentUser to return null by default (needed for constructor)
+      when(mockAuth.currentUser).thenReturn(null);
 
       authRepository = SupabaseAuthRepository(mockSupabaseClient);
     });
@@ -52,7 +56,9 @@ void main() {
         expect(result, isA<AuthUser>());
         expect(result!.id, equals('user-123'));
         expect(result.email, equals('test@example.com'));
-        verify(mockAuth.currentUser).called(1);
+        verify(
+          mockAuth.currentUser,
+        ).called(2); // Once in constructor, once in getter
       });
 
       test('should return null when no user is signed in', () {
@@ -61,7 +67,9 @@ void main() {
         final result = authRepository.currentUser;
 
         expect(result, isNull);
-        verify(mockAuth.currentUser).called(1);
+        verify(
+          mockAuth.currentUser,
+        ).called(2); // Once in constructor, once in getter
       });
     });
 
@@ -69,7 +77,7 @@ void main() {
       test('should return auth state changes stream as AuthUser stream', () {
         // The authStateChanges should return a Stream<AuthUser?>
         final stream = authRepository.authStateChanges;
-        
+
         expect(stream, isA<Stream<AuthUser?>>());
         // Note: Testing the actual stream behavior would require more complex mocking
         // of the Supabase auth state stream, which is handled in integration tests
@@ -87,14 +95,19 @@ void main() {
 
         await authRepository.signInWithMagicLink('test@example.com');
 
-        verify(mockAuth.signInWithOtp(
-          email: 'test@example.com',
-          shouldCreateUser: true,
-        )).called(1);
+        verify(
+          mockAuth.signInWithOtp(
+            email: 'test@example.com',
+            shouldCreateUser: true,
+          ),
+        ).called(1);
       });
 
       test('should throw AuthException on Supabase AuthException', () async {
-        final authException = supabase.AuthException('Invalid email', statusCode: '400');
+        final authException = supabase.AuthException(
+          'Invalid email',
+          statusCode: '400',
+        );
         when(
           mockAuth.signInWithOtp(
             email: anyNamed('email'),
@@ -104,30 +117,23 @@ void main() {
 
         expect(
           () => authRepository.signInWithMagicLink('invalid@example.com'),
-          throwsA(
-            isA<AuthException>(),
-          ),
+          throwsA(isA<AuthException>()),
         );
       });
 
-      test(
-        'should throw UnknownAuthException on generic exception',
-        () async {
-          when(
-            mockAuth.signInWithOtp(
-              email: anyNamed('email'),
-              shouldCreateUser: anyNamed('shouldCreateUser'),
-            ),
-          ).thenThrow(Exception('Network error'));
+      test('should throw UnknownAuthException on generic exception', () async {
+        when(
+          mockAuth.signInWithOtp(
+            email: anyNamed('email'),
+            shouldCreateUser: anyNamed('shouldCreateUser'),
+          ),
+        ).thenThrow(Exception('Network error'));
 
-          expect(
-            () => authRepository.signInWithMagicLink('test@example.com'),
-            throwsA(
-              isA<UnknownAuthException>(),
-            ),
-          );
-        },
-      );
+        expect(
+          () => authRepository.signInWithMagicLink('test@example.com'),
+          throwsA(isA<UnknownAuthException>()),
+        );
+      });
     });
 
     group('signOut', () {
@@ -146,27 +152,17 @@ void main() {
         );
         when(mockAuth.signOut()).thenThrow(authException);
 
-        expect(
-          () => authRepository.signOut(),
-          throwsA(
-            isA<AuthException>(),
-          ),
-        );
+        expect(() => authRepository.signOut(), throwsA(isA<AuthException>()));
       });
 
-      test(
-        'should throw UnknownAuthException on generic exception',
-        () async {
-          when(mockAuth.signOut()).thenThrow(Exception('Network error'));
+      test('should throw UnknownAuthException on generic exception', () async {
+        when(mockAuth.signOut()).thenThrow(Exception('Network error'));
 
-          expect(
-            () => authRepository.signOut(),
-            throwsA(
-              isA<UnknownAuthException>(),
-            ),
-          );
-        },
-      );
+        expect(
+          () => authRepository.signOut(),
+          throwsA(isA<UnknownAuthException>()),
+        );
+      });
     });
 
     group('signUpWithEmailPassword', () {
@@ -182,12 +178,12 @@ void main() {
           'aud': 'authenticated',
           'updated_at': '2023-01-01T00:00:00Z',
         });
-        
+
         final mockResponse = supabase.AuthResponse(
           user: mockUser,
           session: null,
         );
-        
+
         when(
           mockAuth.signUp(
             email: anyNamed('email'),
@@ -229,12 +225,12 @@ void main() {
           'aud': 'authenticated',
           'updated_at': '2023-01-01T00:00:00Z',
         });
-        
+
         final mockResponse = supabase.AuthResponse(
           user: mockUser,
           session: null,
         );
-        
+
         when(
           mockAuth.signInWithPassword(
             email: anyNamed('email'),
@@ -261,9 +257,7 @@ void main() {
 
     group('sendPasswordResetEmail', () {
       test('should call resetPasswordForEmail', () async {
-        when(
-          mockAuth.resetPasswordForEmail(any),
-        ).thenAnswer((_) async {});
+        when(mockAuth.resetPasswordForEmail(any)).thenAnswer((_) async {});
 
         await authRepository.sendPasswordResetEmail('test@example.com');
 
@@ -284,12 +278,12 @@ void main() {
           'aud': 'authenticated',
           'updated_at': '2023-01-01T00:00:00Z',
         });
-        
+
         final mockResponse = supabase.AuthResponse(
           user: mockUser,
           session: null,
         );
-        
+
         when(mockAuth.refreshSession()).thenAnswer((_) async => mockResponse);
 
         final result = await authRepository.refreshSession();
@@ -301,11 +295,8 @@ void main() {
       });
 
       test('should return null when no user', () async {
-        final mockResponse = supabase.AuthResponse(
-          user: null,
-          session: null,
-        );
-        
+        final mockResponse = supabase.AuthResponse(user: null, session: null);
+
         when(mockAuth.refreshSession()).thenAnswer((_) async => mockResponse);
 
         final result = await authRepository.refreshSession();
@@ -321,10 +312,7 @@ void main() {
       const exception = InvalidCredentialsException();
 
       expect(exception.message, contains('Invalid'));
-      expect(
-        exception.toString(),
-        contains('Invalid email or password'),
-      );
+      expect(exception.toString(), contains('Invalid email or password'));
     });
 
     test('UnknownAuthException should create with message and code', () {
@@ -332,10 +320,7 @@ void main() {
 
       expect(exception.message, equals('Test message'));
       expect(exception.code, equals('400'));
-      expect(
-        exception.toString(),
-        contains('AuthException'),
-      );
+      expect(exception.toString(), contains('AuthException'));
     });
   });
 }
