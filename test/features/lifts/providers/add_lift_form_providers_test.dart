@@ -166,8 +166,7 @@ void main() {
       notifier.setWeight('100.5');
       notifier.setPerformedAt(DateTime(2024, 1, 15));
 
-      final state = container.read(addLiftFormProvider);
-      final liftEntry = state.toLiftEntry(userId);
+      final liftEntry = notifier.toLiftEntry(userId);
 
       expect(liftEntry, isNotNull);
       expect(liftEntry!.userId, equals(userId));
@@ -182,8 +181,7 @@ void main() {
       notifier.setLiftType(LiftType.squat);
       // Missing reps, weight, and date
 
-      final state = container.read(addLiftFormProvider);
-      final liftEntry = state.toLiftEntry(userId);
+      final liftEntry = notifier.toLiftEntry(userId);
 
       expect(liftEntry, isNull);
     });

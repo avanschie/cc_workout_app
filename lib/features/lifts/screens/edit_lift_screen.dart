@@ -6,6 +6,7 @@ import 'package:cc_workout_app/shared/models/lift_type.dart';
 import 'package:cc_workout_app/features/lifts/providers/history_providers.dart';
 import 'package:cc_workout_app/features/lifts/providers/lift_entries_providers.dart';
 import 'package:cc_workout_app/core/utils/snackbar_utils.dart';
+import 'package:cc_workout_app/shared/forms/lift_form_state.dart';
 
 class EditLiftScreen extends ConsumerStatefulWidget {
   final LiftEntry liftEntry;
@@ -97,7 +98,7 @@ class _EditLiftScreenState extends ConsumerState<EditLiftScreen> {
   }
 
   Widget _buildLiftTypeDropdown(
-    EditLiftFormState formState,
+    LiftFormState formState,
     EditLiftFormNotifier formNotifier,
   ) {
     return Column(
@@ -132,7 +133,7 @@ class _EditLiftScreenState extends ConsumerState<EditLiftScreen> {
   }
 
   Widget _buildRepsField(
-    EditLiftFormState formState,
+    LiftFormState formState,
     EditLiftFormNotifier formNotifier,
   ) {
     return Column(
@@ -169,7 +170,7 @@ class _EditLiftScreenState extends ConsumerState<EditLiftScreen> {
   }
 
   Widget _buildWeightField(
-    EditLiftFormState formState,
+    LiftFormState formState,
     EditLiftFormNotifier formNotifier,
   ) {
     return Column(
@@ -207,7 +208,7 @@ class _EditLiftScreenState extends ConsumerState<EditLiftScreen> {
   }
 
   Widget _buildDateField(
-    EditLiftFormState formState,
+    LiftFormState formState,
     EditLiftFormNotifier formNotifier,
   ) {
     final dateFormatter = DateFormat('MMM d, yyyy');
@@ -249,7 +250,7 @@ class _EditLiftScreenState extends ConsumerState<EditLiftScreen> {
   }
 
   Widget _buildSaveButton(
-    EditLiftFormState formState,
+    LiftFormState formState,
     AsyncValue<void> updateLiftState,
   ) {
     final isLoading = updateLiftState.isLoading;

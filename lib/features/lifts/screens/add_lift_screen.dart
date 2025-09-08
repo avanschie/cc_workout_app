@@ -6,6 +6,7 @@ import 'package:cc_workout_app/features/auth/application/providers/auth_provider
 import 'package:cc_workout_app/features/lifts/providers/add_lift_form_providers.dart';
 import 'package:cc_workout_app/features/lifts/providers/lift_entries_providers.dart';
 import 'package:cc_workout_app/core/utils/snackbar_utils.dart';
+import 'package:cc_workout_app/shared/forms/lift_form_state.dart';
 
 class AddLiftScreen extends ConsumerStatefulWidget {
   const AddLiftScreen({super.key});
@@ -52,7 +53,7 @@ class _AddLiftScreenState extends ConsumerState<AddLiftScreen> {
   }
 
   Widget _buildLiftTypeDropdown(
-    AddLiftFormState formState,
+    LiftFormState formState,
     AddLiftFormNotifier formNotifier,
   ) {
     return Column(
@@ -87,7 +88,7 @@ class _AddLiftScreenState extends ConsumerState<AddLiftScreen> {
   }
 
   Widget _buildRepsField(
-    AddLiftFormState formState,
+    LiftFormState formState,
     AddLiftFormNotifier formNotifier,
   ) {
     return Column(
@@ -124,7 +125,7 @@ class _AddLiftScreenState extends ConsumerState<AddLiftScreen> {
   }
 
   Widget _buildWeightField(
-    AddLiftFormState formState,
+    LiftFormState formState,
     AddLiftFormNotifier formNotifier,
   ) {
     return Column(
@@ -162,7 +163,7 @@ class _AddLiftScreenState extends ConsumerState<AddLiftScreen> {
   }
 
   Widget _buildDateField(
-    AddLiftFormState formState,
+    LiftFormState formState,
     AddLiftFormNotifier formNotifier,
   ) {
     final dateFormatter = DateFormat('MMM d, yyyy');
@@ -204,7 +205,7 @@ class _AddLiftScreenState extends ConsumerState<AddLiftScreen> {
   }
 
   Widget _buildSaveButton(
-    AddLiftFormState formState,
+    LiftFormState formState,
     AsyncValue<void> createLiftState,
   ) {
     final isLoading = createLiftState.isLoading;
@@ -271,7 +272,7 @@ class _AddLiftScreenState extends ConsumerState<AddLiftScreen> {
         return;
       }
 
-      final liftEntry = validatedFormState.toLiftEntry(currentUser.id);
+      final liftEntry = formNotifier.toLiftEntry(currentUser.id);
 
       if (liftEntry != null) {
         await createLiftNotifier.createLiftEntry(liftEntry);
