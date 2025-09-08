@@ -1,5 +1,15 @@
 # TODO: Powerlifting Rep Max Tracker MVP
 
+## Phase 0: CI/CD & Quality Assurance
+
+### 0.1 Continuous Integration Setup
+- [x] Configure GitHub Actions CI pipeline
+- [x] Enforce code formatting with `dart format --set-exit-if-changed`
+- [x] Enforce static analysis with `flutter analyze --fatal-warnings` (zero warnings policy)
+- [x] Automate test execution on all commits
+- [x] Set up automated dependency updates via Renovate bot
+- [x] Configure proper concurrency management for CI jobs
+
 ## Phase 1: Project Setup & Dependencies
 
 ### 1.1 Flutter Project Structure
@@ -45,6 +55,11 @@
   - [x] Set up VSCode launch configurations (.vscode/launch.json)
   - [x] Add visual environment banner for debug builds
 
+### 1.4 Platform-Specific Development Configuration
+- [x] Configure Android emulator network settings (use 10.0.2.2:54321 for local Supabase)
+- [x] Document production email requirements (no example.com domains in staging/production)
+- [x] Set up environment-specific auth behavior (local auto-login, staging optional verification)
+
 ## Phase 2: Supabase Backend Setup
 
 ### 2.1 Database Schema
@@ -62,16 +77,17 @@
 ### 2.2 Row Level Security (RLS)
 - [x] Enable RLS on `lift_entries` table
 - [x] Create policies: users can only read/write their own lifts (SELECT, INSERT, UPDATE, DELETE)
-- [ ] Test RLS policies with actual users
+- [x] Test RLS policies with actual users
 
 ### 2.3 Seed Data
 - [x] Create seed.sql with sample lift entries for testing
 - [x] Apply seed data to local database
 
 ### 2.4 Authentication Setup
-- [ ] Configure Supabase Auth with email/password
-- [ ] Set up email templates (optional)
-- [ ] Test authentication flow
+- [x] Configure Supabase Auth with email/password
+- [x] Set up email templates (optional)
+- [x] Test authentication flow
+- [x] Implement environment-specific auth behavior (auto-login for local dev)
 
 ## Phase 3: Core Models & Services
 
@@ -207,22 +223,22 @@
 ## Phase 9: Testing & Quality Assurance
 
 ### 9.1 Testing
-- [ ] Write unit tests for models and services
-- [ ] Write widget tests for key UI components
-- [ ] Write integration tests for critical flows
+- [x] Write unit tests for models and services
+- [x] Write widget tests for key UI components
+- [x] Write integration tests for critical flows
 - [ ] Test on both iOS and Android
 
 ### 9.2 Performance & Optimization
-- [ ] Optimize database queries
-- [ ] Implement proper state management patterns
+- [x] Optimize database queries
+- [x] Implement proper state management patterns
 - [ ] Test app performance and memory usage
 
 ## Phase 10: App Release Preparation
 
 ### 10.1 App Configuration
-- [ ] Set app name in pubspec.yaml and native configs
+- [x] Set app name in pubspec.yaml and native configs
 - [ ] Design and set app icon
-- [ ] Set version to 0.1.0
+- [x] Set version to 0.1.0
 - [ ] Configure app permissions
 
 ### 10.2 Platform-Specific Setup
@@ -230,6 +246,14 @@
 - [ ] Configure Android package name and settings
 - [ ] Test on physical devices
 - [ ] Prepare app store assets (if releasing)
+- [ ] Verify iOS/Android release builds compile successfully
+- [ ] Test production Supabase configuration with real email domains
+
+### 10.3 Production Environment Setup
+- [ ] Set up production Supabase project
+- [ ] Configure production database schema and RLS policies
+- [ ] Set up production authentication with email verification
+- [ ] Verify production environment variables configuration
 
 ## Phase 11: Final Testing & Deployment
 
@@ -237,24 +261,42 @@
 - [ ] Test complete user journey: sign up → add lifts → view rep maxes
 - [ ] Test offline behavior and error recovery
 - [ ] Verify data persistence and RLS
+- [ ] Verify all code passes `flutter analyze` with zero warnings (enforced by CI)
+- [ ] Test app performance and memory usage under load
 
 ### 11.2 Documentation
-- [ ] Update README with setup instructions
-- [ ] Document environment variable setup
+- [x] Update README with setup instructions
+- [x] Document environment variable setup
 - [ ] Add troubleshooting guide
 
 ## Definition of Done Checklist
 
-- [ ] User can sign in/out (email/password) and stay signed in
-- [ ] User can create lift entries with: lift, reps, weight (kg), date  
-- [ ] Data persists in Supabase with RLS (only owner can read/write)
-- [ ] Rep Maxes screen shows best weight per rep (1–10) for S/B/D
-- [ ] Input validation: reps 1–10, weight > 0, date required
-- [ ] Error handling & empty states; loading indicators present
+- [x] User can sign in/out (email/password) and stay signed in
+- [x] User can create lift entries with: lift, reps, weight (kg), date  
+- [x] Data persists in Supabase with RLS (only owner can read/write)
+- [x] Rep Maxes screen shows best weight per rep (1–10) for S/B/D
+- [x] Input validation: reps 1–10, weight > 0, date required
+- [x] Error handling & empty states; loading indicators present
 - [ ] Works on iOS and Android devices/emulators
-- [ ] App icon & name set; version 0.1.0
+- [x] App icon & name set; version 0.1.0
 
 ---
 
 **Estimated Timeline:** 2-3 weeks for a solo developer working part-time
-**Priority Order:** Follow phases 1-6 for core MVP, then 7-11 for polish and release
+**Priority Order:** Follow phases 0-6 for core MVP, then 7-11 for polish and release
+
+## Notes for Production Deployment
+
+### Email Domain Requirements
+- **Local Development**: Uses `@example.com` emails (john@example.com, jane@example.com) with hardcoded passwords
+- **Staging/Production**: Must use realistic email domains (gmail.com, test.com, etc.) as Supabase blocks example.com domains
+- **Email Verification**: Disabled for local, optional for staging, mandatory for production
+
+### Android Emulator Configuration
+- **Network Access**: Use `10.0.2.2:54321` instead of `127.0.0.1:54321` when running on Android emulator
+- **Local Supabase**: The emulator cannot access localhost directly, requires the Android emulator's special IP
+
+### Code Quality Standards
+- **Zero Warnings Policy**: CI enforces `flutter analyze --fatal-warnings` - any warning fails the build
+- **Formatting**: All code must pass `dart format --set-exit-if-changed`
+- **Testing**: All tests must pass before code can be merged
