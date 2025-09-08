@@ -69,7 +69,7 @@
 - [x] Apply seed data to local database
 
 ### 2.4 Authentication Setup
-- [ ] Configure Supabase Auth with magic link
+- [ ] Configure Supabase Auth with email/password
 - [ ] Set up email templates (optional)
 - [ ] Test authentication flow
 
@@ -97,7 +97,7 @@
 
 ### 4.1 Auth State Management
 - [x] Create Riverpod providers for auth state (AsyncNotifier pattern with AuthController)
-- [x] Implement sign in with email/password (replaced magic link with better UX)
+- [x] Implement sign in with email/password
 - [x] Implement sign up with email/password/display name
 - [x] Implement password reset functionality
 - [x] Implement sign out functionality
@@ -245,7 +245,7 @@
 
 ## Definition of Done Checklist
 
-- [ ] User can sign in/out (magic link) and stay signed in
+- [ ] User can sign in/out (email/password) and stay signed in
 - [ ] User can create lift entries with: lift, reps, weight (kg), date  
 - [ ] Data persists in Supabase with RLS (only owner can read/write)
 - [ ] Rep Maxes screen shows best weight per rep (1–10) for S/B/D

@@ -61,11 +61,6 @@ void main() {
       );
     }
 
-    setUpAll(() {
-      // Register fallback values for mocktail
-      registerFallbackValue(OtpType.magiclink);
-    });
-
     setUp(() {
       mockSupabaseClient = MockSupabaseClient();
       mockAuth = MockGoTrueClient();
@@ -198,118 +193,6 @@ void main() {
         expect(result, isNotNull);
         expect(result!.id, testId);
       });
-    });
-
-    group('signInWithMagicLink', () {
-      test('calls Supabase signInWithOtp with correct email', () async {
-        when(
-          () => mockAuth.signInWithOtp(
-            email: any(named: 'email'),
-            shouldCreateUser: any(named: 'shouldCreateUser'),
-          ),
-        ).thenAnswer((_) async => createAuthResponse(null));
-
-        await repository.signInWithMagicLink(testEmail);
-
-        verify(
-          () =>
-              mockAuth.signInWithOtp(email: testEmail, shouldCreateUser: true),
-        ).called(1);
-      });
-
-      test(
-        'throws domain_exceptions.InvalidCredentialsException on invalid credentials',
-        () async {
-          when(
-            () => mockAuth.signInWithOtp(
-              email: any(named: 'email'),
-              shouldCreateUser: any(named: 'shouldCreateUser'),
-            ),
-          ).thenThrow(
-            const supabase.AuthException(
-              'Invalid login credentials',
-              statusCode: '400',
-            ),
-          );
-
-          expect(
-            () => repository.signInWithMagicLink(testEmail),
-            throwsA(
-              isA<domain_exceptions.InvalidCredentialsException>().having(
-                (e) => e.code,
-                'code',
-                '400',
-              ),
-            ),
-          );
-        },
-      );
-
-      test(
-        'throws domain_exceptions.UserNotFoundException on user not found',
-        () async {
-          when(
-            () => mockAuth.signInWithOtp(
-              email: any(named: 'email'),
-              shouldCreateUser: any(named: 'shouldCreateUser'),
-            ),
-          ).thenThrow(
-            const supabase.AuthException('User not found', statusCode: '404'),
-          );
-
-          expect(
-            () => repository.signInWithMagicLink(testEmail),
-            throwsA(isA<domain_exceptions.UserNotFoundException>()),
-          );
-        },
-      );
-
-      test(
-        'throws domain_exceptions.TooManyRequestsException on rate limit',
-        () async {
-          when(
-            () => mockAuth.signInWithOtp(
-              email: any(named: 'email'),
-              shouldCreateUser: any(named: 'shouldCreateUser'),
-            ),
-          ).thenThrow(
-            const supabase.AuthException(
-              'Too many requests',
-              statusCode: '429',
-            ),
-          );
-
-          expect(
-            () => repository.signInWithMagicLink(testEmail),
-            throwsA(isA<domain_exceptions.TooManyRequestsException>()),
-          );
-        },
-      );
-
-      test(
-        'throws domain_exceptions.UnknownAuthException on generic exception',
-        () async {
-          when(
-            () => mockAuth.signInWithOtp(
-              email: any(named: 'email'),
-              shouldCreateUser: any(named: 'shouldCreateUser'),
-            ),
-          ).thenThrow(Exception('Network error'));
-
-          expect(
-            () => repository.signInWithMagicLink(testEmail),
-            throwsA(
-              isA<domain_exceptions.UnknownAuthException>().having(
-                (e) => e.message,
-                'message',
-                contains(
-                  'An unexpected error occurred during magic link sign in',
-                ),
-              ),
-            ),
-          );
-        },
-      );
     });
 
     group('signUpWithEmailPassword', () {
@@ -766,14 +649,17 @@ void main() {
 
         for (final (supabaseException, expectedExceptionType) in testCases) {
           when(
-            () => mockAuth.signInWithOtp(
+            () => mockAuth.signInWithPassword(
               email: any(named: 'email'),
-              shouldCreateUser: any(named: 'shouldCreateUser'),
+              password: any(named: 'password'),
             ),
           ).thenThrow(supabaseException);
 
           expect(
-            () => repository.signInWithMagicLink(testEmail),
+            () => repository.signInWithEmailPassword(
+              email: testEmail,
+              password: testPassword,
+            ),
             throwsA(
               isA<domain_exceptions.AuthException>().having(
                 (e) => e.runtimeType,
@@ -795,14 +681,17 @@ void main() {
           );
 
           when(
-            () => mockAuth.signInWithOtp(
+            () => mockAuth.signInWithPassword(
               email: any(named: 'email'),
-              shouldCreateUser: any(named: 'shouldCreateUser'),
+              password: any(named: 'password'),
             ),
           ).thenThrow(unknownException);
 
           expect(
-            () => repository.signInWithMagicLink(testEmail),
+            () => repository.signInWithEmailPassword(
+              email: testEmail,
+              password: testPassword,
+            ),
             throwsA(
               isA<domain_exceptions.UnknownAuthException>().having(
                 (e) => e.message,

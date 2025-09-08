@@ -59,26 +59,6 @@ class AuthNotifier extends AsyncNotifier<AuthUser?> {
     return currentUser;
   }
 
-  /// Performs sign in with magic link (OTP).
-  ///
-  /// Sets loading state during the operation and handles errors appropriately.
-  /// The actual sign-in completion will be handled by the auth state change listener.
-  Future<void> signInWithMagicLink(String email) async {
-    state = const AsyncValue.loading();
-
-    try {
-      await _repository.signInWithMagicLink(email);
-      // Don't update state here - let the auth state listener handle it
-      // This prevents race conditions and ensures consistency
-    } on AuthException catch (error, stackTrace) {
-      state = AsyncValue.error(error, stackTrace);
-      rethrow;
-    } catch (error, stackTrace) {
-      state = AsyncValue.error(error, stackTrace);
-      rethrow;
-    }
-  }
-
   /// Performs sign up with email and password.
   ///
   /// Returns the newly created user on success.

@@ -87,19 +87,6 @@ class SupabaseAuthRepository implements AuthRepository {
   }
 
   @override
-  Future<void> signInWithMagicLink(String email) async {
-    try {
-      await _supabase.auth.signInWithOtp(email: email, shouldCreateUser: true);
-    } on supabase.AuthException catch (e) {
-      throw _mapAuthException(e);
-    } catch (e) {
-      throw UnknownAuthException(
-        'An unexpected error occurred during magic link sign in: $e',
-      );
-    }
-  }
-
-  @override
   Future<domain.AuthUser> signUpWithEmailPassword({
     required String email,
     required String password,

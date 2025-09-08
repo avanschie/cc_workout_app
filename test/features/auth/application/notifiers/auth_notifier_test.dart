@@ -108,8 +108,11 @@ void main() {
       test('handles auto-login when enabled in environment', () async {
         when(() => mockAuthRepository.currentUser).thenReturn(null);
         when(
-          () => mockAuthRepository.signInWithMagicLink(any()),
-        ).thenAnswer((_) async {});
+          () => mockAuthRepository.signInWithEmailPassword(
+            email: any(named: 'email'),
+            password: any(named: 'password'),
+          ),
+        ).thenAnswer((_) async => createTestUser());
 
         // Mock EnvConfig behavior for auto-login
         // Note: This would require additional setup to fully mock EnvConfig
@@ -194,81 +197,6 @@ void main() {
         final currentState = container.read(authNotifierProvider);
         expect(currentState.hasError, isFalse);
         expect(currentState.valueOrNull, isNotNull);
-      });
-    });
-
-    group('signInWithMagicLink', () {
-      test('sets loading state during sign in', () async {
-        when(() => mockAuthRepository.currentUser).thenReturn(null);
-        when(() => mockAuthRepository.signInWithMagicLink(any())).thenAnswer(
-          (_) async => Future.delayed(const Duration(milliseconds: 100)),
-        );
-
-        final notifier = container.read(authNotifierProvider.notifier);
-        await notifier.future;
-
-        // Start sign in
-        final signInFuture = notifier.signInWithMagicLink(testEmail);
-
-        // Check that state is loading
-        expect(container.read(authNotifierProvider).isLoading, isTrue);
-
-        // Complete the sign in
-        await signInFuture;
-      });
-
-      test('calls repository signInWithMagicLink with correct email', () async {
-        when(() => mockAuthRepository.currentUser).thenReturn(null);
-        when(
-          () => mockAuthRepository.signInWithMagicLink(any()),
-        ).thenAnswer((_) async {});
-
-        final notifier = container.read(authNotifierProvider.notifier);
-        await notifier.future;
-
-        await notifier.signInWithMagicLink(testEmail);
-
-        verify(
-          () => mockAuthRepository.signInWithMagicLink(testEmail),
-        ).called(1);
-      });
-
-      test('sets error state on auth exception', () async {
-        when(() => mockAuthRepository.currentUser).thenReturn(null);
-        when(
-          () => mockAuthRepository.signInWithMagicLink(any()),
-        ).thenThrow(const InvalidCredentialsException());
-
-        final notifier = container.read(authNotifierProvider.notifier);
-        await notifier.future;
-
-        await expectLater(
-          () => notifier.signInWithMagicLink(testEmail),
-          throwsA(isA<InvalidCredentialsException>()),
-        );
-
-        final currentState = container.read(authNotifierProvider);
-        expect(currentState.hasError, isTrue);
-        expect(currentState.error, isA<InvalidCredentialsException>());
-      });
-
-      test('sets error state on generic exception', () async {
-        when(() => mockAuthRepository.currentUser).thenReturn(null);
-        when(
-          () => mockAuthRepository.signInWithMagicLink(any()),
-        ).thenThrow(Exception('Network error'));
-
-        final notifier = container.read(authNotifierProvider.notifier);
-        await notifier.future;
-
-        await expectLater(
-          () => notifier.signInWithMagicLink(testEmail),
-          throwsA(isA<Exception>()),
-        );
-
-        final currentState = container.read(authNotifierProvider);
-        expect(currentState.hasError, isTrue);
-        expect(currentState.error, isA<Exception>());
       });
     });
 

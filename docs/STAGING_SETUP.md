@@ -73,7 +73,7 @@ When running in staging mode, you'll see:
 
 ### Authentication Problems
 
-1. **Magic Link**: Email-based auth requires internet on device
+1. **Email/Password**: Standard authentication flow requires valid credentials
 2. **RLS Policies**: Ensure Row Level Security is properly configured
 3. **User Creation**: New users are created through Supabase Auth
 

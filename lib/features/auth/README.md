@@ -32,7 +32,7 @@ lib/features/auth/
 
 **AuthRepository Interface** (`domain/repositories/auth_repository.dart`)
 - Abstract repository defining authentication contracts
-- Methods: signInWithMagicLink, signUpWithEmailPassword, signInWithEmailPassword, sendPasswordResetEmail, signOut
+- Methods: signUpWithEmailPassword, signInWithEmailPassword, sendPasswordResetEmail, signOut
 - Returns domain entities, not infrastructure types
 - Stream-based auth state changes
 

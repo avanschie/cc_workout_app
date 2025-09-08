@@ -522,23 +522,6 @@ void main() {
         controller = container.read(authControllerProvider);
       });
 
-      group('signInWithMagicLink', () {
-        test('calls notifier signInWithMagicLink', () async {
-          when(
-            () => mockAuthRepository.signInWithMagicLink(any()),
-          ).thenAnswer((_) async {});
-
-          // Initialize notifier first
-          await container.read(authNotifierProvider.future);
-
-          await controller.signInWithMagicLink(testEmail);
-
-          verify(
-            () => mockAuthRepository.signInWithMagicLink(testEmail),
-          ).called(1);
-        });
-      });
-
       group('signUpWithEmailPassword', () {
         test(
           'calls notifier signUpWithEmailPassword and returns user',

@@ -9,9 +9,6 @@ abstract class AuthRepository {
   /// Stream of authentication state changes.
   Stream<AuthUser?> get authStateChanges;
 
-  /// Sign in with magic link (OTP via email).
-  Future<void> signInWithMagicLink(String email);
-
   /// Sign up with email and password.
   /// Returns the created user.
   Future<AuthUser> signUpWithEmailPassword({

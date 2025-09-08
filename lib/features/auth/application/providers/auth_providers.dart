@@ -130,12 +130,6 @@ class AuthController {
 
   final Ref _ref;
 
-  /// Signs in with magic link (OTP email).
-  Future<void> signInWithMagicLink(String email) async {
-    final notifier = _ref.read(authNotifierProvider.notifier);
-    await notifier.signInWithMagicLink(email);
-  }
-
   /// Signs up with email and password.
   Future<AuthUser> signUpWithEmailPassword({
     required String email,

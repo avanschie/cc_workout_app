@@ -84,58 +84,6 @@ void main() {
       });
     });
 
-    group('signInWithMagicLink', () {
-      test('should call signInWithOtp with correct email', () async {
-        when(
-          mockAuth.signInWithOtp(
-            email: anyNamed('email'),
-            shouldCreateUser: anyNamed('shouldCreateUser'),
-          ),
-        ).thenAnswer((_) async => supabase.AuthResponse());
-
-        await authRepository.signInWithMagicLink('test@example.com');
-
-        verify(
-          mockAuth.signInWithOtp(
-            email: 'test@example.com',
-            shouldCreateUser: true,
-          ),
-        ).called(1);
-      });
-
-      test('should throw AuthException on Supabase AuthException', () async {
-        final authException = supabase.AuthException(
-          'Invalid email',
-          statusCode: '400',
-        );
-        when(
-          mockAuth.signInWithOtp(
-            email: anyNamed('email'),
-            shouldCreateUser: anyNamed('shouldCreateUser'),
-          ),
-        ).thenThrow(authException);
-
-        expect(
-          () => authRepository.signInWithMagicLink('invalid@example.com'),
-          throwsA(isA<AuthException>()),
-        );
-      });
-
-      test('should throw UnknownAuthException on generic exception', () async {
-        when(
-          mockAuth.signInWithOtp(
-            email: anyNamed('email'),
-            shouldCreateUser: anyNamed('shouldCreateUser'),
-          ),
-        ).thenThrow(Exception('Network error'));
-
-        expect(
-          () => authRepository.signInWithMagicLink('test@example.com'),
-          throwsA(isA<UnknownAuthException>()),
-        );
-      });
-    });
-
     group('signOut', () {
       test('should call auth signOut', () async {
         when(mockAuth.signOut()).thenAnswer((_) async {});
