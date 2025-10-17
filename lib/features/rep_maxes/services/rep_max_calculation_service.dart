@@ -3,9 +3,9 @@ import 'package:cc_workout_app/shared/models/rep_max.dart';
 import 'package:cc_workout_app/features/rep_maxes/repositories/rep_maxes_repository.dart';
 
 class RepMaxCalculationService {
-  final RepMaxesRepository _repository;
-
   const RepMaxCalculationService(this._repository);
+
+  final RepMaxesRepository _repository;
 
   Future<List<RepMax>> calculateAllRepMaxes() async {
     return await _repository.getAllRepMaxes();
@@ -68,9 +68,9 @@ class RepMaxCalculationService {
 }
 
 class RepMaxCalculationServiceException implements Exception {
-  final String message;
-
   const RepMaxCalculationServiceException(this.message);
+
+  final String message;
 
   @override
   String toString() => 'RepMaxCalculationServiceException: $message';

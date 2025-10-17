@@ -1,6 +1,6 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:supabase_flutter/supabase_flutter.dart' hide AuthUser;
-import '../../domain/entities/auth_user.dart' as domain;
+import 'package:cc_workout_app/features/auth/domain/entities/auth_user.dart' as domain;
 
 part 'auth_user_dto.freezed.dart';
 part 'auth_user_dto.g.dart';
@@ -18,8 +18,6 @@ class AuthUserDto with _$AuthUserDto {
     required DateTime createdAt,
     DateTime? lastSignInAt,
   }) = _AuthUserDto;
-
-  const AuthUserDto._();
 
   /// Creates an AuthUserDto from a Supabase User object.
   factory AuthUserDto.fromSupabaseUser(User user) {
@@ -41,19 +39,6 @@ class AuthUserDto with _$AuthUserDto {
     );
   }
 
-  /// Converts this DTO to a domain AuthUser entity.
-  domain.AuthUser toDomain() {
-    return domain.AuthUser(
-      id: id,
-      email: email,
-      displayName: displayName,
-      photoUrl: photoUrl,
-      isEmailVerified: isEmailVerified,
-      createdAt: createdAt,
-      lastSignInAt: lastSignInAt,
-    );
-  }
-
   /// Creates an AuthUserDto from a domain AuthUser entity.
   factory AuthUserDto.fromDomain(domain.AuthUser user) {
     return AuthUserDto(
@@ -70,4 +55,19 @@ class AuthUserDto with _$AuthUserDto {
   /// Creates an AuthUserDto from JSON.
   factory AuthUserDto.fromJson(Map<String, dynamic> json) =>
       _$AuthUserDtoFromJson(json);
+
+  const AuthUserDto._();
+
+  /// Converts this DTO to a domain AuthUser entity.
+  domain.AuthUser toDomain() {
+    return domain.AuthUser(
+      id: id,
+      email: email,
+      displayName: displayName,
+      photoUrl: photoUrl,
+      isEmailVerified: isEmailVerified,
+      createdAt: createdAt,
+      lastSignInAt: lastSignInAt,
+    );
+  }
 }

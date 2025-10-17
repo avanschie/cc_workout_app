@@ -1,9 +1,9 @@
+import 'dart:async';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:cc_workout_app/shared/models/lift_entry.dart';
 import 'package:cc_workout_app/shared/models/lift_type.dart';
 import 'package:cc_workout_app/features/lifts/repositories/lift_entries_repository.dart';
-import 'package:cc_workout_app/features/rep_maxes/providers/rep_max_providers.dart';
 
 final supabaseClientProvider = Provider<SupabaseClient>((ref) {
   return Supabase.instance.client;
@@ -17,6 +17,12 @@ final liftEntriesRepositoryProvider = Provider<LiftEntriesRepository>((ref) {
 final liftEntriesProvider = FutureProvider.autoDispose<List<LiftEntry>>((
   ref,
 ) async {
+  // Keep alive for better performance since this is frequently accessed
+  final link = ref.keepAlive();
+
+  // Auto-dispose after 5 minutes of inactivity for memory management
+  Timer(const Duration(minutes: 5), link.close);
+
   final repository = ref.watch(liftEntriesRepositoryProvider);
   return repository.getAllLiftEntries();
 });
@@ -36,14 +42,9 @@ class CreateLiftEntryNotifier extends AutoDisposeAsyncNotifier<void> {
     try {
       final repository = ref.read(liftEntriesRepositoryProvider);
       await repository.createLiftEntry(liftEntry);
+      // Invalidate lift entries providers - rep maxes will auto-refresh via dependencies
       ref.invalidate(liftEntriesProvider);
       ref.invalidate(liftEntriesByTypeProvider);
-      // Invalidate rep maxes since they depend on lift entries
-      ref.invalidate(allRepMaxesProvider);
-      ref.invalidate(repMaxesByLiftProvider);
-      ref.invalidate(fullRepMaxTableProvider);
-      ref.invalidate(repMaxNotifierProvider);
-      ref.invalidate(repMaxTableNotifierProvider);
       state = const AsyncValue.data(null);
     } catch (error, stackTrace) {
       state = AsyncValue.error(error, stackTrace);
@@ -66,14 +67,9 @@ class UpdateLiftEntryNotifier extends AutoDisposeAsyncNotifier<void> {
     try {
       final repository = ref.read(liftEntriesRepositoryProvider);
       await repository.updateLiftEntry(liftEntry);
+      // Invalidate lift entries providers - rep maxes will auto-refresh via dependencies
       ref.invalidate(liftEntriesProvider);
       ref.invalidate(liftEntriesByTypeProvider);
-      // Invalidate rep maxes since they depend on lift entries
-      ref.invalidate(allRepMaxesProvider);
-      ref.invalidate(repMaxesByLiftProvider);
-      ref.invalidate(fullRepMaxTableProvider);
-      ref.invalidate(repMaxNotifierProvider);
-      ref.invalidate(repMaxTableNotifierProvider);
       state = const AsyncValue.data(null);
     } catch (error, stackTrace) {
       state = AsyncValue.error(error, stackTrace);
@@ -96,14 +92,9 @@ class DeleteLiftEntryNotifier extends AutoDisposeAsyncNotifier<void> {
     try {
       final repository = ref.read(liftEntriesRepositoryProvider);
       await repository.deleteLiftEntry(id);
+      // Invalidate lift entries providers - rep maxes will auto-refresh via dependencies
       ref.invalidate(liftEntriesProvider);
       ref.invalidate(liftEntriesByTypeProvider);
-      // Invalidate rep maxes since they depend on lift entries
-      ref.invalidate(allRepMaxesProvider);
-      ref.invalidate(repMaxesByLiftProvider);
-      ref.invalidate(fullRepMaxTableProvider);
-      ref.invalidate(repMaxNotifierProvider);
-      ref.invalidate(repMaxTableNotifierProvider);
       state = const AsyncValue.data(null);
     } catch (error, stackTrace) {
       state = AsyncValue.error(error, stackTrace);

@@ -5,21 +5,22 @@ import 'package:supabase_flutter/supabase_flutter.dart'
     as supabase
     show AuthException;
 
-import '../../../../core/config/env_config.dart';
-import '../../domain/entities/auth_user.dart' as domain;
-import '../../domain/exceptions/auth_exceptions.dart';
-import '../../domain/repositories/auth_repository.dart';
-import '../models/auth_user_dto.dart';
+import 'package:cc_workout_app/core/config/env_config.dart';
+import 'package:cc_workout_app/core/utils/retry_utils.dart';
+import 'package:cc_workout_app/features/auth/domain/entities/auth_user.dart' as domain;
+import 'package:cc_workout_app/features/auth/domain/exceptions/auth_exceptions.dart';
+import 'package:cc_workout_app/features/auth/domain/repositories/auth_repository.dart';
+import 'package:cc_workout_app/features/auth/data/models/auth_user_dto.dart';
 
 /// Supabase implementation of the AuthRepository.
 class SupabaseAuthRepository implements AuthRepository {
-  final SupabaseClient _supabase;
-  StreamController<domain.AuthUser?>? _authStateController;
-  StreamSubscription<AuthState>? _authStateSubscription;
-
   SupabaseAuthRepository(this._supabase) {
     _initializeAuthStateStream();
   }
+
+  final SupabaseClient _supabase;
+  StreamController<domain.AuthUser?>? _authStateController;
+  StreamSubscription<AuthState>? _authStateSubscription;
 
   void _initializeAuthStateStream() {
     _authStateController = StreamController<domain.AuthUser?>.broadcast();
@@ -75,7 +76,9 @@ class SupabaseAuthRepository implements AuthRepository {
   @override
   domain.AuthUser? get currentUser {
     final user = _supabase.auth.currentUser;
-    if (user == null) return null;
+    if (user == null) {
+      return null;
+    }
 
     final userDto = AuthUserDto.fromSupabaseUser(user);
     return userDto.toDomain();
@@ -113,7 +116,7 @@ class SupabaseAuthRepository implements AuthRepository {
       }
 
       if (response.user == null) {
-        throw UnknownAuthException('Sign up failed: no user returned');
+        throw const UnknownAuthException('Sign up failed: no user returned');
       }
 
       // Handle environment-specific email verification
@@ -184,7 +187,7 @@ class SupabaseAuthRepository implements AuthRepository {
       }
 
       if (response.user == null) {
-        throw InvalidCredentialsException();
+        throw const InvalidCredentialsException();
       }
 
       // Check if email verification is required
@@ -223,15 +226,23 @@ class SupabaseAuthRepository implements AuthRepository {
 
   @override
   Future<void> sendPasswordResetEmail(String email) async {
-    try {
-      await _supabase.auth.resetPasswordForEmail(email);
-    } on supabase.AuthException catch (e) {
-      throw _mapAuthException(e);
-    } catch (e) {
-      throw UnknownAuthException(
-        'An unexpected error occurred while sending password reset email: $e',
-      );
-    }
+    return RetryUtils.retry(() async {
+      try {
+        await _supabase.auth.resetPasswordForEmail(email);
+      } on supabase.AuthException catch (e) {
+        throw _mapAuthException(e);
+      } catch (e) {
+        throw UnknownAuthException(
+          'An unexpected error occurred while sending password reset email: $e',
+        );
+      }
+    }, shouldRetry: (error) {
+      // Don't retry for authentication-specific errors
+      return !(error is InvalidCredentialsException ||
+               error is EmailNotConfirmedException ||
+               error is TooManyRequestsException ||
+               error is UserNotFoundException);
+    });
   }
 
   @override
@@ -253,7 +264,9 @@ class SupabaseAuthRepository implements AuthRepository {
       final response = await _supabase.auth.refreshSession();
       final user = response.user;
 
-      if (user == null) return null;
+      if (user == null) {
+        return null;
+      }
 
       final userDto = AuthUserDto.fromSupabaseUser(user);
       return userDto.toDomain();

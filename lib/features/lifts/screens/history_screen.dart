@@ -47,13 +47,13 @@ class HistoryScreen extends ConsumerWidget {
 }
 
 class _HistoryListView extends ConsumerWidget {
-  final List<LiftEntry> entries;
-  final HistoryController historyController;
-
   const _HistoryListView({
     required this.entries,
     required this.historyController,
   });
+
+  final List<LiftEntry> entries;
+  final HistoryController historyController;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -106,7 +106,9 @@ class _HistoryListView extends ConsumerWidget {
     LiftEntry entry,
   ) async {
     final confirmed = await _showDeleteConfirmationDialog(context, entry);
-    if (!confirmed) return;
+    if (!confirmed) {
+      return;
+    }
 
     try {
       await historyController.deleteEntry(entry);
@@ -214,17 +216,17 @@ class _HistoryListView extends ConsumerWidget {
 }
 
 class _LiftEntryRow extends StatelessWidget {
-  final LiftEntry entry;
-  final int index;
-  final VoidCallback onTap;
-  final VoidCallback onDelete;
-
   const _LiftEntryRow({
     required this.entry,
     required this.index,
     required this.onTap,
     required this.onDelete,
   });
+
+  final LiftEntry entry;
+  final int index;
+  final VoidCallback onTap;
+  final VoidCallback onDelete;
 
   @override
   Widget build(BuildContext context) {
@@ -310,9 +312,9 @@ class _LiftEntryRow extends StatelessWidget {
 }
 
 class _LiftBadge extends StatelessWidget {
-  final LiftType liftType;
-
   const _LiftBadge({required this.liftType});
+
+  final LiftType liftType;
 
   @override
   Widget build(BuildContext context) {
@@ -364,9 +366,9 @@ class _LoadingHistoryView extends StatelessWidget {
 }
 
 class _SkeletonLiftRow extends StatefulWidget {
-  final int index;
-
   const _SkeletonLiftRow({required this.index});
+
+  final int index;
 
   @override
   State<_SkeletonLiftRow> createState() => _SkeletonLiftRowState();
@@ -531,10 +533,10 @@ class _EmptyHistoryView extends StatelessWidget {
 }
 
 class _ErrorHistoryView extends StatelessWidget {
+  const _ErrorHistoryView({required this.error, required this.onRetry});
+
   final Object error;
   final VoidCallback onRetry;
-
-  const _ErrorHistoryView({required this.error, required this.onRetry});
 
   @override
   Widget build(BuildContext context) {

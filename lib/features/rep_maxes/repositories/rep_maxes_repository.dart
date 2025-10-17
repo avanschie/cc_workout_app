@@ -12,9 +12,9 @@ abstract class RepMaxesRepository {
 }
 
 class SupabaseRepMaxesRepository implements RepMaxesRepository {
-  final SupabaseClient _supabase;
-
   SupabaseRepMaxesRepository(this._supabase);
+
+  final SupabaseClient _supabase;
 
   @override
   Future<List<RepMax>> getAllRepMaxes() async {
@@ -26,7 +26,7 @@ class SupabaseRepMaxesRepository implements RepMaxesRepository {
         }
 
         if (userId == null) {
-          throw RepMaxesRepositoryException('User not authenticated');
+          throw const RepMaxesRepositoryException('User not authenticated');
         }
 
         if (kDebugMode) {
@@ -43,7 +43,7 @@ class SupabaseRepMaxesRepository implements RepMaxesRepository {
           );
         }
         return response
-            .map<RepMax>((row) => RepMax.fromSupabaseRow(row))
+            .map<RepMax>(RepMax.fromSupabaseRow)
             .toList();
       } catch (e, stackTrace) {
         if (kDebugMode) {
@@ -68,7 +68,7 @@ class SupabaseRepMaxesRepository implements RepMaxesRepository {
       try {
         final userId = _supabase.auth.currentUser?.id;
         if (userId == null) {
-          throw RepMaxesRepositoryException('User not authenticated');
+          throw const RepMaxesRepositoryException('User not authenticated');
         }
 
         final response = await _supabase
@@ -79,7 +79,7 @@ class SupabaseRepMaxesRepository implements RepMaxesRepository {
             .order('reps');
 
         return response
-            .map<RepMax>((row) => RepMax.fromSupabaseRow(row))
+            .map<RepMax>(RepMax.fromSupabaseRow)
             .toList();
       } catch (e, stackTrace) {
         final appError = ErrorHandler.handleError(e, stackTrace);
@@ -94,7 +94,7 @@ class SupabaseRepMaxesRepository implements RepMaxesRepository {
       try {
         final userId = _supabase.auth.currentUser?.id;
         if (userId == null) {
-          throw RepMaxesRepositoryException('User not authenticated');
+          throw const RepMaxesRepositoryException('User not authenticated');
         }
 
         final response = await _supabase
@@ -105,7 +105,9 @@ class SupabaseRepMaxesRepository implements RepMaxesRepository {
             .eq('reps', reps)
             .maybeSingle();
 
-        if (response == null) return null;
+        if (response == null) {
+          return null;
+        }
         return RepMax.fromSupabaseRow(response);
       } catch (e, stackTrace) {
         final appError = ErrorHandler.handleError(e, stackTrace);
@@ -116,9 +118,9 @@ class SupabaseRepMaxesRepository implements RepMaxesRepository {
 }
 
 class RepMaxesRepositoryException implements Exception {
-  final String message;
-
   const RepMaxesRepositoryException(this.message);
+
+  final String message;
 
   @override
   String toString() => 'RepMaxesRepositoryException: $message';

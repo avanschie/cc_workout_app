@@ -1,1 +1,65 @@
 include: package:flutter_lints/flutter.yaml
+
+analyzer:
+  exclude:
+    - "**/*.g.dart"
+    - "**/*.freezed.dart"
+    - "test/**/*"
+  strong-mode:
+    implicit-casts: false
+    implicit-dynamic: false
+  errors:
+    # Treat missing required parameters as errors
+    missing_required_param: error
+    # Treat missing return values as errors
+    missing_return: error
+    # Treat invalid assignments as errors
+    invalid_assignment: error
+    # Make documentation warnings less strict for internal files
+    public_member_api_docs: ignore
+
+linter:
+  rules:
+    # Error handling
+    - always_declare_return_types
+    - avoid_catching_errors
+    - use_rethrow_when_possible
+
+    # Code style
+    - always_put_control_body_on_new_line
+    - always_use_package_imports
+    - avoid_redundant_argument_values
+    - avoid_unnecessary_containers
+    - prefer_const_constructors
+    - prefer_const_declarations
+    - prefer_const_literals_to_create_immutables
+    - prefer_final_fields
+    - prefer_final_in_for_each
+    - prefer_final_locals
+    - sort_child_properties_last
+    - sort_constructors_first
+    - sort_unnamed_constructors_first
+
+    # Performance
+    - avoid_function_literals_in_foreach_calls
+    - prefer_collection_literals
+    - prefer_spread_collections
+    - unnecessary_lambdas
+
+    # Safety
+    - avoid_dynamic_calls
+    - avoid_type_to_string
+    - close_sinks
+    - hash_and_equals
+    - invariant_booleans
+    - literal_only_boolean_expressions
+    - test_types_in_equals
+    - unrelated_type_equality_checks
+
+    # Documentation (keeping for external APIs but ignoring via analyzer settings)
+    # - public_member_api_docs  # Disabled for internal development
+    # - package_api_docs       # Disabled for internal development
+
+    # Flutter specific
+    - avoid_web_libraries_in_flutter
+    - use_key_in_widget_constructors

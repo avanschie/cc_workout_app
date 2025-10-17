@@ -46,12 +46,8 @@ class AuthUser with _$AuthUser {
       lastSignInAt: user.lastSignInAt != null
           ? DateTime.parse(user.lastSignInAt!)
           : null,
-      userMetadata: user.userMetadata?.map((k, v) => MapEntry(k, v)) ?? {},
-      appMetadata:
-          (user.appMetadata as Map<String, dynamic>?)?.map(
-            (k, v) => MapEntry(k, v),
-          ) ??
-          {},
+      userMetadata: user.userMetadata ?? {},
+      appMetadata: (user.appMetadata as Map<String, dynamic>?) ?? {},
     );
   }
 }

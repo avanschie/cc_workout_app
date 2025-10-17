@@ -2,16 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart';
 
 class ErrorBoundary extends StatefulWidget {
-  final Widget child;
-  final Widget Function(Object error, StackTrace? stackTrace)? errorBuilder;
-  final void Function(Object error, StackTrace? stackTrace)? onError;
-
   const ErrorBoundary({
     super.key,
     required this.child,
     this.errorBuilder,
     this.onError,
   });
+
+  final Widget child;
+  final Widget Function(Object error, StackTrace? stackTrace)? errorBuilder;
+  final void Function(Object error, StackTrace? stackTrace)? onError;
 
   @override
   State<ErrorBoundary> createState() => _ErrorBoundaryState();

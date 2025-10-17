@@ -84,6 +84,6 @@ class SnackBarUtils {
   }
 
   static void showInfo(BuildContext context, String message) {
-    showSnackBar(context, message, type: SnackBarType.info);
+    showSnackBar(context, message);
   }
 }

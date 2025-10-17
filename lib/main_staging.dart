@@ -24,14 +24,6 @@ void main() async {
   await Supabase.initialize(
     url: EnvConfig.config.supabaseUrl,
     anonKey: EnvConfig.config.supabaseAnonKey,
-    authOptions: const FlutterAuthClientOptions(
-      authFlowType: AuthFlowType.pkce,
-      autoRefreshToken: true,
-    ),
-    realtimeClientOptions: const RealtimeClientOptions(
-      logLevel: RealtimeLogLevel.info,
-    ),
-    storageOptions: const StorageClientOptions(retryAttempts: 3),
   );
 
   // Debug: Check if there's a restored session
@@ -67,7 +59,6 @@ class MainApp extends StatelessWidget {
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(
           seedColor: const Color(0xFF6B46C1),
-          brightness: Brightness.light,
         ),
         useMaterial3: true,
         appBarTheme: const AppBarTheme(centerTitle: true, elevation: 0),
@@ -98,7 +89,6 @@ class MainApp extends StatelessWidget {
           ),
         ),
       ),
-      themeMode: ThemeMode.system,
       home: const AuthGate(),
       routes: {
         '/sign-in': (context) => const EnvironmentBanner(

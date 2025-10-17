@@ -296,7 +296,7 @@ class _AddLiftScreenState extends ConsumerState<AddLiftScreen> {
           'Failed to save lift: ${e.toString()}',
           action: SnackBarAction(
             label: 'Retry',
-            onPressed: () => _handleSave(),
+            onPressed: _handleSave,
           ),
         );
       }

@@ -14,9 +14,9 @@ abstract class LiftEntriesRepository {
 }
 
 class SupabaseLiftEntriesRepository implements LiftEntriesRepository {
-  final SupabaseClient _supabase;
-
   SupabaseLiftEntriesRepository(this._supabase);
+
+  final SupabaseClient _supabase;
 
   @override
   Future<List<LiftEntry>> getAllLiftEntries() async {
@@ -28,7 +28,7 @@ class SupabaseLiftEntriesRepository implements LiftEntriesRepository {
         }
 
         if (userId == null) {
-          throw LiftEntriesRepositoryException('User not authenticated');
+          throw const LiftEntriesRepositoryException('User not authenticated');
         }
 
         final response = await _supabase
@@ -44,7 +44,7 @@ class SupabaseLiftEntriesRepository implements LiftEntriesRepository {
           );
         }
         return response
-            .map<LiftEntry>((row) => LiftEntry.fromSupabaseRow(row))
+            .map<LiftEntry>(LiftEntry.fromSupabaseRow)
             .toList();
       } catch (e, stackTrace) {
         if (kDebugMode) {
@@ -62,7 +62,7 @@ class SupabaseLiftEntriesRepository implements LiftEntriesRepository {
       try {
         final userId = _supabase.auth.currentUser?.id;
         if (userId == null) {
-          throw LiftEntriesRepositoryException('User not authenticated');
+          throw const LiftEntriesRepositoryException('User not authenticated');
         }
 
         final response = await _supabase
@@ -74,7 +74,7 @@ class SupabaseLiftEntriesRepository implements LiftEntriesRepository {
             .order('created_at', ascending: false);
 
         return response
-            .map<LiftEntry>((row) => LiftEntry.fromSupabaseRow(row))
+            .map<LiftEntry>(LiftEntry.fromSupabaseRow)
             .toList();
       } catch (e, stackTrace) {
         final appError = ErrorHandler.handleError(e, stackTrace);
@@ -86,7 +86,7 @@ class SupabaseLiftEntriesRepository implements LiftEntriesRepository {
   @override
   Future<LiftEntry> createLiftEntry(LiftEntry liftEntry) async {
     if (!liftEntry.isValid) {
-      throw LiftEntriesRepositoryException('Invalid lift entry data');
+      throw const LiftEntriesRepositoryException('Invalid lift entry data');
     }
 
     return RetryUtils.retry(() async {
@@ -99,7 +99,7 @@ class SupabaseLiftEntriesRepository implements LiftEntriesRepository {
         }
 
         if (currentUserId == null) {
-          throw LiftEntriesRepositoryException('No authenticated user');
+          throw const LiftEntriesRepositoryException('No authenticated user');
         }
 
         if (currentUserId != liftEntry.userId) {
@@ -152,19 +152,19 @@ class SupabaseLiftEntriesRepository implements LiftEntriesRepository {
   @override
   Future<LiftEntry> updateLiftEntry(LiftEntry liftEntry) async {
     if (!liftEntry.isValid) {
-      throw LiftEntriesRepositoryException('Invalid lift entry data');
+      throw const LiftEntriesRepositoryException('Invalid lift entry data');
     }
 
     return RetryUtils.retry(() async {
       try {
         final userId = _supabase.auth.currentUser?.id;
         if (userId == null) {
-          throw LiftEntriesRepositoryException('User not authenticated');
+          throw const LiftEntriesRepositoryException('User not authenticated');
         }
 
         // Ensure user owns this entry
         if (liftEntry.userId != userId) {
-          throw LiftEntriesRepositoryException(
+          throw const LiftEntriesRepositoryException(
             'Unauthorized: Cannot update entry owned by another user',
           );
         }
@@ -194,7 +194,7 @@ class SupabaseLiftEntriesRepository implements LiftEntriesRepository {
       try {
         final userId = _supabase.auth.currentUser?.id;
         if (userId == null) {
-          throw LiftEntriesRepositoryException('User not authenticated');
+          throw const LiftEntriesRepositoryException('User not authenticated');
         }
 
         // Only delete entries owned by the current user
@@ -215,9 +215,9 @@ class SupabaseLiftEntriesRepository implements LiftEntriesRepository {
 }
 
 class LiftEntriesRepositoryException implements Exception {
-  final String message;
-
   const LiftEntriesRepositoryException(this.message);
+
+  final String message;
 
   @override
   String toString() => 'LiftEntriesRepositoryException: $message';

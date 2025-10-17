@@ -48,7 +48,6 @@ class MainApp extends StatelessWidget {
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(
           seedColor: const Color(0xFF6B46C1),
-          brightness: Brightness.light,
         ),
         useMaterial3: true,
         appBarTheme: const AppBarTheme(centerTitle: true, elevation: 0),
@@ -79,7 +78,6 @@ class MainApp extends StatelessWidget {
           ),
         ),
       ),
-      themeMode: ThemeMode.system,
       home: const AuthGate(),
       routes: {
         '/sign-in': (context) => const EnvironmentBanner(

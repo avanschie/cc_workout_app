@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../application/providers/auth_providers.dart';
-import '../../domain/exceptions/auth_exceptions.dart';
-import '../widgets/form_components.dart';
-import '../../../../core/utils/snackbar_utils.dart';
-import '../../../../core/config/env_config.dart';
+import 'package:cc_workout_app/features/auth/application/providers/auth_providers.dart';
+import 'package:cc_workout_app/features/auth/domain/exceptions/auth_exceptions.dart';
+import 'package:cc_workout_app/features/auth/presentation/widgets/form_components.dart';
+import 'package:cc_workout_app/core/utils/snackbar_utils.dart';
+import 'package:cc_workout_app/core/config/env_config.dart';
 
 /// Forgot password screen for requesting password reset emails
 ///
@@ -182,7 +182,7 @@ class _ForgotPasswordScreenState extends ConsumerState<ForgotPasswordScreen> {
     );
   }
 
-  Widget _buildSuccessContent(ThemeData theme, colorScheme) {
+  Widget _buildSuccessContent(ThemeData theme, ColorScheme colorScheme) {
     final canResend = _canResendEmail();
     final remainingCooldown = _getRemainingCooldownSeconds();
 
@@ -407,14 +407,18 @@ class _ForgotPasswordScreenState extends ConsumerState<ForgotPasswordScreen> {
   }
 
   bool _canResendEmail() {
-    if (_lastSentTime == null) return false;
+    if (_lastSentTime == null) {
+      return false;
+    }
     final now = DateTime.now();
     const cooldownDuration = Duration(seconds: 60); // 1 minute cooldown
     return now.difference(_lastSentTime!) >= cooldownDuration;
   }
 
   int _getRemainingCooldownSeconds() {
-    if (_lastSentTime == null) return 0;
+    if (_lastSentTime == null) {
+      return 0;
+    }
     final now = DateTime.now();
     const cooldownDuration = Duration(seconds: 60);
     final elapsed = now.difference(_lastSentTime!);
@@ -467,7 +471,9 @@ class _ForgotPasswordScreenState extends ConsumerState<ForgotPasswordScreen> {
   }
 
   Future<void> _handleResendEmail() async {
-    if (!_canResendEmail()) return;
+    if (!_canResendEmail()) {
+      return;
+    }
 
     await _handleSendResetEmail();
   }

@@ -1,16 +1,16 @@
 import 'package:flutter/material.dart';
 
 class SkeletonWidget extends StatefulWidget {
-  final double? width;
-  final double height;
-  final BorderRadius? borderRadius;
-
   const SkeletonWidget({
     super.key,
     this.width,
     required this.height,
     this.borderRadius,
   });
+
+  final double? width;
+  final double height;
+  final BorderRadius? borderRadius;
 
   @override
   State<SkeletonWidget> createState() => _SkeletonWidgetState();
@@ -111,7 +111,6 @@ class SkeletonRepMaxTable extends StatelessWidget {
           child: Row(
             children: [
               const Expanded(
-                flex: 1,
                 child: SkeletonWidget(width: 40, height: 16),
               ),
               ...List.generate(
@@ -148,7 +147,6 @@ class SkeletonRepMaxTable extends StatelessWidget {
                 child: Row(
                   children: [
                     const Expanded(
-                      flex: 1,
                       child: SkeletonWidget(width: 20, height: 20),
                     ),
                     ...List.generate(
@@ -176,10 +174,10 @@ class SkeletonRepMaxTable extends StatelessWidget {
 }
 
 class SkeletonCard extends StatelessWidget {
+  const SkeletonCard({super.key, this.width, this.height = 120});
+
   final double? width;
   final double height;
-
-  const SkeletonCard({super.key, this.width, this.height = 120});
 
   @override
   Widget build(BuildContext context) {

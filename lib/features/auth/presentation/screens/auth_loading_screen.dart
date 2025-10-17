@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../../../core/config/env_config.dart';
+import 'package:cc_workout_app/core/config/env_config.dart';
 
 /// Loading screen displayed during authentication operations
 ///
@@ -207,7 +207,6 @@ class AuthInitializingScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return const AuthLoadingScreen(
       message: 'Checking authentication...',
-      showEnvironmentInfo: true,
     );
   }
 }

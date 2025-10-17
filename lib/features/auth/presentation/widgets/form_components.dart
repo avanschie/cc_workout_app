@@ -379,7 +379,9 @@ class _AuthPasswordFieldState extends State<AuthPasswordField> {
     ThemeData theme,
     ColorScheme colorScheme,
   ) {
-    if (_validationResult == null) return const SizedBox.shrink();
+    if (_validationResult == null) {
+      return const SizedBox.shrink();
+    }
 
     Color strengthColor;
     String strengthText;

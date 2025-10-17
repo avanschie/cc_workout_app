@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../application/providers/auth_providers.dart';
-import '../../domain/entities/auth_user.dart';
-import 'auth_loading_screen.dart';
-import 'sign_in_screen.dart';
-import 'sign_up_screen.dart';
-import 'forgot_password_screen.dart';
-import '../../../../core/navigation/main_navigation_shell.dart';
+import 'package:cc_workout_app/features/auth/application/providers/auth_providers.dart';
+import 'package:cc_workout_app/features/auth/domain/entities/auth_user.dart';
+import 'package:cc_workout_app/features/auth/presentation/screens/auth_loading_screen.dart';
+import 'package:cc_workout_app/features/auth/presentation/screens/sign_in_screen.dart';
+import 'package:cc_workout_app/features/auth/presentation/screens/sign_up_screen.dart';
+import 'package:cc_workout_app/features/auth/presentation/screens/forgot_password_screen.dart';
+import 'package:cc_workout_app/core/navigation/main_navigation_shell.dart';
 
 /// Authentication gate that handles routing based on authentication state
 ///
@@ -36,7 +36,9 @@ class AuthGate extends ConsumerWidget {
       // Authenticated user - show main app
       data: (user) {
         if (user != null) {
-          return const MainNavigationShell();
+          return const MainNavigationShell(
+            child: SizedBox.shrink(),
+          );
         } else {
           // Not authenticated - show auth navigator
           return const AuthNavigator();
@@ -112,7 +114,7 @@ class _AuthNavigatorState extends State<AuthNavigator> {
                   const end = Offset.zero;
                   const curve = Curves.easeInOut;
 
-                  var tween = Tween(
+                  final tween = Tween(
                     begin: begin,
                     end: end,
                   ).chain(CurveTween(curve: curve));
@@ -122,8 +124,6 @@ class _AuthNavigatorState extends State<AuthNavigator> {
                     child: child,
                   );
                 },
-            transitionDuration: const Duration(milliseconds: 300),
-            reverseTransitionDuration: const Duration(milliseconds: 300),
           );
         },
       ),

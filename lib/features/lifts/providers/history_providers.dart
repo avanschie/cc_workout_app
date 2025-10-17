@@ -109,9 +109,9 @@ final historyListProvider =
 
 /// Controller for orchestrating history operations
 class HistoryController {
-  final Ref ref;
-
   HistoryController(this.ref);
+
+  final Ref ref;
 
   /// Initialize edit flow with a lift entry
   void startEdit(LiftEntry entry) {

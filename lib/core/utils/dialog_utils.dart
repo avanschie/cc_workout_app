@@ -49,7 +49,6 @@ class DialogUtils {
           customMessage ??
           'Are you sure you want to delete this $itemName? This action cannot be undone.',
       confirmText: 'Delete',
-      cancelText: 'Cancel',
       confirmColor: Theme.of(context).colorScheme.error,
       icon: Icons.delete_outline,
     );
@@ -129,7 +128,7 @@ class DialogUtils {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          icon: Icon(Icons.check_circle_outline, color: Colors.green, size: 32),
+          icon: const Icon(Icons.check_circle_outline, color: Colors.green, size: 32),
           title: Text(title),
           content: Text(message),
           actions: [

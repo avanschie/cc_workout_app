@@ -1,4 +1,4 @@
-import '../entities/auth_user.dart';
+import 'package:cc_workout_app/features/auth/domain/entities/auth_user.dart';
 
 /// Abstract repository for authentication operations.
 /// Defines the contract for authentication data access.

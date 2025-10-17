@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../application/providers/auth_providers.dart';
-import '../../domain/exceptions/auth_exceptions.dart';
-import '../widgets/form_components.dart';
-import '../../../../core/utils/snackbar_utils.dart';
-import '../../../../core/config/env_config.dart';
+import 'package:cc_workout_app/features/auth/application/providers/auth_providers.dart';
+import 'package:cc_workout_app/features/auth/domain/exceptions/auth_exceptions.dart';
+import 'package:cc_workout_app/features/auth/presentation/widgets/form_components.dart';
+import 'package:cc_workout_app/core/utils/snackbar_utils.dart';
+import 'package:cc_workout_app/core/config/env_config.dart';
 
 /// Sign up screen with email/password registration
 ///
@@ -174,7 +174,6 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
             controller: _emailController,
             enabled: !_isLoading,
             autofocus: true,
-            textInputAction: TextInputAction.next,
             onFieldSubmitted: () {
               FocusScope.of(context).requestFocus(_displayNameFocusNode);
             },
@@ -186,7 +185,6 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
           AuthDisplayNameField(
             controller: _displayNameController,
             enabled: !_isLoading,
-            textInputAction: TextInputAction.next,
             onFieldSubmitted: () {
               FocusScope.of(context).requestFocus(_passwordFocusNode);
             },
@@ -213,7 +211,6 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
             enabled: !_isLoading,
             labelText: 'Confirm Password',
             hintText: 'Re-enter your password',
-            textInputAction: TextInputAction.done,
             isConfirmationField: true,
             originalPasswordController: _passwordController,
             onFieldSubmitted: _acceptedTerms ? _handleSignUp : null,

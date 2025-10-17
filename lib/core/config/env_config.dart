@@ -40,10 +40,7 @@ class EnvironmentConfig {
     supabaseUrl: supabaseUrl,
     supabaseAnonKey: supabaseAnonKey,
     enableLogging: true,
-    requireEmailVerification:
-        true, // Required for tests - disable in Supabase dashboard if needed
-    enableAutoSignIn: false,
-    sessionTimeoutMinutes: 60,
+    // Required for tests - disable in Supabase dashboard if needed
   );
 
   static EnvironmentConfig production({
@@ -54,9 +51,7 @@ class EnvironmentConfig {
     supabaseUrl: supabaseUrl,
     supabaseAnonKey: supabaseAnonKey,
     enableLogging: false,
-    requireEmailVerification:
-        true, // Always require email verification in production
-    enableAutoSignIn: false,
+    // Always require email verification in production
     sessionTimeoutMinutes: 30, // Shorter sessions for production security
   );
 }

@@ -2,10 +2,10 @@ import 'dart:async';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../../../core/config/env_config.dart';
-import '../../domain/entities/auth_user.dart';
-import '../../domain/repositories/auth_repository.dart';
-import '../../domain/exceptions/auth_exceptions.dart';
+import 'package:cc_workout_app/core/config/env_config.dart';
+import 'package:cc_workout_app/features/auth/domain/entities/auth_user.dart';
+import 'package:cc_workout_app/features/auth/domain/repositories/auth_repository.dart';
+import 'package:cc_workout_app/features/auth/domain/exceptions/auth_exceptions.dart';
 
 /// Provider for the AuthRepository - to be overridden by the providers file
 final authRepositoryProvider = Provider<AuthRepository>((ref) {

@@ -1,10 +1,10 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:supabase_flutter/supabase_flutter.dart' as supabase;
 
-import '../../domain/entities/auth_user.dart';
-import '../../domain/repositories/auth_repository.dart';
-import '../../data/repositories/supabase_auth_repository.dart';
-import '../notifiers/auth_notifier.dart';
+import 'package:cc_workout_app/features/auth/domain/entities/auth_user.dart';
+import 'package:cc_workout_app/features/auth/domain/repositories/auth_repository.dart';
+import 'package:cc_workout_app/features/auth/data/repositories/supabase_auth_repository.dart';
+import 'package:cc_workout_app/features/auth/application/notifiers/auth_notifier.dart';
 
 /// Provider for the Supabase client instance.
 ///

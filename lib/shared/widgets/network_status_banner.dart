@@ -4,7 +4,7 @@ import 'package:cc_workout_app/core/utils/connectivity_service.dart';
 
 final connectivityServiceProvider = Provider<ConnectivityService>((ref) {
   final service = ConnectivityService();
-  ref.onDispose(() => service.dispose());
+  ref.onDispose(service.dispose);
   return service;
 });
 
@@ -15,9 +15,9 @@ final connectivityStreamProvider = StreamProvider<bool>((ref) {
 });
 
 class NetworkStatusBanner extends ConsumerWidget {
-  final Widget child;
-
   const NetworkStatusBanner({super.key, required this.child});
+
+  final Widget child;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -39,9 +39,9 @@ class NetworkStatusBanner extends ConsumerWidget {
               color: Colors.orange.shade600,
               child: Row(
                 children: [
-                  Icon(Icons.wifi_off, color: Colors.white, size: 16),
+                  const Icon(Icons.wifi_off, color: Colors.white, size: 16),
                   const SizedBox(width: 8),
-                  Expanded(
+                  const Expanded(
                     child: Text(
                       'No internet connection. Some features may not work.',
                       style: TextStyle(

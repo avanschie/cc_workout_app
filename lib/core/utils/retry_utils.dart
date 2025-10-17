@@ -4,17 +4,17 @@ import 'package:flutter/foundation.dart';
 import 'package:cc_workout_app/core/utils/error_handler.dart';
 
 class RetryConfig {
-  final int maxRetries;
-  final Duration initialDelay;
-  final double backoffMultiplier;
-  final Duration maxDelay;
-
   const RetryConfig({
     this.maxRetries = 3,
     this.initialDelay = const Duration(milliseconds: 500),
     this.backoffMultiplier = 2.0,
     this.maxDelay = const Duration(seconds: 10),
   });
+
+  final int maxRetries;
+  final Duration initialDelay;
+  final double backoffMultiplier;
+  final Duration maxDelay;
 }
 
 class RetryUtils {

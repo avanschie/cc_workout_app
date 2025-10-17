@@ -3,9 +3,10 @@ import 'dart:io';
 import 'package:flutter/foundation.dart';
 
 class ConnectivityService {
-  static final ConnectivityService _instance = ConnectivityService._internal();
   factory ConnectivityService() => _instance;
   ConnectivityService._internal();
+
+  static final ConnectivityService _instance = ConnectivityService._internal();
 
   final StreamController<bool> _connectivityController =
       StreamController<bool>.broadcast();

@@ -9,9 +9,9 @@ import 'package:cc_workout_app/core/utils/snackbar_utils.dart';
 import 'package:cc_workout_app/shared/forms/lift_form_state.dart';
 
 class EditLiftScreen extends ConsumerStatefulWidget {
-  final LiftEntry liftEntry;
-
   const EditLiftScreen({super.key, required this.liftEntry});
+
+  final LiftEntry liftEntry;
 
   @override
   ConsumerState<EditLiftScreen> createState() => _EditLiftScreenState();
@@ -45,7 +45,7 @@ class _EditLiftScreenState extends ConsumerState<EditLiftScreen> {
           IconButton(
             onPressed: formState.showDeleteConfirmation
                 ? null
-                : () => _showDeleteConfirmationDialog(),
+                : _showDeleteConfirmationDialog,
             icon: const Icon(Icons.delete),
             tooltip: 'Delete Lift',
           ),
@@ -320,7 +320,7 @@ class _EditLiftScreenState extends ConsumerState<EditLiftScreen> {
           'Failed to update lift: ${e.toString()}',
           action: SnackBarAction(
             label: 'Retry',
-            onPressed: () => _handleSave(),
+            onPressed: _handleSave,
           ),
         );
       }
@@ -437,7 +437,7 @@ class _EditLiftScreenState extends ConsumerState<EditLiftScreen> {
           'Failed to delete lift: ${e.toString()}',
           action: SnackBarAction(
             label: 'Retry',
-            onPressed: () => _showDeleteConfirmationDialog(),
+            onPressed: _showDeleteConfirmationDialog,
           ),
         );
       }

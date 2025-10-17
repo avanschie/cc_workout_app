@@ -5,11 +5,6 @@ import 'dart:io';
 enum AppErrorType { network, authentication, validation, database, unknown }
 
 class AppError {
-  final String message;
-  final AppErrorType type;
-  final dynamic originalError;
-  final StackTrace? stackTrace;
-
   const AppError({
     required this.message,
     required this.type,
@@ -62,6 +57,11 @@ class AppError {
       stackTrace: stackTrace,
     );
   }
+
+  final String message;
+  final AppErrorType type;
+  final dynamic originalError;
+  final StackTrace? stackTrace;
 
   static String _getPostgrestErrorMessage(PostgrestException error) {
     switch (error.code) {

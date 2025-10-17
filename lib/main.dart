@@ -3,11 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:cc_workout_app/core/config/env_config.dart';
 import 'package:cc_workout_app/features/auth/application/providers/auth_providers.dart';
-import 'package:cc_workout_app/features/auth/presentation/screens/auth_gate.dart';
-import 'package:cc_workout_app/features/auth/presentation/screens/sign_in_screen.dart';
-import 'package:cc_workout_app/features/auth/presentation/screens/sign_up_screen.dart';
-import 'package:cc_workout_app/features/auth/presentation/screens/forgot_password_screen.dart';
-import 'package:cc_workout_app/shared/widgets/network_status_banner.dart';
+import 'package:cc_workout_app/core/navigation/app_router.dart';
 import 'package:cc_workout_app/shared/widgets/error_boundary.dart';
 
 void main() async {
@@ -47,20 +43,22 @@ void main() async {
   );
 }
 
-class MainApp extends StatelessWidget {
+class MainApp extends ConsumerWidget {
   const MainApp({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
+  Widget build(BuildContext context, WidgetRef ref) {
+    final router = ref.watch(routerProvider);
+
+    return MaterialApp.router(
       title: 'Powerlifting Rep Max Tracker',
+      routerConfig: router,
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(
           seedColor: const Color(0xFF6B46C1),
-          brightness: Brightness.light,
         ),
         useMaterial3: true,
-        appBarTheme: const AppBarTheme(centerTitle: true, elevation: 0),
+        appBarTheme: const AppBarTheme(centerTitle: true),
         floatingActionButtonTheme: const FloatingActionButtonThemeData(
           elevation: 4,
         ),
@@ -77,7 +75,7 @@ class MainApp extends StatelessWidget {
           brightness: Brightness.dark,
         ),
         useMaterial3: true,
-        appBarTheme: const AppBarTheme(centerTitle: true, elevation: 0),
+        appBarTheme: const AppBarTheme(centerTitle: true),
         floatingActionButtonTheme: const FloatingActionButtonThemeData(
           elevation: 4,
         ),
@@ -88,16 +86,6 @@ class MainApp extends StatelessWidget {
           ),
         ),
       ),
-      themeMode: ThemeMode.system,
-      home: const AuthGate(),
-      routes: {
-        '/sign-in': (context) =>
-            const NetworkStatusBanner(child: SignInScreen()),
-        '/sign-up': (context) =>
-            const NetworkStatusBanner(child: SignUpScreen()),
-        '/forgot-password': (context) =>
-            const NetworkStatusBanner(child: ForgotPasswordScreen()),
-      },
     );
   }
 }

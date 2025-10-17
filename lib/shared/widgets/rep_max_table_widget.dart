@@ -4,9 +4,9 @@ import 'package:cc_workout_app/shared/models/rep_max.dart';
 import 'package:cc_workout_app/shared/constants/lift_colors.dart';
 
 class RepMaxTableWidget extends StatelessWidget {
-  final Map<LiftType, Map<int, RepMax>> repMaxTable;
-
   const RepMaxTableWidget({super.key, required this.repMaxTable});
+
+  final Map<LiftType, Map<int, RepMax>> repMaxTable;
 
   @override
   Widget build(BuildContext context) {
@@ -44,7 +44,6 @@ class RepMaxTableWidget extends StatelessWidget {
       child: Row(
         children: [
           Expanded(
-            flex: 1,
             child: FittedBox(
               fit: BoxFit.scaleDown,
               alignment: Alignment.centerLeft,
@@ -111,7 +110,6 @@ class RepMaxTableWidget extends StatelessWidget {
       child: Row(
         children: [
           Expanded(
-            flex: 1,
             child: Container(
               padding: const EdgeInsets.symmetric(vertical: 6, horizontal: 8),
               decoration: BoxDecoration(
@@ -156,7 +154,6 @@ class RepMaxTableWidget extends StatelessWidget {
                   border: hasData
                       ? Border.all(
                           color: liftColor.withValues(alpha: 0.25),
-                          width: 1,
                         )
                       : null,
                 ),

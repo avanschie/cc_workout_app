@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../application/providers/auth_providers.dart';
-import '../../domain/exceptions/auth_exceptions.dart';
-import '../widgets/form_components.dart';
-import '../../../../core/utils/snackbar_utils.dart';
-import '../../../../core/config/env_config.dart';
+import 'package:cc_workout_app/features/auth/application/providers/auth_providers.dart';
+import 'package:cc_workout_app/features/auth/domain/exceptions/auth_exceptions.dart';
+import 'package:cc_workout_app/features/auth/presentation/widgets/form_components.dart';
+import 'package:cc_workout_app/core/utils/snackbar_utils.dart';
+import 'package:cc_workout_app/core/config/env_config.dart';
 
 /// Sign in screen with email/password authentication
 ///
@@ -155,7 +155,6 @@ class _SignInScreenState extends ConsumerState<SignInScreen> {
             controller: _emailController,
             enabled: !_isLoading,
             autofocus: true,
-            textInputAction: TextInputAction.next,
             onFieldSubmitted: () {
               FocusScope.of(context).requestFocus(_passwordFocusNode);
             },
@@ -167,7 +166,6 @@ class _SignInScreenState extends ConsumerState<SignInScreen> {
           AuthPasswordField(
             controller: _passwordController,
             enabled: !_isLoading,
-            textInputAction: TextInputAction.done,
             onFieldSubmitted: _handleSignIn,
           ),
         ],
