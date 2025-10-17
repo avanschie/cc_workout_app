@@ -12,6 +12,28 @@ import 'package:cc_workout_app/features/rep_maxes/screens/rep_maxes_screen.dart'
 import 'rep_maxes_screen_test.mocks.dart';
 
 @GenerateMocks([RepMaxCalculationService])
+
+/// Test notifier that avoids timers and complex dependencies
+class TestRepMaxTableNotifier extends RepMaxTableNotifier {
+  final RepMaxCalculationService _service;
+
+  TestRepMaxTableNotifier(this._service);
+
+  @override
+  Future<Map<LiftType, Map<int, RepMax>>> build() async {
+    // Don't watch other providers in test to avoid complex dependencies
+    return await _service.getFullRepMaxTable();
+  }
+
+  @override
+  Future<void> refresh() async {
+    state = const AsyncValue.loading();
+    state = await AsyncValue.guard(() async {
+      return await _service.getFullRepMaxTable();
+    });
+  }
+}
+
 void main() {
   group('RepMaxesScreen', () {
     late MockRepMaxCalculationService mockService;
@@ -53,6 +75,10 @@ void main() {
       return ProviderScope(
         overrides: [
           repMaxCalculationServiceProvider.overrideWithValue(mockService),
+          // Override the notifier provider to avoid timer issues in tests
+          repMaxTableNotifierProvider.overrideWith(
+            () => TestRepMaxTableNotifier(mockService),
+          ),
         ],
         child: const MaterialApp(home: RepMaxesScreen()),
       );

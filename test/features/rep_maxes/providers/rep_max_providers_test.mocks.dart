@@ -3,15 +3,20 @@
 // Do not manually edit this file.
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
-import 'dart:async' as _i3;
+import 'dart:async' as _i5;
 
+import 'package:cc_workout_app/features/lifts/repositories/lift_entries_repository.dart'
+    as _i10;
 import 'package:cc_workout_app/features/rep_maxes/repositories/rep_maxes_repository.dart'
-    as _i2;
+    as _i4;
 import 'package:cc_workout_app/features/rep_maxes/services/rep_max_calculation_service.dart'
-    as _i6;
-import 'package:cc_workout_app/shared/models/lift_type.dart' as _i5;
-import 'package:cc_workout_app/shared/models/rep_max.dart' as _i4;
+    as _i8;
+import 'package:cc_workout_app/shared/models/lift_entry.dart' as _i3;
+import 'package:cc_workout_app/shared/models/lift_type.dart' as _i7;
+import 'package:cc_workout_app/shared/models/rep_max.dart' as _i6;
 import 'package:mockito/mockito.dart' as _i1;
+import 'package:mockito/src/dummies.dart' as _i9;
+import 'package:supabase_flutter/supabase_flutter.dart' as _i2;
 
 // ignore_for_file: type=lint
 // ignore_for_file: avoid_redundant_argument_values
@@ -27,111 +32,421 @@ import 'package:mockito/mockito.dart' as _i1;
 // ignore_for_file: camel_case_types
 // ignore_for_file: subtype_of_sealed_class
 
+class _FakeFunctionsClient_0 extends _i1.SmartFake
+    implements _i2.FunctionsClient {
+  _FakeFunctionsClient_0(Object parent, Invocation parentInvocation)
+    : super(parent, parentInvocation);
+}
+
+class _FakeSupabaseStorageClient_1 extends _i1.SmartFake
+    implements _i2.SupabaseStorageClient {
+  _FakeSupabaseStorageClient_1(Object parent, Invocation parentInvocation)
+    : super(parent, parentInvocation);
+}
+
+class _FakeRealtimeClient_2 extends _i1.SmartFake
+    implements _i2.RealtimeClient {
+  _FakeRealtimeClient_2(Object parent, Invocation parentInvocation)
+    : super(parent, parentInvocation);
+}
+
+class _FakePostgrestClient_3 extends _i1.SmartFake
+    implements _i2.PostgrestClient {
+  _FakePostgrestClient_3(Object parent, Invocation parentInvocation)
+    : super(parent, parentInvocation);
+}
+
+class _FakeGoTrueClient_4 extends _i1.SmartFake implements _i2.GoTrueClient {
+  _FakeGoTrueClient_4(Object parent, Invocation parentInvocation)
+    : super(parent, parentInvocation);
+}
+
+class _FakeSupabaseQueryBuilder_5 extends _i1.SmartFake
+    implements _i2.SupabaseQueryBuilder {
+  _FakeSupabaseQueryBuilder_5(Object parent, Invocation parentInvocation)
+    : super(parent, parentInvocation);
+}
+
+class _FakeSupabaseQuerySchema_6 extends _i1.SmartFake
+    implements _i2.SupabaseQuerySchema {
+  _FakeSupabaseQuerySchema_6(Object parent, Invocation parentInvocation)
+    : super(parent, parentInvocation);
+}
+
+class _FakePostgrestFilterBuilder_7<T1> extends _i1.SmartFake
+    implements _i2.PostgrestFilterBuilder<T1> {
+  _FakePostgrestFilterBuilder_7(Object parent, Invocation parentInvocation)
+    : super(parent, parentInvocation);
+}
+
+class _FakeRealtimeChannel_8 extends _i1.SmartFake
+    implements _i2.RealtimeChannel {
+  _FakeRealtimeChannel_8(Object parent, Invocation parentInvocation)
+    : super(parent, parentInvocation);
+}
+
+class _FakeLiftEntry_9 extends _i1.SmartFake implements _i3.LiftEntry {
+  _FakeLiftEntry_9(Object parent, Invocation parentInvocation)
+    : super(parent, parentInvocation);
+}
+
 /// A class which mocks [RepMaxesRepository].
 ///
 /// See the documentation for Mockito's code generation for more information.
 class MockRepMaxesRepository extends _i1.Mock
-    implements _i2.RepMaxesRepository {
+    implements _i4.RepMaxesRepository {
   MockRepMaxesRepository() {
     _i1.throwOnMissingStub(this);
   }
 
   @override
-  _i3.Future<List<_i4.RepMax>> getAllRepMaxes() =>
+  _i5.Future<List<_i6.RepMax>> getAllRepMaxes() =>
       (super.noSuchMethod(
             Invocation.method(#getAllRepMaxes, []),
-            returnValue: _i3.Future<List<_i4.RepMax>>.value(<_i4.RepMax>[]),
+            returnValue: _i5.Future<List<_i6.RepMax>>.value(<_i6.RepMax>[]),
           )
-          as _i3.Future<List<_i4.RepMax>>);
+          as _i5.Future<List<_i6.RepMax>>);
 
   @override
-  _i3.Future<List<_i4.RepMax>> getRepMaxesByLiftType(_i5.LiftType? liftType) =>
+  _i5.Future<List<_i6.RepMax>> getRepMaxesByLiftType(_i7.LiftType? liftType) =>
       (super.noSuchMethod(
             Invocation.method(#getRepMaxesByLiftType, [liftType]),
-            returnValue: _i3.Future<List<_i4.RepMax>>.value(<_i4.RepMax>[]),
+            returnValue: _i5.Future<List<_i6.RepMax>>.value(<_i6.RepMax>[]),
           )
-          as _i3.Future<List<_i4.RepMax>>);
+          as _i5.Future<List<_i6.RepMax>>);
 
   @override
-  _i3.Future<_i4.RepMax?> getRepMaxForLiftAndReps(
-    _i5.LiftType? liftType,
+  _i5.Future<_i6.RepMax?> getRepMaxForLiftAndReps(
+    _i7.LiftType? liftType,
     int? reps,
   ) =>
       (super.noSuchMethod(
             Invocation.method(#getRepMaxForLiftAndReps, [liftType, reps]),
-            returnValue: _i3.Future<_i4.RepMax?>.value(),
+            returnValue: _i5.Future<_i6.RepMax?>.value(),
           )
-          as _i3.Future<_i4.RepMax?>);
+          as _i5.Future<_i6.RepMax?>);
 }
 
 /// A class which mocks [RepMaxCalculationService].
 ///
 /// See the documentation for Mockito's code generation for more information.
 class MockRepMaxCalculationService extends _i1.Mock
-    implements _i6.RepMaxCalculationService {
+    implements _i8.RepMaxCalculationService {
   MockRepMaxCalculationService() {
     _i1.throwOnMissingStub(this);
   }
 
   @override
-  _i3.Future<List<_i4.RepMax>> calculateAllRepMaxes() =>
+  _i5.Future<List<_i6.RepMax>> calculateAllRepMaxes() =>
       (super.noSuchMethod(
             Invocation.method(#calculateAllRepMaxes, []),
-            returnValue: _i3.Future<List<_i4.RepMax>>.value(<_i4.RepMax>[]),
+            returnValue: _i5.Future<List<_i6.RepMax>>.value(<_i6.RepMax>[]),
           )
-          as _i3.Future<List<_i4.RepMax>>);
+          as _i5.Future<List<_i6.RepMax>>);
 
   @override
-  _i3.Future<Map<_i5.LiftType, List<_i4.RepMax>>> calculateRepMaxesByLift() =>
+  _i5.Future<Map<_i7.LiftType, List<_i6.RepMax>>> calculateRepMaxesByLift() =>
       (super.noSuchMethod(
             Invocation.method(#calculateRepMaxesByLift, []),
-            returnValue: _i3.Future<Map<_i5.LiftType, List<_i4.RepMax>>>.value(
-              <_i5.LiftType, List<_i4.RepMax>>{},
+            returnValue: _i5.Future<Map<_i7.LiftType, List<_i6.RepMax>>>.value(
+              <_i7.LiftType, List<_i6.RepMax>>{},
             ),
           )
-          as _i3.Future<Map<_i5.LiftType, List<_i4.RepMax>>>);
+          as _i5.Future<Map<_i7.LiftType, List<_i6.RepMax>>>);
 
   @override
-  _i3.Future<List<_i4.RepMax>> calculateRepMaxesForLift(
-    _i5.LiftType? liftType,
+  _i5.Future<List<_i6.RepMax>> calculateRepMaxesForLift(
+    _i7.LiftType? liftType,
   ) =>
       (super.noSuchMethod(
             Invocation.method(#calculateRepMaxesForLift, [liftType]),
-            returnValue: _i3.Future<List<_i4.RepMax>>.value(<_i4.RepMax>[]),
+            returnValue: _i5.Future<List<_i6.RepMax>>.value(<_i6.RepMax>[]),
           )
-          as _i3.Future<List<_i4.RepMax>>);
+          as _i5.Future<List<_i6.RepMax>>);
 
   @override
-  _i3.Future<_i4.RepMax?> getRepMaxForLiftAndReps(
-    _i5.LiftType? liftType,
+  _i5.Future<_i6.RepMax?> getRepMaxForLiftAndReps(
+    _i7.LiftType? liftType,
     int? reps,
   ) =>
       (super.noSuchMethod(
             Invocation.method(#getRepMaxForLiftAndReps, [liftType, reps]),
-            returnValue: _i3.Future<_i4.RepMax?>.value(),
+            returnValue: _i5.Future<_i6.RepMax?>.value(),
           )
-          as _i3.Future<_i4.RepMax?>);
+          as _i5.Future<_i6.RepMax?>);
 
   @override
-  _i3.Future<Map<int, _i4.RepMax>> getRepMaxTableForLift(
-    _i5.LiftType? liftType,
+  _i5.Future<Map<int, _i6.RepMax>> getRepMaxTableForLift(
+    _i7.LiftType? liftType,
   ) =>
       (super.noSuchMethod(
             Invocation.method(#getRepMaxTableForLift, [liftType]),
-            returnValue: _i3.Future<Map<int, _i4.RepMax>>.value(
-              <int, _i4.RepMax>{},
+            returnValue: _i5.Future<Map<int, _i6.RepMax>>.value(
+              <int, _i6.RepMax>{},
             ),
           )
-          as _i3.Future<Map<int, _i4.RepMax>>);
+          as _i5.Future<Map<int, _i6.RepMax>>);
 
   @override
-  _i3.Future<Map<_i5.LiftType, Map<int, _i4.RepMax>>> getFullRepMaxTable() =>
+  _i5.Future<Map<_i7.LiftType, Map<int, _i6.RepMax>>> getFullRepMaxTable() =>
       (super.noSuchMethod(
             Invocation.method(#getFullRepMaxTable, []),
             returnValue:
-                _i3.Future<Map<_i5.LiftType, Map<int, _i4.RepMax>>>.value(
-                  <_i5.LiftType, Map<int, _i4.RepMax>>{},
+                _i5.Future<Map<_i7.LiftType, Map<int, _i6.RepMax>>>.value(
+                  <_i7.LiftType, Map<int, _i6.RepMax>>{},
                 ),
           )
-          as _i3.Future<Map<_i5.LiftType, Map<int, _i4.RepMax>>>);
+          as _i5.Future<Map<_i7.LiftType, Map<int, _i6.RepMax>>>);
+}
+
+/// A class which mocks [SupabaseClient].
+///
+/// See the documentation for Mockito's code generation for more information.
+class MockSupabaseClient extends _i1.Mock implements _i2.SupabaseClient {
+  MockSupabaseClient() {
+    _i1.throwOnMissingStub(this);
+  }
+
+  @override
+  _i2.FunctionsClient get functions =>
+      (super.noSuchMethod(
+            Invocation.getter(#functions),
+            returnValue: _FakeFunctionsClient_0(
+              this,
+              Invocation.getter(#functions),
+            ),
+          )
+          as _i2.FunctionsClient);
+
+  @override
+  _i2.SupabaseStorageClient get storage =>
+      (super.noSuchMethod(
+            Invocation.getter(#storage),
+            returnValue: _FakeSupabaseStorageClient_1(
+              this,
+              Invocation.getter(#storage),
+            ),
+          )
+          as _i2.SupabaseStorageClient);
+
+  @override
+  _i2.RealtimeClient get realtime =>
+      (super.noSuchMethod(
+            Invocation.getter(#realtime),
+            returnValue: _FakeRealtimeClient_2(
+              this,
+              Invocation.getter(#realtime),
+            ),
+          )
+          as _i2.RealtimeClient);
+
+  @override
+  _i2.PostgrestClient get rest =>
+      (super.noSuchMethod(
+            Invocation.getter(#rest),
+            returnValue: _FakePostgrestClient_3(this, Invocation.getter(#rest)),
+          )
+          as _i2.PostgrestClient);
+
+  @override
+  Map<String, String> get headers =>
+      (super.noSuchMethod(
+            Invocation.getter(#headers),
+            returnValue: <String, String>{},
+          )
+          as Map<String, String>);
+
+  @override
+  _i2.GoTrueClient get auth =>
+      (super.noSuchMethod(
+            Invocation.getter(#auth),
+            returnValue: _FakeGoTrueClient_4(this, Invocation.getter(#auth)),
+          )
+          as _i2.GoTrueClient);
+
+  @override
+  set functions(_i2.FunctionsClient? _functions) => super.noSuchMethod(
+    Invocation.setter(#functions, _functions),
+    returnValueForMissingStub: null,
+  );
+
+  @override
+  set storage(_i2.SupabaseStorageClient? _storage) => super.noSuchMethod(
+    Invocation.setter(#storage, _storage),
+    returnValueForMissingStub: null,
+  );
+
+  @override
+  set realtime(_i2.RealtimeClient? _realtime) => super.noSuchMethod(
+    Invocation.setter(#realtime, _realtime),
+    returnValueForMissingStub: null,
+  );
+
+  @override
+  set rest(_i2.PostgrestClient? _rest) => super.noSuchMethod(
+    Invocation.setter(#rest, _rest),
+    returnValueForMissingStub: null,
+  );
+
+  @override
+  set headers(Map<String, String>? headers) => super.noSuchMethod(
+    Invocation.setter(#headers, headers),
+    returnValueForMissingStub: null,
+  );
+
+  @override
+  _i2.SupabaseQueryBuilder from(String? table) =>
+      (super.noSuchMethod(
+            Invocation.method(#from, [table]),
+            returnValue: _FakeSupabaseQueryBuilder_5(
+              this,
+              Invocation.method(#from, [table]),
+            ),
+          )
+          as _i2.SupabaseQueryBuilder);
+
+  @override
+  _i2.SupabaseQuerySchema schema(String? schema) =>
+      (super.noSuchMethod(
+            Invocation.method(#schema, [schema]),
+            returnValue: _FakeSupabaseQuerySchema_6(
+              this,
+              Invocation.method(#schema, [schema]),
+            ),
+          )
+          as _i2.SupabaseQuerySchema);
+
+  @override
+  _i2.PostgrestFilterBuilder<T> rpc<T>(
+    String? fn, {
+    Map<String, dynamic>? params,
+    dynamic get = false,
+  }) =>
+      (super.noSuchMethod(
+            Invocation.method(#rpc, [fn], {#params: params, #get: get}),
+            returnValue: _FakePostgrestFilterBuilder_7<T>(
+              this,
+              Invocation.method(#rpc, [fn], {#params: params, #get: get}),
+            ),
+          )
+          as _i2.PostgrestFilterBuilder<T>);
+
+  @override
+  _i2.RealtimeChannel channel(
+    String? name, {
+    _i2.RealtimeChannelConfig? opts = const _i2.RealtimeChannelConfig(),
+  }) =>
+      (super.noSuchMethod(
+            Invocation.method(#channel, [name], {#opts: opts}),
+            returnValue: _FakeRealtimeChannel_8(
+              this,
+              Invocation.method(#channel, [name], {#opts: opts}),
+            ),
+          )
+          as _i2.RealtimeChannel);
+
+  @override
+  List<_i2.RealtimeChannel> getChannels() =>
+      (super.noSuchMethod(
+            Invocation.method(#getChannels, []),
+            returnValue: <_i2.RealtimeChannel>[],
+          )
+          as List<_i2.RealtimeChannel>);
+
+  @override
+  _i5.Future<String> removeChannel(_i2.RealtimeChannel? channel) =>
+      (super.noSuchMethod(
+            Invocation.method(#removeChannel, [channel]),
+            returnValue: _i5.Future<String>.value(
+              _i9.dummyValue<String>(
+                this,
+                Invocation.method(#removeChannel, [channel]),
+              ),
+            ),
+          )
+          as _i5.Future<String>);
+
+  @override
+  _i5.Future<List<String>> removeAllChannels() =>
+      (super.noSuchMethod(
+            Invocation.method(#removeAllChannels, []),
+            returnValue: _i5.Future<List<String>>.value(<String>[]),
+          )
+          as _i5.Future<List<String>>);
+
+  @override
+  _i5.Future<void> dispose() =>
+      (super.noSuchMethod(
+            Invocation.method(#dispose, []),
+            returnValue: _i5.Future<void>.value(),
+            returnValueForMissingStub: _i5.Future<void>.value(),
+          )
+          as _i5.Future<void>);
+}
+
+/// A class which mocks [LiftEntriesRepository].
+///
+/// See the documentation for Mockito's code generation for more information.
+class MockLiftEntriesRepository extends _i1.Mock
+    implements _i10.LiftEntriesRepository {
+  MockLiftEntriesRepository() {
+    _i1.throwOnMissingStub(this);
+  }
+
+  @override
+  _i5.Future<List<_i3.LiftEntry>> getAllLiftEntries() =>
+      (super.noSuchMethod(
+            Invocation.method(#getAllLiftEntries, []),
+            returnValue: _i5.Future<List<_i3.LiftEntry>>.value(
+              <_i3.LiftEntry>[],
+            ),
+          )
+          as _i5.Future<List<_i3.LiftEntry>>);
+
+  @override
+  _i5.Future<List<_i3.LiftEntry>> getLiftEntriesByType(
+    _i7.LiftType? liftType,
+  ) =>
+      (super.noSuchMethod(
+            Invocation.method(#getLiftEntriesByType, [liftType]),
+            returnValue: _i5.Future<List<_i3.LiftEntry>>.value(
+              <_i3.LiftEntry>[],
+            ),
+          )
+          as _i5.Future<List<_i3.LiftEntry>>);
+
+  @override
+  _i5.Future<_i3.LiftEntry> createLiftEntry(_i3.LiftEntry? liftEntry) =>
+      (super.noSuchMethod(
+            Invocation.method(#createLiftEntry, [liftEntry]),
+            returnValue: _i5.Future<_i3.LiftEntry>.value(
+              _FakeLiftEntry_9(
+                this,
+                Invocation.method(#createLiftEntry, [liftEntry]),
+              ),
+            ),
+          )
+          as _i5.Future<_i3.LiftEntry>);
+
+  @override
+  _i5.Future<_i3.LiftEntry> updateLiftEntry(_i3.LiftEntry? liftEntry) =>
+      (super.noSuchMethod(
+            Invocation.method(#updateLiftEntry, [liftEntry]),
+            returnValue: _i5.Future<_i3.LiftEntry>.value(
+              _FakeLiftEntry_9(
+                this,
+                Invocation.method(#updateLiftEntry, [liftEntry]),
+              ),
+            ),
+          )
+          as _i5.Future<_i3.LiftEntry>);
+
+  @override
+  _i5.Future<void> deleteLiftEntry(String? id) =>
+      (super.noSuchMethod(
+            Invocation.method(#deleteLiftEntry, [id]),
+            returnValue: _i5.Future<void>.value(),
+            returnValueForMissingStub: _i5.Future<void>.value(),
+          )
+          as _i5.Future<void>);
 }

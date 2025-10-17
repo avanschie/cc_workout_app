@@ -18,15 +18,15 @@ void main() {
         userId: 'test-user-id',
         lift: LiftType.squat,
         reps: 5,
-        weightKg: 100.0,
-        lastPerformedAt: DateTime(2024, 1, 1),
+        weightKg: 100,
+        lastPerformedAt: DateTime(2024),
       );
 
       expect(repMax.userId, 'test-user-id');
       expect(repMax.lift, LiftType.squat);
       expect(repMax.reps, 5);
-      expect(repMax.weightKg, 100.0);
-      expect(repMax.lastPerformedAt, DateTime(2024, 1, 1));
+      expect(repMax.weightKg, 100);
+      expect(repMax.lastPerformedAt, DateTime(2024));
     });
 
     test('AuthUser model creates correctly', () {
@@ -35,14 +35,14 @@ void main() {
         email: 'test@example.com',
         displayName: 'Test User',
         isEmailVerified: true,
-        createdAt: DateTime(2024, 1, 1),
+        createdAt: DateTime(2024),
       );
 
       expect(user.id, 'test-id');
       expect(user.email, 'test@example.com');
       expect(user.displayName, 'Test User');
       expect(user.isEmailVerified, true);
-      expect(user.createdAt, DateTime(2024, 1, 1));
+      expect(user.createdAt, DateTime(2024));
     });
   });
 
@@ -54,7 +54,6 @@ void main() {
         theme: ThemeData(
           colorScheme: ColorScheme.fromSeed(
             seedColor: const Color(0xFF6B46C1),
-            brightness: Brightness.light,
           ),
           useMaterial3: true,
         ),

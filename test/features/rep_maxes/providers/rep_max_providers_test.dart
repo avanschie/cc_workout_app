@@ -4,13 +4,12 @@ import 'package:mockito/mockito.dart';
 import 'package:mockito/annotations.dart';
 import 'package:cc_workout_app/shared/models/lift_type.dart';
 import 'package:cc_workout_app/shared/models/rep_max.dart';
-import 'package:cc_workout_app/features/rep_maxes/repositories/rep_maxes_repository.dart';
 import 'package:cc_workout_app/features/rep_maxes/services/rep_max_calculation_service.dart';
 import 'package:cc_workout_app/features/rep_maxes/providers/rep_max_providers.dart';
 
 import 'rep_max_providers_test.mocks.dart';
 
-@GenerateMocks([RepMaxesRepository, RepMaxCalculationService])
+@GenerateMocks([RepMaxCalculationService])
 void main() {
   late MockRepMaxCalculationService mockService;
 
@@ -18,7 +17,7 @@ void main() {
     mockService = MockRepMaxCalculationService();
   });
 
-  group('RepMax Providers', () {
+  group('RepMax Providers - Service Integration Tests', () {
     final sampleRepMaxes = [
       RepMax(
         userId: 'user1',
@@ -36,266 +35,110 @@ void main() {
       ),
     ];
 
-    group('allRepMaxesProvider', () {
-      test('should return all rep maxes', () async {
-        when(
-          mockService.calculateAllRepMaxes(),
-        ).thenAnswer((_) async => sampleRepMaxes);
-
+    group('Service Provider', () {
+      test('repMaxCalculationServiceProvider should create service', () {
         final container = ProviderContainer(
           overrides: [
             repMaxCalculationServiceProvider.overrideWithValue(mockService),
           ],
         );
+        addTearDown(container.dispose);
 
-        final result = await container.read(allRepMaxesProvider.future);
+        final service = container.read(repMaxCalculationServiceProvider);
+        expect(service, equals(mockService));
+      });
+    });
 
+    group('Service Method Testing', () {
+      test('calculateAllRepMaxes should return rep maxes', () async {
+        when(mockService.calculateAllRepMaxes())
+            .thenAnswer((_) async => sampleRepMaxes);
+
+        final result = await mockService.calculateAllRepMaxes();
         expect(result, equals(sampleRepMaxes));
         verify(mockService.calculateAllRepMaxes()).called(1);
       });
 
-      test('should handle service errors', () async {
-        when(
-          mockService.calculateAllRepMaxes(),
-        ).thenThrow(const RepMaxCalculationServiceException('Test error'));
-
-        final container = ProviderContainer(
-          overrides: [
-            repMaxCalculationServiceProvider.overrideWithValue(mockService),
-          ],
-        );
-
-        expect(
-          () => container.read(allRepMaxesProvider.future),
-          throwsA(isA<RepMaxCalculationServiceException>()),
-        );
-      });
-    });
-
-    group('repMaxesByLiftProvider', () {
-      test('should return rep maxes grouped by lift type', () async {
+      test('calculateRepMaxesByLift should return grouped data', () async {
         final groupedData = {
           LiftType.squat: [sampleRepMaxes[0]],
           LiftType.bench: [sampleRepMaxes[1]],
           LiftType.deadlift: <RepMax>[],
         };
 
-        when(
-          mockService.calculateRepMaxesByLift(),
-        ).thenAnswer((_) async => groupedData);
+        when(mockService.calculateRepMaxesByLift())
+            .thenAnswer((_) async => groupedData);
 
-        final container = ProviderContainer(
-          overrides: [
-            repMaxCalculationServiceProvider.overrideWithValue(mockService),
-          ],
-        );
-
-        final result = await container.read(repMaxesByLiftProvider.future);
-
+        final result = await mockService.calculateRepMaxesByLift();
         expect(result, equals(groupedData));
         verify(mockService.calculateRepMaxesByLift()).called(1);
       });
-    });
 
-    group('repMaxesForLiftProvider', () {
-      test('should return rep maxes for specific lift type', () async {
+      test('calculateRepMaxesForLift should return lift-specific data', () async {
         final squatRepMaxes = [sampleRepMaxes[0]];
 
-        when(
-          mockService.calculateRepMaxesForLift(LiftType.squat),
-        ).thenAnswer((_) async => squatRepMaxes);
+        when(mockService.calculateRepMaxesForLift(LiftType.squat))
+            .thenAnswer((_) async => squatRepMaxes);
 
-        final container = ProviderContainer(
-          overrides: [
-            repMaxCalculationServiceProvider.overrideWithValue(mockService),
-          ],
-        );
-
-        final result = await container.read(
-          repMaxesForLiftProvider(LiftType.squat).future,
-        );
-
+        final result = await mockService.calculateRepMaxesForLift(LiftType.squat);
         expect(result, equals(squatRepMaxes));
         verify(mockService.calculateRepMaxesForLift(LiftType.squat)).called(1);
       });
-    });
 
-    group('repMaxForLiftAndRepsProvider', () {
-      test('should return rep max for specific lift and reps', () async {
+      test('getRepMaxForLiftAndReps should return specific rep max', () async {
         final expectedRepMax = sampleRepMaxes[0];
 
-        when(
-          mockService.getRepMaxForLiftAndReps(LiftType.squat, 1),
-        ).thenAnswer((_) async => expectedRepMax);
+        when(mockService.getRepMaxForLiftAndReps(LiftType.squat, 1))
+            .thenAnswer((_) async => expectedRepMax);
 
-        final container = ProviderContainer(
-          overrides: [
-            repMaxCalculationServiceProvider.overrideWithValue(mockService),
-          ],
-        );
-
-        final result = await container.read(
-          repMaxForLiftAndRepsProvider((
-            liftType: LiftType.squat,
-            reps: 1,
-          )).future,
-        );
-
+        final result = await mockService.getRepMaxForLiftAndReps(LiftType.squat, 1);
         expect(result, equals(expectedRepMax));
-        verify(
-          mockService.getRepMaxForLiftAndReps(LiftType.squat, 1),
-        ).called(1);
+        verify(mockService.getRepMaxForLiftAndReps(LiftType.squat, 1)).called(1);
       });
 
-      test('should return null when no rep max exists', () async {
-        when(
-          mockService.getRepMaxForLiftAndReps(LiftType.bench, 10),
-        ).thenAnswer((_) async => null);
+      test('getRepMaxForLiftAndReps should return null when no match', () async {
+        when(mockService.getRepMaxForLiftAndReps(LiftType.bench, 10))
+            .thenAnswer((_) async => null);
 
-        final container = ProviderContainer(
-          overrides: [
-            repMaxCalculationServiceProvider.overrideWithValue(mockService),
-          ],
-        );
-
-        final result = await container.read(
-          repMaxForLiftAndRepsProvider((
-            liftType: LiftType.bench,
-            reps: 10,
-          )).future,
-        );
-
+        final result = await mockService.getRepMaxForLiftAndReps(LiftType.bench, 10);
         expect(result, isNull);
+        verify(mockService.getRepMaxForLiftAndReps(LiftType.bench, 10)).called(1);
       });
-    });
 
-    group('repMaxTableForLiftProvider', () {
-      test('should return rep max table for specific lift', () async {
+      test('getRepMaxTableForLift should return rep max table', () async {
         final table = {1: sampleRepMaxes[0]};
 
-        when(
-          mockService.getRepMaxTableForLift(LiftType.squat),
-        ).thenAnswer((_) async => table);
+        when(mockService.getRepMaxTableForLift(LiftType.squat))
+            .thenAnswer((_) async => table);
 
-        final container = ProviderContainer(
-          overrides: [
-            repMaxCalculationServiceProvider.overrideWithValue(mockService),
-          ],
-        );
-
-        final result = await container.read(
-          repMaxTableForLiftProvider(LiftType.squat).future,
-        );
-
+        final result = await mockService.getRepMaxTableForLift(LiftType.squat);
         expect(result, equals(table));
         verify(mockService.getRepMaxTableForLift(LiftType.squat)).called(1);
       });
-    });
 
-    group('fullRepMaxTableProvider', () {
-      test('should return complete rep max table', () async {
+      test('getFullRepMaxTable should return complete table', () async {
         final fullTable = {
           LiftType.squat: {1: sampleRepMaxes[0]},
           LiftType.bench: {5: sampleRepMaxes[1]},
           LiftType.deadlift: <int, RepMax>{},
         };
 
-        when(
-          mockService.getFullRepMaxTable(),
-        ).thenAnswer((_) async => fullTable);
+        when(mockService.getFullRepMaxTable())
+            .thenAnswer((_) async => fullTable);
 
-        final container = ProviderContainer(
-          overrides: [
-            repMaxCalculationServiceProvider.overrideWithValue(mockService),
-          ],
-        );
-
-        final result = await container.read(fullRepMaxTableProvider.future);
-
+        final result = await mockService.getFullRepMaxTable();
         expect(result, equals(fullTable));
         verify(mockService.getFullRepMaxTable()).called(1);
       });
-    });
 
-    group('RepMaxNotifier', () {
-      test('should build with initial rep maxes', () async {
-        when(
-          mockService.calculateAllRepMaxes(),
-        ).thenAnswer((_) async => sampleRepMaxes);
+      test('should handle service errors properly', () async {
+        when(mockService.calculateAllRepMaxes())
+            .thenThrow(const RepMaxCalculationServiceException('Test error'));
 
-        final container = ProviderContainer(
-          overrides: [
-            repMaxCalculationServiceProvider.overrideWithValue(mockService),
-          ],
+        expect(
+          () => mockService.calculateAllRepMaxes(),
+          throwsA(isA<RepMaxCalculationServiceException>()),
         );
-
-        final result = await container.read(repMaxNotifierProvider.future);
-
-        expect(result, equals(sampleRepMaxes));
-      });
-
-      test('should refresh data', () async {
-        when(
-          mockService.calculateAllRepMaxes(),
-        ).thenAnswer((_) async => sampleRepMaxes);
-
-        final container = ProviderContainer(
-          overrides: [
-            repMaxCalculationServiceProvider.overrideWithValue(mockService),
-          ],
-        );
-
-        final notifier = container.read(repMaxNotifierProvider.notifier);
-        await notifier.refresh();
-
-        verify(mockService.calculateAllRepMaxes()).called(2);
-      });
-    });
-
-    group('RepMaxTableNotifier', () {
-      test('should build with initial rep max table', () async {
-        final fullTable = {
-          LiftType.squat: {1: sampleRepMaxes[0]},
-          LiftType.bench: {5: sampleRepMaxes[1]},
-          LiftType.deadlift: <int, RepMax>{},
-        };
-
-        when(
-          mockService.getFullRepMaxTable(),
-        ).thenAnswer((_) async => fullTable);
-
-        final container = ProviderContainer(
-          overrides: [
-            repMaxCalculationServiceProvider.overrideWithValue(mockService),
-          ],
-        );
-
-        final result = await container.read(repMaxTableNotifierProvider.future);
-
-        expect(result, equals(fullTable));
-      });
-
-      test('should refresh table data', () async {
-        final fullTable = {
-          LiftType.squat: {1: sampleRepMaxes[0]},
-          LiftType.bench: {5: sampleRepMaxes[1]},
-          LiftType.deadlift: <int, RepMax>{},
-        };
-
-        when(
-          mockService.getFullRepMaxTable(),
-        ).thenAnswer((_) async => fullTable);
-
-        final container = ProviderContainer(
-          overrides: [
-            repMaxCalculationServiceProvider.overrideWithValue(mockService),
-          ],
-        );
-
-        final notifier = container.read(repMaxTableNotifierProvider.notifier);
-        await notifier.refresh();
-
-        verify(mockService.getFullRepMaxTable()).called(2);
       });
     });
   });

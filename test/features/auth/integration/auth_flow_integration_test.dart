@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mocktail/mocktail.dart';
+import 'package:go_router/go_router.dart';
 import 'package:supabase_flutter/supabase_flutter.dart' as supabase;
 import 'package:cc_workout_app/core/config/env_config.dart';
 import 'package:cc_workout_app/features/auth/domain/entities/auth_user.dart';
@@ -14,6 +15,13 @@ import 'package:cc_workout_app/features/auth/application/providers/auth_provider
 import 'package:cc_workout_app/features/auth/presentation/screens/auth_gate.dart';
 import 'package:cc_workout_app/features/rep_maxes/repositories/rep_maxes_repository.dart';
 import 'package:cc_workout_app/features/rep_maxes/providers/rep_max_providers.dart';
+import 'package:cc_workout_app/features/lifts/providers/lift_entries_providers.dart' hide supabaseClientProvider;
+import 'package:cc_workout_app/features/lifts/providers/history_providers.dart';
+import 'package:cc_workout_app/features/lifts/repositories/lift_entries_repository.dart';
+import 'package:cc_workout_app/core/navigation/app_routes.dart';
+import 'package:cc_workout_app/core/navigation/main_navigation_shell.dart';
+import 'package:cc_workout_app/features/rep_maxes/screens/rep_maxes_screen.dart';
+import 'package:cc_workout_app/features/lifts/screens/history_screen.dart';
 
 // Mock classes
 class MockAuthRepository extends Mock implements AuthRepository {}
@@ -23,6 +31,8 @@ class MockSupabaseClient extends Mock implements supabase.SupabaseClient {}
 class MockGoTrueClient extends Mock implements supabase.GoTrueClient {}
 
 class MockRepMaxesRepository extends Mock implements RepMaxesRepository {}
+
+class MockLiftEntriesRepository extends Mock implements LiftEntriesRepository {}
 
 /// Integration test robot for auth flows
 class AuthFlowRobot {
@@ -39,6 +49,7 @@ class AuthFlowRobot {
     final mockSupabaseClient = MockSupabaseClient();
     final mockGoTrueClient = MockGoTrueClient();
     final mockRepMaxesRepository = MockRepMaxesRepository();
+    final mockLiftEntriesRepository = MockLiftEntriesRepository();
     final authStateController = StreamController<AuthUser?>.broadcast();
 
     // Set up the mock SupabaseClient to return the mock GoTrueClient
@@ -47,6 +58,11 @@ class AuthFlowRobot {
     // Set up the mock RepMaxesRepository to return empty data
     when(
       () => mockRepMaxesRepository.getAllRepMaxes(),
+    ).thenAnswer((_) async => []);
+
+    // Set up the mock LiftEntriesRepository to return empty data
+    when(
+      () => mockLiftEntriesRepository.getAllLiftEntries(),
     ).thenAnswer((_) async => []);
 
     when(() => mockRepository.currentUser).thenReturn(initialUser);
@@ -65,20 +81,56 @@ class AuthFlowRobot {
       ).thenAnswer((_) async => createTestUser());
     }
 
-    await tester.pumpWidget(
-      MaterialApp(
-        home: ProviderScope(
-          overrides: [
-            supabaseClientProvider.overrideWithValue(mockSupabaseClient),
-            authRepositoryProviderImpl.overrideWithValue(mockRepository),
-            authRepositoryProvider.overrideWithValue(mockRepository),
-            repMaxesRepositoryProvider.overrideWithValue(
-              mockRepMaxesRepository,
+    // Create a test router that mimics the app structure but simpler for tests
+    final router = GoRouter(
+      initialLocation: initialUser != null ? AppRoute.repMaxes.path : AppRoute.signIn.path,
+      routes: [
+        // Auth routes (outside shell)
+        GoRoute(
+          path: AppRoute.signIn.path,
+          name: AppRoute.signIn.name,
+          builder: (context, state) => const AuthGate(),
+        ),
+
+        // Main app shell (for authenticated users)
+        ShellRoute(
+          builder: (context, state, child) => MainNavigationShell(child: child),
+          routes: [
+            GoRoute(
+              path: AppRoute.repMaxes.path,
+              name: AppRoute.repMaxes.name,
+              builder: (context, state) => const RepMaxesScreen(),
             ),
-            // Disable auto-login for tests
-            hasUserLoggedOutProvider.overrideWith((ref) => true),
+            GoRoute(
+              path: AppRoute.history.path,
+              name: AppRoute.history.name,
+              builder: (context, state) => const HistoryScreen(),
+            ),
           ],
-          child: const AuthGate(),
+        ),
+      ],
+    );
+
+    await tester.pumpWidget(
+      ProviderScope(
+        overrides: [
+          supabaseClientProvider.overrideWithValue(mockSupabaseClient),
+          authRepositoryProviderImpl.overrideWithValue(mockRepository),
+          authRepositoryProvider.overrideWithValue(mockRepository),
+          repMaxesRepositoryProvider.overrideWithValue(
+            mockRepMaxesRepository,
+          ),
+          liftEntriesRepositoryProvider.overrideWithValue(
+            mockLiftEntriesRepository,
+          ),
+          // Override providers that use timers to avoid timer issues in tests
+          liftEntriesProvider.overrideWith((ref) => Future.value([])),
+          allRepMaxesProvider.overrideWith((ref) => Future.value([])),
+          // Disable auto-login for tests
+          hasUserLoggedOutProvider.overrideWith((ref) => true),
+        ],
+        child: MaterialApp.router(
+          routerConfig: router,
         ),
       ),
     );
@@ -211,6 +263,17 @@ class AuthFlowRobot {
 
   void expectMainApp() {
     expect(find.text('Rep Max Tracker'), findsOneWidget);
+  }
+
+  /// Cleanup method to dispose of any active timers and controllers
+  Future<void> cleanup() async {
+    // Let any pending timers complete
+    await tester.pumpAndSettle();
+
+    // Pump a few more frames to allow providers to dispose
+    for (int i = 0; i < 3; i++) {
+      await tester.pump();
+    }
   }
 
   void expectError(String errorText) {
@@ -435,6 +498,9 @@ void main() {
 
       // Should immediately show main app
       robot.expectMainApp();
+
+      // Cleanup timers and providers
+      await robot.cleanup();
     });
 
     // Sign out button not yet implemented in UI - test removed
