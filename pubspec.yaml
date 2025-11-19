@@ -24,7 +24,7 @@ dev_dependencies:
   freezed: ^2.4.6
   json_serializable: ^6.7.1
   mockito: ^5.4.4
-  build_test: ^2.2.1
+  build_test: 3.5.4
   mocktail: ^1.0.4
 
 flutter:
