@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:cc_workout_app/shared/widgets/rep_max_table_widget.dart';
 import 'package:cc_workout_app/shared/models/lift_type.dart';
-import 'package:cc_workout_app/shared/models/rep_max.dart';
+import 'package:cc_workout_app/features/rep_maxes/domain/entities/rep_max.dart';
 import 'package:cc_workout_app/shared/constants/lift_colors.dart';
 
 void main() {

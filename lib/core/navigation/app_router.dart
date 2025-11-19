@@ -7,12 +7,12 @@ import 'package:cc_workout_app/features/auth/presentation/screens/sign_in_screen
 import 'package:cc_workout_app/features/auth/presentation/screens/sign_up_screen.dart';
 import 'package:cc_workout_app/features/auth/presentation/screens/forgot_password_screen.dart';
 import 'package:cc_workout_app/core/navigation/main_navigation_shell.dart';
-import 'package:cc_workout_app/features/rep_maxes/screens/rep_maxes_screen.dart';
-import 'package:cc_workout_app/features/lifts/screens/history_screen.dart';
-import 'package:cc_workout_app/features/lifts/screens/add_lift_screen.dart';
-import 'package:cc_workout_app/features/lifts/screens/edit_lift_screen.dart';
+import 'package:cc_workout_app/features/rep_maxes/presentation/screens/rep_maxes_screen.dart';
+import 'package:cc_workout_app/features/lifts/presentation/screens/history_screen.dart';
+import 'package:cc_workout_app/features/lifts/presentation/screens/add_lift_screen.dart';
+import 'package:cc_workout_app/features/lifts/presentation/screens/edit_lift_screen.dart';
 import 'package:cc_workout_app/shared/widgets/network_status_banner.dart';
-import 'package:cc_workout_app/shared/models/lift_entry.dart';
+import 'package:cc_workout_app/features/lifts/domain/entities/lift_entry.dart';
 
 /// Provider for the GoRouter instance
 final routerProvider = Provider<GoRouter>((ref) {

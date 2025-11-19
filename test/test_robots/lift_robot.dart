@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:cc_workout_app/shared/models/lift_type.dart';
-import 'package:cc_workout_app/features/lifts/screens/add_lift_screen.dart';
-import 'package:cc_workout_app/features/lifts/screens/edit_lift_screen.dart';
-import 'package:cc_workout_app/features/lifts/screens/history_screen.dart';
+import 'package:cc_workout_app/features/lifts/presentation/screens/add_lift_screen.dart';
+import 'package:cc_workout_app/features/lifts/presentation/screens/edit_lift_screen.dart';
+import 'package:cc_workout_app/features/lifts/presentation/screens/history_screen.dart';
 import 'base_robot.dart';
 
 /// Robot class for testing lift-related UI interactions

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:cc_workout_app/shared/models/lift_type.dart';
-import 'package:cc_workout_app/shared/models/rep_max.dart';
+import 'package:cc_workout_app/features/rep_maxes/domain/entities/rep_max.dart';
 import 'package:cc_workout_app/shared/constants/lift_colors.dart';
 
 class RepMaxTableWidget extends StatelessWidget {
