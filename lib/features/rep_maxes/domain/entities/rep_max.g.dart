@@ -6,7 +6,7 @@ part of 'rep_max.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-_$RepMaxImpl _$$RepMaxImplFromJson(Map<String, dynamic> json) => _$RepMaxImpl(
+_RepMax _$RepMaxFromJson(Map<String, dynamic> json) => _RepMax(
   userId: json['userId'] as String,
   lift: $enumDecode(_$LiftTypeEnumMap, json['lift']),
   reps: (json['reps'] as num).toInt(),
@@ -14,14 +14,13 @@ _$RepMaxImpl _$$RepMaxImplFromJson(Map<String, dynamic> json) => _$RepMaxImpl(
   lastPerformedAt: DateTime.parse(json['lastPerformedAt'] as String),
 );
 
-Map<String, dynamic> _$$RepMaxImplToJson(_$RepMaxImpl instance) =>
-    <String, dynamic>{
-      'userId': instance.userId,
-      'lift': _$LiftTypeEnumMap[instance.lift]!,
-      'reps': instance.reps,
-      'weightKg': instance.weightKg,
-      'lastPerformedAt': instance.lastPerformedAt.toIso8601String(),
-    };
+Map<String, dynamic> _$RepMaxToJson(_RepMax instance) => <String, dynamic>{
+  'userId': instance.userId,
+  'lift': _$LiftTypeEnumMap[instance.lift]!,
+  'reps': instance.reps,
+  'weightKg': instance.weightKg,
+  'lastPerformedAt': instance.lastPerformedAt.toIso8601String(),
+};
 
 const _$LiftTypeEnumMap = {
   LiftType.squat: 'squat',

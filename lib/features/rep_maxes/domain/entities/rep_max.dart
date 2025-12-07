@@ -5,7 +5,7 @@ part 'rep_max.freezed.dart';
 part 'rep_max.g.dart';
 
 @freezed
-class RepMax with _$RepMax {
+sealed class RepMax with _$RepMax {
   const factory RepMax({
     required String userId,
     required LiftType lift,

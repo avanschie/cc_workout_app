@@ -9,7 +9,7 @@ part 'auth_user_dto.g.dart';
 /// Data Transfer Object for AuthUser.
 /// Handles mapping between Supabase User objects and domain AuthUser entities.
 @freezed
-class AuthUserDto with _$AuthUserDto {
+sealed class AuthUserDto with _$AuthUserDto {
   const factory AuthUserDto({
     required String id,
     required String email,

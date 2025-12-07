@@ -6,7 +6,7 @@ part 'lift_entry.freezed.dart';
 part 'lift_entry.g.dart';
 
 @freezed
-class LiftEntry with _$LiftEntry {
+sealed class LiftEntry with _$LiftEntry {
   const factory LiftEntry({
     required String id,
     required String userId,

@@ -1,5 +1,5 @@
-// coverage:ignore-file
 // GENERATED CODE - DO NOT MODIFY BY HAND
+// coverage:ignore-file
 // ignore_for_file: type=lint
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
@@ -9,302 +9,281 @@ part of 'lift_entry.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// dart format off
 T _$identity<T>(T value) => value;
-
-final _privateConstructorUsedError = UnsupportedError(
-  'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models',
-);
-
-LiftEntry _$LiftEntryFromJson(Map<String, dynamic> json) {
-  return _LiftEntry.fromJson(json);
-}
 
 /// @nodoc
 mixin _$LiftEntry {
-  String get id => throw _privateConstructorUsedError;
-  String get userId => throw _privateConstructorUsedError;
-  LiftType get lift => throw _privateConstructorUsedError;
-  int get reps => throw _privateConstructorUsedError;
-  double get weightKg => throw _privateConstructorUsedError;
-  DateTime get performedAt => throw _privateConstructorUsedError;
-  DateTime get createdAt => throw _privateConstructorUsedError;
+
+ String get id; String get userId; LiftType get lift; int get reps; double get weightKg; DateTime get performedAt; DateTime get createdAt;
+/// Create a copy of LiftEntry
+/// with the given fields replaced by the non-null parameter values.
+@JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+$LiftEntryCopyWith<LiftEntry> get copyWith => _$LiftEntryCopyWithImpl<LiftEntry>(this as LiftEntry, _$identity);
 
   /// Serializes this LiftEntry to a JSON map.
-  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
+  Map<String, dynamic> toJson();
 
-  /// Create a copy of LiftEntry
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
-  $LiftEntryCopyWith<LiftEntry> get copyWith =>
-      throw _privateConstructorUsedError;
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is LiftEntry&&(identical(other.id, id) || other.id == id)&&(identical(other.userId, userId) || other.userId == userId)&&(identical(other.lift, lift) || other.lift == lift)&&(identical(other.reps, reps) || other.reps == reps)&&(identical(other.weightKg, weightKg) || other.weightKg == weightKg)&&(identical(other.performedAt, performedAt) || other.performedAt == performedAt)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt));
+}
+
+@JsonKey(includeFromJson: false, includeToJson: false)
+@override
+int get hashCode => Object.hash(runtimeType,id,userId,lift,reps,weightKg,performedAt,createdAt);
+
+@override
+String toString() {
+  return 'LiftEntry(id: $id, userId: $userId, lift: $lift, reps: $reps, weightKg: $weightKg, performedAt: $performedAt, createdAt: $createdAt)';
+}
+
+
 }
 
 /// @nodoc
-abstract class $LiftEntryCopyWith<$Res> {
-  factory $LiftEntryCopyWith(LiftEntry value, $Res Function(LiftEntry) then) =
-      _$LiftEntryCopyWithImpl<$Res, LiftEntry>;
-  @useResult
-  $Res call({
-    String id,
-    String userId,
-    LiftType lift,
-    int reps,
-    double weightKg,
-    DateTime performedAt,
-    DateTime createdAt,
-  });
-}
+abstract mixin class $LiftEntryCopyWith<$Res>  {
+  factory $LiftEntryCopyWith(LiftEntry value, $Res Function(LiftEntry) _then) = _$LiftEntryCopyWithImpl;
+@useResult
+$Res call({
+ String id, String userId, LiftType lift, int reps, double weightKg, DateTime performedAt, DateTime createdAt
+});
 
+
+
+
+}
 /// @nodoc
-class _$LiftEntryCopyWithImpl<$Res, $Val extends LiftEntry>
+class _$LiftEntryCopyWithImpl<$Res>
     implements $LiftEntryCopyWith<$Res> {
-  _$LiftEntryCopyWithImpl(this._value, this._then);
+  _$LiftEntryCopyWithImpl(this._self, this._then);
 
-  // ignore: unused_field
-  final $Val _value;
-  // ignore: unused_field
-  final $Res Function($Val) _then;
+  final LiftEntry _self;
+  final $Res Function(LiftEntry) _then;
 
-  /// Create a copy of LiftEntry
-  /// with the given fields replaced by the non-null parameter values.
-  @pragma('vm:prefer-inline')
-  @override
-  $Res call({
-    Object? id = null,
-    Object? userId = null,
-    Object? lift = null,
-    Object? reps = null,
-    Object? weightKg = null,
-    Object? performedAt = null,
-    Object? createdAt = null,
-  }) {
-    return _then(
-      _value.copyWith(
-            id: null == id
-                ? _value.id
-                : id // ignore: cast_nullable_to_non_nullable
-                      as String,
-            userId: null == userId
-                ? _value.userId
-                : userId // ignore: cast_nullable_to_non_nullable
-                      as String,
-            lift: null == lift
-                ? _value.lift
-                : lift // ignore: cast_nullable_to_non_nullable
-                      as LiftType,
-            reps: null == reps
-                ? _value.reps
-                : reps // ignore: cast_nullable_to_non_nullable
-                      as int,
-            weightKg: null == weightKg
-                ? _value.weightKg
-                : weightKg // ignore: cast_nullable_to_non_nullable
-                      as double,
-            performedAt: null == performedAt
-                ? _value.performedAt
-                : performedAt // ignore: cast_nullable_to_non_nullable
-                      as DateTime,
-            createdAt: null == createdAt
-                ? _value.createdAt
-                : createdAt // ignore: cast_nullable_to_non_nullable
-                      as DateTime,
-          )
-          as $Val,
-    );
-  }
+/// Create a copy of LiftEntry
+/// with the given fields replaced by the non-null parameter values.
+@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? userId = null,Object? lift = null,Object? reps = null,Object? weightKg = null,Object? performedAt = null,Object? createdAt = null,}) {
+  return _then(_self.copyWith(
+id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
+as String,userId: null == userId ? _self.userId : userId // ignore: cast_nullable_to_non_nullable
+as String,lift: null == lift ? _self.lift : lift // ignore: cast_nullable_to_non_nullable
+as LiftType,reps: null == reps ? _self.reps : reps // ignore: cast_nullable_to_non_nullable
+as int,weightKg: null == weightKg ? _self.weightKg : weightKg // ignore: cast_nullable_to_non_nullable
+as double,performedAt: null == performedAt ? _self.performedAt : performedAt // ignore: cast_nullable_to_non_nullable
+as DateTime,createdAt: null == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
+as DateTime,
+  ));
 }
 
-/// @nodoc
-abstract class _$$LiftEntryImplCopyWith<$Res>
-    implements $LiftEntryCopyWith<$Res> {
-  factory _$$LiftEntryImplCopyWith(
-    _$LiftEntryImpl value,
-    $Res Function(_$LiftEntryImpl) then,
-  ) = __$$LiftEntryImplCopyWithImpl<$Res>;
-  @override
-  @useResult
-  $Res call({
-    String id,
-    String userId,
-    LiftType lift,
-    int reps,
-    double weightKg,
-    DateTime performedAt,
-    DateTime createdAt,
-  });
 }
 
-/// @nodoc
-class __$$LiftEntryImplCopyWithImpl<$Res>
-    extends _$LiftEntryCopyWithImpl<$Res, _$LiftEntryImpl>
-    implements _$$LiftEntryImplCopyWith<$Res> {
-  __$$LiftEntryImplCopyWithImpl(
-    _$LiftEntryImpl _value,
-    $Res Function(_$LiftEntryImpl) _then,
-  ) : super(_value, _then);
 
-  /// Create a copy of LiftEntry
-  /// with the given fields replaced by the non-null parameter values.
-  @pragma('vm:prefer-inline')
-  @override
-  $Res call({
-    Object? id = null,
-    Object? userId = null,
-    Object? lift = null,
-    Object? reps = null,
-    Object? weightKg = null,
-    Object? performedAt = null,
-    Object? createdAt = null,
-  }) {
-    return _then(
-      _$LiftEntryImpl(
-        id: null == id
-            ? _value.id
-            : id // ignore: cast_nullable_to_non_nullable
-                  as String,
-        userId: null == userId
-            ? _value.userId
-            : userId // ignore: cast_nullable_to_non_nullable
-                  as String,
-        lift: null == lift
-            ? _value.lift
-            : lift // ignore: cast_nullable_to_non_nullable
-                  as LiftType,
-        reps: null == reps
-            ? _value.reps
-            : reps // ignore: cast_nullable_to_non_nullable
-                  as int,
-        weightKg: null == weightKg
-            ? _value.weightKg
-            : weightKg // ignore: cast_nullable_to_non_nullable
-                  as double,
-        performedAt: null == performedAt
-            ? _value.performedAt
-            : performedAt // ignore: cast_nullable_to_non_nullable
-                  as DateTime,
-        createdAt: null == createdAt
-            ? _value.createdAt
-            : createdAt // ignore: cast_nullable_to_non_nullable
-                  as DateTime,
-      ),
-    );
-  }
+/// Adds pattern-matching-related methods to [LiftEntry].
+extension LiftEntryPatterns on LiftEntry {
+/// A variant of `map` that fallback to returning `orElse`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>(TResult Function( _LiftEntry value)?  $default,{required TResult orElse(),}){
+final _that = this;
+switch (_that) {
+case _LiftEntry() when $default != null:
+return $default(_that);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// Callbacks receives the raw object, upcasted.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case final Subclass2 value:
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult map<TResult extends Object?>(TResult Function( _LiftEntry value)  $default,){
+final _that = this;
+switch (_that) {
+case _LiftEntry():
+return $default(_that);}
+}
+/// A variant of `map` that fallback to returning `null`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>(TResult? Function( _LiftEntry value)?  $default,){
+final _that = this;
+switch (_that) {
+case _LiftEntry() when $default != null:
+return $default(_that);case _:
+  return null;
+
+}
+}
+/// A variant of `when` that fallback to an `orElse` callback.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id,  String userId,  LiftType lift,  int reps,  double weightKg,  DateTime performedAt,  DateTime createdAt)?  $default,{required TResult orElse(),}) {final _that = this;
+switch (_that) {
+case _LiftEntry() when $default != null:
+return $default(_that.id,_that.userId,_that.lift,_that.reps,_that.weightKg,_that.performedAt,_that.createdAt);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// As opposed to `map`, this offers destructuring.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case Subclass2(:final field2):
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id,  String userId,  LiftType lift,  int reps,  double weightKg,  DateTime performedAt,  DateTime createdAt)  $default,) {final _that = this;
+switch (_that) {
+case _LiftEntry():
+return $default(_that.id,_that.userId,_that.lift,_that.reps,_that.weightKg,_that.performedAt,_that.createdAt);}
+}
+/// A variant of `when` that fallback to returning `null`
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id,  String userId,  LiftType lift,  int reps,  double weightKg,  DateTime performedAt,  DateTime createdAt)?  $default,) {final _that = this;
+switch (_that) {
+case _LiftEntry() when $default != null:
+return $default(_that.id,_that.userId,_that.lift,_that.reps,_that.weightKg,_that.performedAt,_that.createdAt);case _:
+  return null;
+
+}
+}
+
 }
 
 /// @nodoc
 @JsonSerializable()
-class _$LiftEntryImpl extends _LiftEntry {
-  const _$LiftEntryImpl({
-    required this.id,
-    required this.userId,
-    required this.lift,
-    required this.reps,
-    required this.weightKg,
-    required this.performedAt,
-    required this.createdAt,
-  }) : super._();
 
-  factory _$LiftEntryImpl.fromJson(Map<String, dynamic> json) =>
-      _$$LiftEntryImplFromJson(json);
+class _LiftEntry extends LiftEntry {
+  const _LiftEntry({required this.id, required this.userId, required this.lift, required this.reps, required this.weightKg, required this.performedAt, required this.createdAt}): super._();
+  factory _LiftEntry.fromJson(Map<String, dynamic> json) => _$LiftEntryFromJson(json);
 
-  @override
-  final String id;
-  @override
-  final String userId;
-  @override
-  final LiftType lift;
-  @override
-  final int reps;
-  @override
-  final double weightKg;
-  @override
-  final DateTime performedAt;
-  @override
-  final DateTime createdAt;
+@override final  String id;
+@override final  String userId;
+@override final  LiftType lift;
+@override final  int reps;
+@override final  double weightKg;
+@override final  DateTime performedAt;
+@override final  DateTime createdAt;
 
-  @override
-  String toString() {
-    return 'LiftEntry(id: $id, userId: $userId, lift: $lift, reps: $reps, weightKg: $weightKg, performedAt: $performedAt, createdAt: $createdAt)';
-  }
+/// Create a copy of LiftEntry
+/// with the given fields replaced by the non-null parameter values.
+@override @JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+_$LiftEntryCopyWith<_LiftEntry> get copyWith => __$LiftEntryCopyWithImpl<_LiftEntry>(this, _$identity);
 
-  @override
-  bool operator ==(Object other) {
-    return identical(this, other) ||
-        (other.runtimeType == runtimeType &&
-            other is _$LiftEntryImpl &&
-            (identical(other.id, id) || other.id == id) &&
-            (identical(other.userId, userId) || other.userId == userId) &&
-            (identical(other.lift, lift) || other.lift == lift) &&
-            (identical(other.reps, reps) || other.reps == reps) &&
-            (identical(other.weightKg, weightKg) ||
-                other.weightKg == weightKg) &&
-            (identical(other.performedAt, performedAt) ||
-                other.performedAt == performedAt) &&
-            (identical(other.createdAt, createdAt) ||
-                other.createdAt == createdAt));
-  }
-
-  @JsonKey(includeFromJson: false, includeToJson: false)
-  @override
-  int get hashCode => Object.hash(
-    runtimeType,
-    id,
-    userId,
-    lift,
-    reps,
-    weightKg,
-    performedAt,
-    createdAt,
-  );
-
-  /// Create a copy of LiftEntry
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
-  @override
-  @pragma('vm:prefer-inline')
-  _$$LiftEntryImplCopyWith<_$LiftEntryImpl> get copyWith =>
-      __$$LiftEntryImplCopyWithImpl<_$LiftEntryImpl>(this, _$identity);
-
-  @override
-  Map<String, dynamic> toJson() {
-    return _$$LiftEntryImplToJson(this);
-  }
+@override
+Map<String, dynamic> toJson() {
+  return _$LiftEntryToJson(this, );
 }
 
-abstract class _LiftEntry extends LiftEntry {
-  const factory _LiftEntry({
-    required final String id,
-    required final String userId,
-    required final LiftType lift,
-    required final int reps,
-    required final double weightKg,
-    required final DateTime performedAt,
-    required final DateTime createdAt,
-  }) = _$LiftEntryImpl;
-  const _LiftEntry._() : super._();
-
-  factory _LiftEntry.fromJson(Map<String, dynamic> json) =
-      _$LiftEntryImpl.fromJson;
-
-  @override
-  String get id;
-  @override
-  String get userId;
-  @override
-  LiftType get lift;
-  @override
-  int get reps;
-  @override
-  double get weightKg;
-  @override
-  DateTime get performedAt;
-  @override
-  DateTime get createdAt;
-
-  /// Create a copy of LiftEntry
-  /// with the given fields replaced by the non-null parameter values.
-  @override
-  @JsonKey(includeFromJson: false, includeToJson: false)
-  _$$LiftEntryImplCopyWith<_$LiftEntryImpl> get copyWith =>
-      throw _privateConstructorUsedError;
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _LiftEntry&&(identical(other.id, id) || other.id == id)&&(identical(other.userId, userId) || other.userId == userId)&&(identical(other.lift, lift) || other.lift == lift)&&(identical(other.reps, reps) || other.reps == reps)&&(identical(other.weightKg, weightKg) || other.weightKg == weightKg)&&(identical(other.performedAt, performedAt) || other.performedAt == performedAt)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt));
 }
+
+@JsonKey(includeFromJson: false, includeToJson: false)
+@override
+int get hashCode => Object.hash(runtimeType,id,userId,lift,reps,weightKg,performedAt,createdAt);
+
+@override
+String toString() {
+  return 'LiftEntry(id: $id, userId: $userId, lift: $lift, reps: $reps, weightKg: $weightKg, performedAt: $performedAt, createdAt: $createdAt)';
+}
+
+
+}
+
+/// @nodoc
+abstract mixin class _$LiftEntryCopyWith<$Res> implements $LiftEntryCopyWith<$Res> {
+  factory _$LiftEntryCopyWith(_LiftEntry value, $Res Function(_LiftEntry) _then) = __$LiftEntryCopyWithImpl;
+@override @useResult
+$Res call({
+ String id, String userId, LiftType lift, int reps, double weightKg, DateTime performedAt, DateTime createdAt
+});
+
+
+
+
+}
+/// @nodoc
+class __$LiftEntryCopyWithImpl<$Res>
+    implements _$LiftEntryCopyWith<$Res> {
+  __$LiftEntryCopyWithImpl(this._self, this._then);
+
+  final _LiftEntry _self;
+  final $Res Function(_LiftEntry) _then;
+
+/// Create a copy of LiftEntry
+/// with the given fields replaced by the non-null parameter values.
+@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? userId = null,Object? lift = null,Object? reps = null,Object? weightKg = null,Object? performedAt = null,Object? createdAt = null,}) {
+  return _then(_LiftEntry(
+id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
+as String,userId: null == userId ? _self.userId : userId // ignore: cast_nullable_to_non_nullable
+as String,lift: null == lift ? _self.lift : lift // ignore: cast_nullable_to_non_nullable
+as LiftType,reps: null == reps ? _self.reps : reps // ignore: cast_nullable_to_non_nullable
+as int,weightKg: null == weightKg ? _self.weightKg : weightKg // ignore: cast_nullable_to_non_nullable
+as double,performedAt: null == performedAt ? _self.performedAt : performedAt // ignore: cast_nullable_to_non_nullable
+as DateTime,createdAt: null == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
+as DateTime,
+  ));
+}
+
+
+}
+
+// dart format on

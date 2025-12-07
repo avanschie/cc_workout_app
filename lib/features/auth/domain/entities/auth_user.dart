@@ -10,7 +10,7 @@ part 'auth_user.g.dart';
 /// needed for authentication state management. It maps from Supabase's User
 /// but only includes the fields we actually use in our application.
 @freezed
-class AuthUser with _$AuthUser {
+sealed class AuthUser with _$AuthUser {
   const factory AuthUser({
     required String id,
     required String email,
