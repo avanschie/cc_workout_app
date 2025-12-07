@@ -7,7 +7,8 @@ import 'package:supabase_flutter/supabase_flutter.dart'
 
 import 'package:cc_workout_app/core/config/env_config.dart';
 import 'package:cc_workout_app/core/utils/retry_utils.dart';
-import 'package:cc_workout_app/features/auth/domain/entities/auth_user.dart' as domain;
+import 'package:cc_workout_app/features/auth/domain/entities/auth_user.dart'
+    as domain;
 import 'package:cc_workout_app/features/auth/domain/exceptions/auth_exceptions.dart';
 import 'package:cc_workout_app/features/auth/domain/repositories/auth_repository.dart';
 import 'package:cc_workout_app/features/auth/data/models/auth_user_dto.dart';
@@ -226,23 +227,26 @@ class SupabaseAuthRepository implements AuthRepository {
 
   @override
   Future<void> sendPasswordResetEmail(String email) async {
-    return RetryUtils.retry(() async {
-      try {
-        await _supabase.auth.resetPasswordForEmail(email);
-      } on supabase.AuthException catch (e) {
-        throw _mapAuthException(e);
-      } catch (e) {
-        throw UnknownAuthException(
-          'An unexpected error occurred while sending password reset email: $e',
-        );
-      }
-    }, shouldRetry: (error) {
-      // Don't retry for authentication-specific errors
-      return !(error is InvalidCredentialsException ||
-               error is EmailNotConfirmedException ||
-               error is TooManyRequestsException ||
-               error is UserNotFoundException);
-    });
+    return RetryUtils.retry(
+      () async {
+        try {
+          await _supabase.auth.resetPasswordForEmail(email);
+        } on supabase.AuthException catch (e) {
+          throw _mapAuthException(e);
+        } catch (e) {
+          throw UnknownAuthException(
+            'An unexpected error occurred while sending password reset email: $e',
+          );
+        }
+      },
+      shouldRetry: (error) {
+        // Don't retry for authentication-specific errors
+        return !(error is InvalidCredentialsException ||
+            error is EmailNotConfirmedException ||
+            error is TooManyRequestsException ||
+            error is UserNotFoundException);
+      },
+    );
   }
 
   @override

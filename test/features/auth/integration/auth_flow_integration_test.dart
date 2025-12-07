@@ -15,7 +15,8 @@ import 'package:cc_workout_app/features/auth/application/providers/auth_provider
 import 'package:cc_workout_app/features/auth/presentation/screens/auth_gate.dart';
 import 'package:cc_workout_app/features/rep_maxes/domain/repositories/rep_maxes_repository.dart';
 import 'package:cc_workout_app/features/rep_maxes/application/providers/rep_max_providers.dart';
-import 'package:cc_workout_app/features/lifts/application/providers/lift_entries_providers.dart' hide supabaseClientProvider;
+import 'package:cc_workout_app/features/lifts/application/providers/lift_entries_providers.dart'
+    hide supabaseClientProvider;
 import 'package:cc_workout_app/features/lifts/application/providers/history_providers.dart';
 import 'package:cc_workout_app/features/lifts/domain/repositories/lift_entries_repository.dart';
 import 'package:cc_workout_app/core/navigation/app_routes.dart';
@@ -83,7 +84,9 @@ class AuthFlowRobot {
 
     // Create a test router that mimics the app structure but simpler for tests
     final router = GoRouter(
-      initialLocation: initialUser != null ? AppRoute.repMaxes.path : AppRoute.signIn.path,
+      initialLocation: initialUser != null
+          ? AppRoute.repMaxes.path
+          : AppRoute.signIn.path,
       routes: [
         // Auth routes (outside shell)
         GoRoute(
@@ -117,9 +120,7 @@ class AuthFlowRobot {
           supabaseClientProvider.overrideWithValue(mockSupabaseClient),
           authRepositoryProviderImpl.overrideWithValue(mockRepository),
           authRepositoryProvider.overrideWithValue(mockRepository),
-          repMaxesRepositoryProvider.overrideWithValue(
-            mockRepMaxesRepository,
-          ),
+          repMaxesRepositoryProvider.overrideWithValue(mockRepMaxesRepository),
           liftEntriesRepositoryProvider.overrideWithValue(
             mockLiftEntriesRepository,
           ),
@@ -129,9 +130,7 @@ class AuthFlowRobot {
           // Disable auto-login for tests
           hasUserLoggedOutProvider.overrideWith((ref) => true),
         ],
-        child: MaterialApp.router(
-          routerConfig: router,
-        ),
+        child: MaterialApp.router(routerConfig: router),
       ),
     );
 

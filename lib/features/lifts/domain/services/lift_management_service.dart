@@ -67,7 +67,7 @@ class LiftManagementService {
         entry.performedAt.day,
       );
       return entryDate.isAfter(startDate.subtract(const Duration(days: 1))) &&
-             entryDate.isBefore(endDate.add(const Duration(days: 1)));
+          entryDate.isBefore(endDate.add(const Duration(days: 1)));
     }).toList();
   }
 
@@ -83,7 +83,10 @@ class LiftManagementService {
   }
 
   /// Sorts lift entries by date (newest first by default)
-  List<LiftEntry> sortByDate(List<LiftEntry> entries, {bool ascending = false}) {
+  List<LiftEntry> sortByDate(
+    List<LiftEntry> entries, {
+    bool ascending = false,
+  }) {
     final sorted = List<LiftEntry>.from(entries);
     sorted.sort((a, b) {
       final comparison = a.performedAt.compareTo(b.performedAt);
@@ -93,7 +96,10 @@ class LiftManagementService {
   }
 
   /// Sorts lift entries by weight (heaviest first by default)
-  List<LiftEntry> sortByWeight(List<LiftEntry> entries, {bool ascending = false}) {
+  List<LiftEntry> sortByWeight(
+    List<LiftEntry> entries, {
+    bool ascending = false,
+  }) {
     final sorted = List<LiftEntry>.from(entries);
     sorted.sort((a, b) {
       final comparison = a.weightKg.compareTo(b.weightKg);
@@ -170,7 +176,8 @@ class LiftManagementService {
     // Count unique workout days
     final workoutDays = <String>{};
     for (final entry in filteredEntries) {
-      final dateKey = '${entry.performedAt.year}-${entry.performedAt.month}-${entry.performedAt.day}';
+      final dateKey =
+          '${entry.performedAt.year}-${entry.performedAt.month}-${entry.performedAt.day}';
       workoutDays.add(dateKey);
     }
 
@@ -207,7 +214,8 @@ class LiftManagementService {
 
       if (recentMax != null && comparisonMax != null) {
         final weightImprovement = recentMax.weightKg - comparisonMax.weightKg;
-        final percentImprovement = (weightImprovement / comparisonMax.weightKg) * 100;
+        final percentImprovement =
+            (weightImprovement / comparisonMax.weightKg) * 100;
 
         result[liftType] = ProgressAnalysis(
           liftType: liftType,
@@ -236,12 +244,14 @@ class LiftManagementService {
 
       if (recentLifts.isEmpty) {
         // Suggest starting with moderate weight
-        suggestions.add(WorkoutSuggestion(
-          liftType: liftType,
-          suggestedWeight: _getStartingWeight(liftType),
-          suggestedReps: 5,
-          reason: 'No recent training - start with moderate weight',
-        ));
+        suggestions.add(
+          WorkoutSuggestion(
+            liftType: liftType,
+            suggestedWeight: _getStartingWeight(liftType),
+            suggestedReps: 5,
+            reason: 'No recent training - start with moderate weight',
+          ),
+        );
       } else {
         // Suggest progression based on recent performance
         final heaviest = recentLifts.reduce(
@@ -249,12 +259,14 @@ class LiftManagementService {
         );
 
         final progressionWeight = heaviest.weightKg * 1.05; // 5% increase
-        suggestions.add(WorkoutSuggestion(
-          liftType: liftType,
-          suggestedWeight: progressionWeight,
-          suggestedReps: heaviest.reps,
-          reason: '5% progression from recent max: ${heaviest.weightKg}kg',
-        ));
+        suggestions.add(
+          WorkoutSuggestion(
+            liftType: liftType,
+            suggestedWeight: progressionWeight,
+            suggestedReps: heaviest.reps,
+            reason: '5% progression from recent max: ${heaviest.weightKg}kg',
+          ),
+        );
       }
     }
 

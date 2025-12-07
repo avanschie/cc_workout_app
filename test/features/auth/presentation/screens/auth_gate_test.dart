@@ -17,7 +17,8 @@ import 'package:cc_workout_app/core/navigation/main_navigation_shell.dart';
 import 'package:cc_workout_app/core/navigation/app_routes.dart';
 import 'package:cc_workout_app/features/rep_maxes/domain/repositories/rep_maxes_repository.dart';
 import 'package:cc_workout_app/features/rep_maxes/application/providers/rep_max_providers.dart';
-import 'package:cc_workout_app/features/lifts/application/providers/lift_entries_providers.dart' hide supabaseClientProvider;
+import 'package:cc_workout_app/features/lifts/application/providers/lift_entries_providers.dart'
+    hide supabaseClientProvider;
 import 'package:cc_workout_app/features/lifts/domain/repositories/lift_entries_repository.dart';
 
 /// Test-specific AuthGate that doesn't require GoRouter context

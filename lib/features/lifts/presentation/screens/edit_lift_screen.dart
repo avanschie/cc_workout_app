@@ -318,10 +318,7 @@ class _EditLiftScreenState extends ConsumerState<EditLiftScreen> {
         SnackBarUtils.showError(
           context,
           'Failed to update lift: ${e.toString()}',
-          action: SnackBarAction(
-            label: 'Retry',
-            onPressed: _handleSave,
-          ),
+          action: SnackBarAction(label: 'Retry', onPressed: _handleSave),
         );
       }
     }

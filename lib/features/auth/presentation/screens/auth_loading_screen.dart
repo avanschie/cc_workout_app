@@ -205,9 +205,7 @@ class AuthInitializingScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const AuthLoadingScreen(
-      message: 'Checking authentication...',
-    );
+    return const AuthLoadingScreen(message: 'Checking authentication...');
   }
 }
 

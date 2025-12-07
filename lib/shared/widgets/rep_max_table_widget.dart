@@ -152,9 +152,7 @@ class RepMaxTableWidget extends StatelessWidget {
                   color: hasData ? liftColor.withValues(alpha: 0.08) : null,
                   borderRadius: BorderRadius.circular(6),
                   border: hasData
-                      ? Border.all(
-                          color: liftColor.withValues(alpha: 0.25),
-                        )
+                      ? Border.all(color: liftColor.withValues(alpha: 0.25))
                       : null,
                 ),
                 child: FittedBox(

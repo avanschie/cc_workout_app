@@ -57,9 +57,7 @@ class MainApp extends StatelessWidget {
     return MaterialApp(
       title: 'Powerlifting Rep Max Tracker (Staging)',
       theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(
-          seedColor: const Color(0xFF6B46C1),
-        ),
+        colorScheme: ColorScheme.fromSeed(seedColor: const Color(0xFF6B46C1)),
         useMaterial3: true,
         appBarTheme: const AppBarTheme(centerTitle: true, elevation: 0),
         floatingActionButtonTheme: const FloatingActionButtonThemeData(

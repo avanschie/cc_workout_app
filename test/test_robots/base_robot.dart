@@ -114,7 +114,9 @@ abstract class BaseRobot {
     } else if (widget is IconButton) {
       expect(widget.onPressed, isNotNull, reason: 'Button should be enabled');
     } else {
-      throw ArgumentError('Widget type ${widget.runtimeType} not supported for enabled check');
+      throw ArgumentError(
+        'Widget type ${widget.runtimeType} not supported for enabled check',
+      );
     }
   }
 
@@ -130,28 +132,42 @@ abstract class BaseRobot {
     } else if (widget is IconButton) {
       expect(widget.onPressed, isNull, reason: 'Button should be disabled');
     } else {
-      throw ArgumentError('Widget type ${widget.runtimeType} not supported for disabled check');
+      throw ArgumentError(
+        'Widget type ${widget.runtimeType} not supported for disabled check',
+      );
     }
   }
 
   /// Verify loading state
   void expectLoadingState() {
-    expectToFind(loadingIndicator, reason: 'Loading indicator should be visible');
+    expectToFind(
+      loadingIndicator,
+      reason: 'Loading indicator should be visible',
+    );
   }
 
   /// Verify no loading state
   void expectNoLoadingState() {
-    expectNotToFind(loadingIndicator, reason: 'Loading indicator should not be visible');
+    expectNotToFind(
+      loadingIndicator,
+      reason: 'Loading indicator should not be visible',
+    );
   }
 
   /// Verify error message
   void expectErrorMessage(String message) {
-    expectToFind(find.text(message), reason: 'Error message should be displayed');
+    expectToFind(
+      find.text(message),
+      reason: 'Error message should be displayed',
+    );
   }
 
   /// Verify success message
   void expectSuccessMessage(String message) {
-    expectToFind(find.text(message), reason: 'Success message should be displayed');
+    expectToFind(
+      find.text(message),
+      reason: 'Success message should be displayed',
+    );
   }
 
   /// Verify that text field has specific value
@@ -167,10 +183,10 @@ abstract class BaseRobot {
 
   /// Verify app bar title
   void expectAppBarTitle(String title) {
-    expectToFind(find.descendant(
-      of: appBar,
-      matching: find.text(title),
-    ), reason: 'App bar should have title: $title');
+    expectToFind(
+      find.descendant(of: appBar, matching: find.text(title)),
+      reason: 'App bar should have title: $title',
+    );
   }
 
   /// Take a screenshot for debugging

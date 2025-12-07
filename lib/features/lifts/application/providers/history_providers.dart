@@ -14,8 +14,7 @@ final navigationIndexProvider = StateProvider<int>((ref) => 0);
 final selectedLiftEntryProvider = StateProvider<LiftEntry?>((ref) => null);
 
 /// Notifier for edit lift form state management
-class EditLiftFormNotifier extends Notifier<LiftFormState>
-    with LiftFormMixin {
+class EditLiftFormNotifier extends Notifier<LiftFormState> with LiftFormMixin {
   @override
   LiftFormState build() {
     // Initialize with selected lift entry if available

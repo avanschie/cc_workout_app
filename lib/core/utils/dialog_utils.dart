@@ -128,7 +128,11 @@ class DialogUtils {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          icon: const Icon(Icons.check_circle_outline, color: Colors.green, size: 32),
+          icon: const Icon(
+            Icons.check_circle_outline,
+            color: Colors.green,
+            size: 32,
+          ),
           title: Text(title),
           content: Text(message),
           actions: [

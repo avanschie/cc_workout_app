@@ -1,6 +1,7 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:supabase_flutter/supabase_flutter.dart' hide AuthUser;
-import 'package:cc_workout_app/features/auth/domain/entities/auth_user.dart' as domain;
+import 'package:cc_workout_app/features/auth/domain/entities/auth_user.dart'
+    as domain;
 
 part 'auth_user_dto.freezed.dart';
 part 'auth_user_dto.g.dart';

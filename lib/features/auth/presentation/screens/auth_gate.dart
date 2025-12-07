@@ -36,9 +36,7 @@ class AuthGate extends ConsumerWidget {
       // Authenticated user - show main app
       data: (user) {
         if (user != null) {
-          return const MainNavigationShell(
-            child: SizedBox.shrink(),
-          );
+          return const MainNavigationShell(child: SizedBox.shrink());
         } else {
           // Not authenticated - show auth navigator
           return const AuthNavigator();

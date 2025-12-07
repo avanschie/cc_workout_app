@@ -24,12 +24,14 @@ class LiftRobot extends BaseRobot {
 
   // History screen elements
   Finder get historyList => find.byKey(const Key('history_list'));
-  Finder get emptyHistoryMessage => find.byKey(const Key('empty_history_message'));
+  Finder get emptyHistoryMessage =>
+      find.byKey(const Key('empty_history_message'));
   Finder get addLiftFab => find.byKey(const Key('add_lift_fab'));
 
   // Rep maxes elements
   Finder get repMaxesTable => find.byKey(const Key('rep_maxes_table'));
-  Finder get emptyRepMaxesMessage => find.byKey(const Key('empty_rep_maxes_message'));
+  Finder get emptyRepMaxesMessage =>
+      find.byKey(const Key('empty_rep_maxes_message'));
 
   // Form validation
   Finder repsErrorText(String error) => find.text(error);

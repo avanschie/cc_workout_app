@@ -22,12 +22,14 @@ class MockAuthNotifier extends Mock implements AuthNotifier {
         #email: email,
         #password: password,
       }),
-      returnValue: Future.value(AuthUser(
-        id: 'test-id',
-        email: email,
-        isEmailVerified: true,
-        createdAt: DateTime.now(),
-      )),
+      returnValue: Future.value(
+        AuthUser(
+          id: 'test-id',
+          email: email,
+          isEmailVerified: true,
+          createdAt: DateTime.now(),
+        ),
+      ),
     );
   }
 
@@ -43,13 +45,15 @@ class MockAuthNotifier extends Mock implements AuthNotifier {
         #password: password,
         #displayName: displayName,
       }),
-      returnValue: Future.value(AuthUser(
-        id: 'test-id',
-        email: email,
-        displayName: displayName,
-        isEmailVerified: true,
-        createdAt: DateTime.now(),
-      )),
+      returnValue: Future.value(
+        AuthUser(
+          id: 'test-id',
+          email: email,
+          displayName: displayName,
+          isEmailVerified: true,
+          createdAt: DateTime.now(),
+        ),
+      ),
     );
   }
 
@@ -101,9 +105,7 @@ void main() {
           // Override providers for testing
           authNotifierProvider.overrideWith(() => mockAuthNotifier),
         ],
-        child: const MaterialApp(
-          home: SignInScreen(),
-        ),
+        child: const MaterialApp(home: SignInScreen()),
       );
     }
 
@@ -151,7 +153,9 @@ void main() {
       await authRobot.tapSignIn();
 
       // Assert
-      authRobot.expectEmailValidationError('Please enter a valid email address');
+      authRobot.expectEmailValidationError(
+        'Please enter a valid email address',
+      );
     });
 
     testWidgets('should display sign in button', (tester) async {
@@ -207,7 +211,8 @@ void main() {
       await tester.pumpWidget(
         MaterialApp(
           routes: {
-            '/sign-up': (context) => const Scaffold(body: Text('Sign Up Screen')),
+            '/sign-up': (context) =>
+                const Scaffold(body: Text('Sign Up Screen')),
           },
           home: ProviderScope(
             overrides: [
@@ -226,7 +231,9 @@ void main() {
       expect(find.text('Sign Up Screen'), findsOneWidget);
     });
 
-    testWidgets('should always enable sign in button (validation on submit)', (tester) async {
+    testWidgets('should always enable sign in button (validation on submit)', (
+      tester,
+    ) async {
       // Arrange
       when(mockAuthNotifier.build()).thenAnswer((_) async => null);
 

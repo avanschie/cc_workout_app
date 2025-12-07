@@ -33,20 +33,29 @@ class RetryService {
         attempts++;
 
         // Check if we should retry this error
-        final shouldRetry = retryIf?.call(error) ?? _shouldRetryByDefault(error);
+        final shouldRetry =
+            retryIf?.call(error) ?? _shouldRetryByDefault(error);
 
         if (attempts > maxRetries || !shouldRetry) {
           if (kDebugMode) {
-            debugPrint('RetryService: Max retries ($maxRetries) exceeded or error not retryable. Final error: $error');
+            debugPrint(
+              'RetryService: Max retries ($maxRetries) exceeded or error not retryable. Final error: $error',
+            );
           }
           rethrow;
         }
 
         // Calculate delay with exponential backoff and jitter
-        final delay = _calculateDelay(attempts, initialDelay, backoffMultiplier);
+        final delay = _calculateDelay(
+          attempts,
+          initialDelay,
+          backoffMultiplier,
+        );
 
         if (kDebugMode) {
-          debugPrint('RetryService: Attempt $attempts failed, retrying in ${delay.inMilliseconds}ms. Error: $error');
+          debugPrint(
+            'RetryService: Attempt $attempts failed, retrying in ${delay.inMilliseconds}ms. Error: $error',
+          );
         }
 
         await Future.delayed(delay);
@@ -62,8 +71,8 @@ class RetryService {
     Duration initialDelay,
     double backoffMultiplier,
   ) {
-    final exponentialDelay = initialDelay.inMilliseconds *
-        pow(backoffMultiplier, attempt - 1);
+    final exponentialDelay =
+        initialDelay.inMilliseconds * pow(backoffMultiplier, attempt - 1);
 
     // Add jitter (random variation) to prevent thundering herd
     final jitter = Random().nextDouble() * 0.1; // 0-10% jitter
@@ -78,15 +87,15 @@ class RetryService {
 
     // Network-related errors that are typically transient
     return errorMessage.contains('network') ||
-           errorMessage.contains('connection') ||
-           errorMessage.contains('timeout') ||
-           errorMessage.contains('socket') ||
-           errorMessage.contains('dns') ||
-           errorMessage.contains('server') ||
-           errorMessage.contains('500') ||
-           errorMessage.contains('502') ||
-           errorMessage.contains('503') ||
-           errorMessage.contains('504');
+        errorMessage.contains('connection') ||
+        errorMessage.contains('timeout') ||
+        errorMessage.contains('socket') ||
+        errorMessage.contains('dns') ||
+        errorMessage.contains('server') ||
+        errorMessage.contains('500') ||
+        errorMessage.contains('502') ||
+        errorMessage.contains('503') ||
+        errorMessage.contains('504');
   }
 
   /// Predicate for database/Supabase specific errors

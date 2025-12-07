@@ -54,9 +54,7 @@ class MainApp extends ConsumerWidget {
       title: 'Powerlifting Rep Max Tracker',
       routerConfig: router,
       theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(
-          seedColor: const Color(0xFF6B46C1),
-        ),
+        colorScheme: ColorScheme.fromSeed(seedColor: const Color(0xFF6B46C1)),
         useMaterial3: true,
         appBarTheme: const AppBarTheme(centerTitle: true),
         floatingActionButtonTheme: const FloatingActionButtonThemeData(

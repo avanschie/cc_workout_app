@@ -110,9 +110,7 @@ class SkeletonRepMaxTable extends StatelessWidget {
           ),
           child: Row(
             children: [
-              const Expanded(
-                child: SkeletonWidget(width: 40, height: 16),
-              ),
+              const Expanded(child: SkeletonWidget(width: 40, height: 16)),
               ...List.generate(
                 3,
                 (index) => const Expanded(

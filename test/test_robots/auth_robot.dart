@@ -22,7 +22,8 @@ class AuthRobot extends BaseRobot {
   Finder get forgotPasswordButton => find.text('Forgot your password?');
   Finder get goToSignUpButton => find.text('Create new account');
   Finder get goToSignInButton => find.text('Already have an account? Sign In');
-  Finder get passwordVisibilityToggle => find.byType(IconButton).last; // Last IconButton in password field
+  Finder get passwordVisibilityToggle =>
+      find.byType(IconButton).last; // Last IconButton in password field
 
   // Error and loading states
   @override
@@ -170,10 +171,7 @@ class AuthRobot extends BaseRobot {
   void expectPasswordVisible(bool visible) {
     // Find the TextField inside the TextFormField
     final textField = tester.widget<TextField>(
-      find.descendant(
-        of: passwordField,
-        matching: find.byType(TextField),
-      ),
+      find.descendant(of: passwordField, matching: find.byType(TextField)),
     );
     expect(textField.obscureText, !visible);
   }

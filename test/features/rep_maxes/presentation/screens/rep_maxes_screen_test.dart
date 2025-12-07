@@ -12,7 +12,6 @@ import 'package:cc_workout_app/features/rep_maxes/presentation/screens/rep_maxes
 import 'rep_maxes_screen_test.mocks.dart';
 
 @GenerateMocks([RepMaxCalculationService])
-
 /// Test notifier that avoids timers and complex dependencies
 class TestRepMaxTableNotifier extends RepMaxTableNotifier {
   final RepMaxCalculationService _service;

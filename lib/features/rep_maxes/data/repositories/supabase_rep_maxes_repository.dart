@@ -37,9 +37,7 @@ class SupabaseRepMaxesRepository implements RepMaxesRepository {
             'DEBUG RepMax: Response received: ${response.length} items',
           );
         }
-        return response
-            .map<RepMax>(RepMax.fromSupabaseRow)
-            .toList();
+        return response.map<RepMax>(RepMax.fromSupabaseRow).toList();
       } catch (e, stackTrace) {
         if (kDebugMode) {
           debugPrint('DEBUG RepMax: Error getting rep maxes: $e');
@@ -73,9 +71,7 @@ class SupabaseRepMaxesRepository implements RepMaxesRepository {
             .eq('lift', liftType.value)
             .order('reps');
 
-        return response
-            .map<RepMax>(RepMax.fromSupabaseRow)
-            .toList();
+        return response.map<RepMax>(RepMax.fromSupabaseRow).toList();
       } catch (e, stackTrace) {
         final appError = ErrorHandler.handleError(e, stackTrace);
         throw RepMaxesRepositoryException(appError.message);

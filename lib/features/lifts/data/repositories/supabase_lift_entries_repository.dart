@@ -36,9 +36,7 @@ class SupabaseLiftEntriesRepository implements LiftEntriesRepository {
             'DEBUG LiftEntries: Response received: ${response.length} items for user: $userId',
           );
         }
-        return response
-            .map<LiftEntry>(LiftEntry.fromSupabaseRow)
-            .toList();
+        return response.map<LiftEntry>(LiftEntry.fromSupabaseRow).toList();
       } catch (e, stackTrace) {
         if (kDebugMode) {
           debugPrint('DEBUG LiftEntries: Error getting lift entries: $e');
@@ -66,9 +64,7 @@ class SupabaseLiftEntriesRepository implements LiftEntriesRepository {
             .order('performed_at', ascending: false)
             .order('created_at', ascending: false);
 
-        return response
-            .map<LiftEntry>(LiftEntry.fromSupabaseRow)
-            .toList();
+        return response.map<LiftEntry>(LiftEntry.fromSupabaseRow).toList();
       } catch (e, stackTrace) {
         final appError = ErrorHandler.handleError(e, stackTrace);
         throw LiftEntriesRepositoryException(appError.message);

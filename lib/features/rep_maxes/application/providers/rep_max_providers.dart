@@ -3,7 +3,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:cc_workout_app/shared/models/lift_type.dart';
 import 'package:cc_workout_app/features/rep_maxes/domain/entities/rep_max.dart';
 import 'package:cc_workout_app/features/auth/application/providers/auth_providers.dart';
-import 'package:cc_workout_app/features/lifts/application/providers/lift_entries_providers.dart' hide supabaseClientProvider;
+import 'package:cc_workout_app/features/lifts/application/providers/lift_entries_providers.dart'
+    hide supabaseClientProvider;
 import 'package:cc_workout_app/features/rep_maxes/domain/repositories/rep_maxes_repository.dart';
 import 'package:cc_workout_app/features/rep_maxes/data/repositories/supabase_rep_maxes_repository.dart';
 import 'package:cc_workout_app/features/rep_maxes/domain/services/rep_max_calculation_service.dart';
@@ -20,7 +21,9 @@ final repMaxCalculationServiceProvider = Provider<RepMaxCalculationService>((
   return RepMaxCalculationService(repository);
 });
 
-final allRepMaxesProvider = FutureProvider.autoDispose<List<RepMax>>((ref) async {
+final allRepMaxesProvider = FutureProvider.autoDispose<List<RepMax>>((
+  ref,
+) async {
   // Keep alive for better performance since this is frequently accessed
   final link = ref.keepAlive();
 
@@ -74,20 +77,19 @@ final repMaxTableForLiftProvider =
       return await service.getRepMaxTableForLift(liftType);
     });
 
-final fullRepMaxTableProvider = FutureProvider.autoDispose<Map<LiftType, Map<int, RepMax>>>(
-  (ref) async {
-    // Keep alive for better performance since this is frequently accessed
-    final link = ref.keepAlive();
+final fullRepMaxTableProvider =
+    FutureProvider.autoDispose<Map<LiftType, Map<int, RepMax>>>((ref) async {
+      // Keep alive for better performance since this is frequently accessed
+      final link = ref.keepAlive();
 
-    // Auto-dispose after 5 minutes of inactivity for memory management
-    Timer(const Duration(minutes: 5), link.close);
+      // Auto-dispose after 5 minutes of inactivity for memory management
+      Timer(const Duration(minutes: 5), link.close);
 
-    // Watch all lift entries to automatically refresh when they change
-    ref.watch(liftEntriesProvider);
-    final service = ref.watch(repMaxCalculationServiceProvider);
-    return await service.getFullRepMaxTable();
-  },
-);
+      // Watch all lift entries to automatically refresh when they change
+      ref.watch(liftEntriesProvider);
+      final service = ref.watch(repMaxCalculationServiceProvider);
+      return await service.getFullRepMaxTable();
+    });
 
 class RepMaxNotifier extends AsyncNotifier<List<RepMax>> {
   @override
@@ -108,9 +110,7 @@ class RepMaxNotifier extends AsyncNotifier<List<RepMax>> {
 }
 
 final repMaxNotifierProvider =
-    AsyncNotifierProvider<RepMaxNotifier, List<RepMax>>(
-      RepMaxNotifier.new,
-    );
+    AsyncNotifierProvider<RepMaxNotifier, List<RepMax>>(RepMaxNotifier.new);
 
 class RepMaxTableNotifier
     extends AsyncNotifier<Map<LiftType, Map<int, RepMax>>> {
@@ -132,7 +132,6 @@ class RepMaxTableNotifier
 }
 
 final repMaxTableNotifierProvider =
-    AsyncNotifierProvider<
-      RepMaxTableNotifier,
-      Map<LiftType, Map<int, RepMax>>
-    >(RepMaxTableNotifier.new);
+    AsyncNotifierProvider<RepMaxTableNotifier, Map<LiftType, Map<int, RepMax>>>(
+      RepMaxTableNotifier.new,
+    );

@@ -16,10 +16,7 @@ final navigationIndexProvider = StateProvider<int>((ref) => 0);
 ///
 /// This shell wraps the main content and provides consistent navigation elements
 class MainNavigationShell extends ConsumerWidget {
-  const MainNavigationShell({
-    super.key,
-    required this.child,
-  });
+  const MainNavigationShell({super.key, required this.child});
 
   final Widget child;
 

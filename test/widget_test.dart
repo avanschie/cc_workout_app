@@ -35,9 +35,7 @@ void main() {
           GoRoute(
             path: '/',
             builder: (context, state) => ProviderScope(
-              overrides: [
-                currentUserProvider.overrideWithValue(testUser),
-              ],
+              overrides: [currentUserProvider.overrideWithValue(testUser)],
               child: const MainNavigationShell(
                 child: Scaffold(body: Center(child: Text('Test Content'))),
               ),
@@ -46,11 +44,7 @@ void main() {
         ],
       );
 
-      await tester.pumpWidget(
-        MaterialApp.router(
-          routerConfig: router,
-        ),
-      );
+      await tester.pumpWidget(MaterialApp.router(routerConfig: router));
 
       await tester.pumpAndSettle();
 
@@ -58,7 +52,10 @@ void main() {
       expect(find.text('Rep Max Tracker'), findsOneWidget); // Shows in app bar
       expect(find.text('Rep Maxes'), findsOneWidget); // Tab label in navigation
       expect(find.text('History'), findsOneWidget); // History tab in navigation
-      expect(find.byType(FloatingActionButton), findsOneWidget); // FAB for adding lifts
+      expect(
+        find.byType(FloatingActionButton),
+        findsOneWidget,
+      ); // FAB for adding lifts
       expect(find.text('Test Content'), findsOneWidget); // The child content
     });
 
@@ -80,9 +77,7 @@ void main() {
           GoRoute(
             path: '/',
             builder: (context, state) => ProviderScope(
-              overrides: [
-                currentUserProvider.overrideWithValue(testUser),
-              ],
+              overrides: [currentUserProvider.overrideWithValue(testUser)],
               child: const MainNavigationShell(
                 child: Scaffold(body: Center(child: Text('Test Content'))),
               ),
@@ -91,11 +86,7 @@ void main() {
         ],
       );
 
-      await tester.pumpWidget(
-        MaterialApp.router(
-          routerConfig: router,
-        ),
-      );
+      await tester.pumpWidget(MaterialApp.router(routerConfig: router));
 
       await tester.pumpAndSettle();
 

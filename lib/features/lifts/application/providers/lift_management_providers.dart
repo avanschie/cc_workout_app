@@ -10,7 +10,9 @@ final liftManagementServiceProvider = Provider<LiftManagementService>((ref) {
 });
 
 /// Provider for workout suggestions based on recent training history
-final workoutSuggestionsProvider = FutureProvider<List<WorkoutSuggestion>>((ref) async {
+final workoutSuggestionsProvider = FutureProvider<List<WorkoutSuggestion>>((
+  ref,
+) async {
   final service = ref.read(liftManagementServiceProvider);
   final entries = await ref.watch(liftEntriesProvider.future);
 
@@ -18,12 +20,13 @@ final workoutSuggestionsProvider = FutureProvider<List<WorkoutSuggestion>>((ref)
 });
 
 /// Provider for progress analysis across all lift types
-final progressAnalysisProvider = FutureProvider<Map<LiftType, ProgressAnalysis>>((ref) async {
-  final service = ref.read(liftManagementServiceProvider);
-  final entries = await ref.watch(liftEntriesProvider.future);
+final progressAnalysisProvider =
+    FutureProvider<Map<LiftType, ProgressAnalysis>>((ref) async {
+      final service = ref.read(liftManagementServiceProvider);
+      final entries = await ref.watch(liftEntriesProvider.future);
 
-  return service.analyzeProgress(entries);
-});
+      return service.analyzeProgress(entries);
+    });
 
 /// Provider for total training volume over the last 30 days
 final recentTrainingVolumeProvider = FutureProvider<double>((ref) async {
@@ -31,7 +34,11 @@ final recentTrainingVolumeProvider = FutureProvider<double>((ref) async {
   final entries = await ref.watch(liftEntriesProvider.future);
 
   final thirtyDaysAgo = DateTime.now().subtract(const Duration(days: 30));
-  final recentEntries = service.filterByDateRange(entries, thirtyDaysAgo, DateTime.now());
+  final recentEntries = service.filterByDateRange(
+    entries,
+    thirtyDaysAgo,
+    DateTime.now(),
+  );
 
   return service.calculateTotalVolume(recentEntries);
 });
@@ -43,11 +50,17 @@ final workoutFrequencyProvider = FutureProvider<double>((ref) async {
 
   final eightWeeksAgo = DateTime.now().subtract(const Duration(days: 56));
 
-  return service.calculateWorkoutFrequency(entries, eightWeeksAgo, DateTime.now());
+  return service.calculateWorkoutFrequency(
+    entries,
+    eightWeeksAgo,
+    DateTime.now(),
+  );
 });
 
 /// Provider for heaviest lifts per type
-final heaviestLiftsProvider = FutureProvider<Map<LiftType, LiftEntry>>((ref) async {
+final heaviestLiftsProvider = FutureProvider<Map<LiftType, LiftEntry>>((
+  ref,
+) async {
   final service = ref.read(liftManagementServiceProvider);
   final entries = await ref.watch(liftEntriesProvider.future);
 
@@ -55,7 +68,9 @@ final heaviestLiftsProvider = FutureProvider<Map<LiftType, LiftEntry>>((ref) asy
 });
 
 /// Provider for most recent lifts per type
-final mostRecentLiftsProvider = FutureProvider<Map<LiftType, LiftEntry>>((ref) async {
+final mostRecentLiftsProvider = FutureProvider<Map<LiftType, LiftEntry>>((
+  ref,
+) async {
   final service = ref.read(liftManagementServiceProvider);
   final entries = await ref.watch(liftEntriesProvider.future);
 
@@ -63,7 +78,10 @@ final mostRecentLiftsProvider = FutureProvider<Map<LiftType, LiftEntry>>((ref) a
 });
 
 /// Family provider for average weight by lift type
-final averageWeightProvider = FutureProvider.family<double, LiftType>((ref, liftType) async {
+final averageWeightProvider = FutureProvider.family<double, LiftType>((
+  ref,
+  liftType,
+) async {
   final service = ref.read(liftManagementServiceProvider);
   final entries = await ref.watch(liftEntriesProvider.future);
 
@@ -71,12 +89,13 @@ final averageWeightProvider = FutureProvider.family<double, LiftType>((ref, lift
 });
 
 /// Family provider for filtered lift entries by date range
-final liftEntriesInDateRangeProvider = FutureProvider.family<List<LiftEntry>, DateRange>((ref, dateRange) async {
-  final service = ref.read(liftManagementServiceProvider);
-  final entries = await ref.watch(liftEntriesProvider.future);
+final liftEntriesInDateRangeProvider =
+    FutureProvider.family<List<LiftEntry>, DateRange>((ref, dateRange) async {
+      final service = ref.read(liftManagementServiceProvider);
+      final entries = await ref.watch(liftEntriesProvider.future);
 
-  return service.filterByDateRange(entries, dateRange.start, dateRange.end);
-});
+      return service.filterByDateRange(entries, dateRange.start, dateRange.end);
+    });
 
 /// Data class for date range filtering
 class DateRange {
