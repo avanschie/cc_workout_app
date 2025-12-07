@@ -48,18 +48,51 @@ class _ErrorBoundaryState extends State<ErrorBoundary> {
   Widget build(BuildContext context) {
     if (_error != null) {
       return widget.errorBuilder?.call(_error!, _stackTrace) ??
-          _defaultErrorWidget(context);
+          _defaultErrorWidget();
     }
 
     return widget.child;
   }
 
-  Widget _defaultErrorWidget(BuildContext context) {
+  Widget _defaultErrorWidget() {
+    // Wrap in MaterialApp to provide directionality and theme context
+    // This is necessary because errors might occur before the main MaterialApp is built
+    return MaterialApp(
+      home: _ErrorScaffold(
+        error: _error,
+        stackTrace: _stackTrace,
+        onRetry: () {
+          setState(() {
+            _error = null;
+            _stackTrace = null;
+          });
+        },
+      ),
+    );
+  }
+}
+
+class _ErrorScaffold extends StatelessWidget {
+  const _ErrorScaffold({
+    required this.error,
+    required this.stackTrace,
+    required this.onRetry,
+  });
+
+  final Object? error;
+  final StackTrace? stackTrace;
+  final VoidCallback onRetry;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('Something went wrong'),
-        backgroundColor: Theme.of(context).colorScheme.error,
-        foregroundColor: Theme.of(context).colorScheme.onError,
+        backgroundColor: colorScheme.error,
+        foregroundColor: colorScheme.onError,
       ),
       body: Padding(
         padding: const EdgeInsets.all(24.0),
@@ -67,15 +100,11 @@ class _ErrorBoundaryState extends State<ErrorBoundary> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Icon(
-                Icons.error_outline,
-                size: 80,
-                color: Theme.of(context).colorScheme.error,
-              ),
+              Icon(Icons.error_outline, size: 80, color: colorScheme.error),
               const SizedBox(height: 24),
               Text(
                 'Oops! Something went wrong',
-                style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                style: theme.textTheme.headlineSmall?.copyWith(
                   fontWeight: FontWeight.w600,
                 ),
                 textAlign: TextAlign.center,
@@ -83,17 +112,12 @@ class _ErrorBoundaryState extends State<ErrorBoundary> {
               const SizedBox(height: 16),
               Text(
                 'An unexpected error occurred. Please restart the app.',
-                style: Theme.of(context).textTheme.bodyLarge,
+                style: theme.textTheme.bodyLarge,
                 textAlign: TextAlign.center,
               ),
               const SizedBox(height: 32),
               FilledButton.icon(
-                onPressed: () {
-                  setState(() {
-                    _error = null;
-                    _stackTrace = null;
-                  });
-                },
+                onPressed: onRetry,
                 icon: const Icon(Icons.refresh),
                 label: const Text('Try Again'),
               ),
@@ -107,7 +131,7 @@ class _ErrorBoundaryState extends State<ErrorBoundary> {
                         title: const Text('Error Details'),
                         content: SingleChildScrollView(
                           child: Text(
-                            'Error: $_error\n\nStack Trace:\n$_stackTrace',
+                            'Error: $error\n\nStack Trace:\n$stackTrace',
                             style: const TextStyle(fontFamily: 'monospace'),
                           ),
                         ),

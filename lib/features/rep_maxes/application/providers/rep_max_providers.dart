@@ -89,7 +89,7 @@ final fullRepMaxTableProvider = FutureProvider.autoDispose<Map<LiftType, Map<int
   },
 );
 
-class RepMaxNotifier extends AutoDisposeAsyncNotifier<List<RepMax>> {
+class RepMaxNotifier extends AsyncNotifier<List<RepMax>> {
   @override
   Future<List<RepMax>> build() async {
     // Watch lift entries to automatically refresh when they change
@@ -108,12 +108,12 @@ class RepMaxNotifier extends AutoDisposeAsyncNotifier<List<RepMax>> {
 }
 
 final repMaxNotifierProvider =
-    AutoDisposeAsyncNotifierProvider<RepMaxNotifier, List<RepMax>>(
+    AsyncNotifierProvider<RepMaxNotifier, List<RepMax>>(
       RepMaxNotifier.new,
     );
 
 class RepMaxTableNotifier
-    extends AutoDisposeAsyncNotifier<Map<LiftType, Map<int, RepMax>>> {
+    extends AsyncNotifier<Map<LiftType, Map<int, RepMax>>> {
   @override
   Future<Map<LiftType, Map<int, RepMax>>> build() async {
     // Watch lift entries to automatically refresh when they change
@@ -132,7 +132,7 @@ class RepMaxTableNotifier
 }
 
 final repMaxTableNotifierProvider =
-    AutoDisposeAsyncNotifierProvider<
+    AsyncNotifierProvider<
       RepMaxTableNotifier,
       Map<LiftType, Map<int, RepMax>>
     >(RepMaxTableNotifier.new);

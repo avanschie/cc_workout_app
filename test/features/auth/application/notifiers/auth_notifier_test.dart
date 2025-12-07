@@ -139,8 +139,8 @@ void main() {
         await Future.delayed(const Duration(milliseconds: 10));
 
         final currentState = container.read(authNotifierProvider);
-        expect(currentState.valueOrNull, isNotNull);
-        expect(currentState.valueOrNull!.id, testUserId);
+        expect(currentState.value, isNotNull);
+        expect(currentState.value!.id, testUserId);
       });
 
       test('updates state when user signs out via external change', () async {
@@ -157,7 +157,7 @@ void main() {
         await Future.delayed(const Duration(milliseconds: 10));
 
         final currentState = container.read(authNotifierProvider);
-        expect(currentState.valueOrNull, isNull);
+        expect(currentState.value, isNull);
       });
 
       test('handles auth state stream errors', () async {
@@ -196,7 +196,7 @@ void main() {
 
         final currentState = container.read(authNotifierProvider);
         expect(currentState.hasError, isFalse);
-        expect(currentState.valueOrNull, isNotNull);
+        expect(currentState.value, isNotNull);
       });
     });
 
@@ -266,8 +266,8 @@ void main() {
         ).called(1);
 
         final currentState = container.read(authNotifierProvider);
-        expect(currentState.valueOrNull, isNotNull);
-        expect(currentState.valueOrNull!.id, testUserId);
+        expect(currentState.value, isNotNull);
+        expect(currentState.value!.id, testUserId);
       });
 
       test('works without display name', () async {
@@ -358,8 +358,8 @@ void main() {
         ).called(1);
 
         final currentState = container.read(authNotifierProvider);
-        expect(currentState.valueOrNull, isNotNull);
-        expect(currentState.valueOrNull!.id, testUserId);
+        expect(currentState.value, isNotNull);
+        expect(currentState.value!.id, testUserId);
       });
 
       test('sets loading state during sign in', () async {
@@ -449,7 +449,7 @@ void main() {
         final stateAfter = container.read(authNotifierProvider);
 
         // State should remain the same
-        expect(stateAfter.valueOrNull, stateBefore.valueOrNull);
+        expect(stateAfter.value, stateBefore.value);
         expect(stateAfter.hasError, stateBefore.hasError);
       });
 
@@ -540,7 +540,7 @@ void main() {
         final notifier = container.read(authNotifierProvider.notifier);
         await notifier.future;
 
-        expect(container.read(authNotifierProvider).valueOrNull, isNull);
+        expect(container.read(authNotifierProvider).value, isNull);
 
         // Update mock to return user for refresh
         when(() => mockAuthRepository.currentUser).thenReturn(testUser);
@@ -548,8 +548,8 @@ void main() {
         await notifier.refresh();
 
         final currentState = container.read(authNotifierProvider);
-        expect(currentState.valueOrNull, isNotNull);
-        expect(currentState.valueOrNull!.id, testUserId);
+        expect(currentState.value, isNotNull);
+        expect(currentState.value!.id, testUserId);
       });
 
       test('sets loading state during refresh', () async {
@@ -645,7 +645,7 @@ void main() {
 
         // The notifier should maintain proper loading states throughout operations
         expect(initialState.hasValue, isTrue);
-        expect(initialState.valueOrNull, isNull);
+        expect(initialState.value, isNull);
       });
     });
 

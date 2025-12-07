@@ -3,7 +3,7 @@ import 'package:cc_workout_app/features/lifts/domain/entities/lift_entry.dart';
 import 'package:cc_workout_app/features/lifts/application/forms/lift_form_state.dart';
 import 'package:cc_workout_app/features/lifts/application/forms/lift_form_mixin.dart';
 
-class AddLiftFormNotifier extends AutoDisposeNotifier<LiftFormState>
+class AddLiftFormNotifier extends Notifier<LiftFormState>
     with LiftFormMixin {
   @override
   LiftFormState build() {
@@ -20,6 +20,6 @@ class AddLiftFormNotifier extends AutoDisposeNotifier<LiftFormState>
 }
 
 final addLiftFormProvider =
-    AutoDisposeNotifierProvider<AddLiftFormNotifier, LiftFormState>(() {
+    NotifierProvider<AddLiftFormNotifier, LiftFormState>(() {
       return AddLiftFormNotifier();
     });

@@ -1,4 +1,5 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_riverpod/legacy.dart';
 import 'package:cc_workout_app/features/lifts/domain/entities/lift_entry.dart';
 import 'package:cc_workout_app/features/lifts/application/providers/lift_entries_providers.dart';
 import 'package:cc_workout_app/features/rep_maxes/application/providers/rep_max_providers.dart';
@@ -13,7 +14,7 @@ final navigationIndexProvider = StateProvider<int>((ref) => 0);
 final selectedLiftEntryProvider = StateProvider<LiftEntry?>((ref) => null);
 
 /// Notifier for edit lift form state management
-class EditLiftFormNotifier extends AutoDisposeNotifier<LiftFormState>
+class EditLiftFormNotifier extends Notifier<LiftFormState>
     with LiftFormMixin {
   @override
   LiftFormState build() {
@@ -39,12 +40,12 @@ class EditLiftFormNotifier extends AutoDisposeNotifier<LiftFormState>
 }
 
 final editLiftFormProvider =
-    AutoDisposeNotifierProvider<EditLiftFormNotifier, LiftFormState>(() {
+    NotifierProvider<EditLiftFormNotifier, LiftFormState>(() {
       return EditLiftFormNotifier();
     });
 
 /// AsyncNotifier for managing the history list with chronological sorting
-class HistoryListNotifier extends AutoDisposeAsyncNotifier<List<LiftEntry>> {
+class HistoryListNotifier extends AsyncNotifier<List<LiftEntry>> {
   @override
   Future<List<LiftEntry>> build() async {
     final repository = ref.watch(liftEntriesRepositoryProvider);
@@ -68,7 +69,7 @@ class HistoryListNotifier extends AutoDisposeAsyncNotifier<List<LiftEntry>> {
   }
 
   Future<void> deleteEntry(LiftEntry entry) async {
-    final currentEntries = state.valueOrNull ?? [];
+    final currentEntries = state.value ?? [];
 
     // Optimistic update - remove entry immediately
     final optimisticEntries = currentEntries
@@ -103,7 +104,7 @@ class HistoryListNotifier extends AutoDisposeAsyncNotifier<List<LiftEntry>> {
 }
 
 final historyListProvider =
-    AutoDisposeAsyncNotifierProvider<HistoryListNotifier, List<LiftEntry>>(() {
+    AsyncNotifierProvider<HistoryListNotifier, List<LiftEntry>>(() {
       return HistoryListNotifier();
     });
 

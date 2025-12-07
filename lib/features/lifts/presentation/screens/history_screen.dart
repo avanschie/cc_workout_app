@@ -541,58 +541,61 @@ class _ErrorHistoryView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
 
     return Center(
-      child: Padding(
-        padding: const EdgeInsets.all(32),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Container(
-              width: 120,
-              height: 120,
-              decoration: BoxDecoration(
-                color: theme.colorScheme.errorContainer,
-                borderRadius: BorderRadius.circular(60),
+      child: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.all(32),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Container(
+                width: 120,
+                height: 120,
+                decoration: BoxDecoration(
+                  color: colorScheme.errorContainer,
+                  borderRadius: BorderRadius.circular(60),
+                ),
+                child: Icon(
+                  Icons.error_outline,
+                  size: 64,
+                  color: colorScheme.onErrorContainer,
+                ),
               ),
-              child: Icon(
-                Icons.error_outline,
-                size: 64,
-                color: theme.colorScheme.onErrorContainer,
+              const SizedBox(height: 24),
+              Text(
+                'Failed to Load History',
+                style: theme.textTheme.headlineSmall?.copyWith(
+                  fontWeight: FontWeight.w600,
+                  color: colorScheme.error,
+                ),
               ),
-            ),
-            const SizedBox(height: 24),
-            Text(
-              'Failed to Load History',
-              style: theme.textTheme.headlineSmall?.copyWith(
-                fontWeight: FontWeight.w600,
-                color: theme.colorScheme.error,
+              const SizedBox(height: 12),
+              Text(
+                'There was a problem loading your lift history. Please check your connection and try again.',
+                textAlign: TextAlign.center,
+                style: theme.textTheme.bodyLarge?.copyWith(
+                  color: colorScheme.onSurfaceVariant,
+                ),
               ),
-            ),
-            const SizedBox(height: 12),
-            Text(
-              'There was a problem loading your lift history. Please check your connection and try again.',
-              textAlign: TextAlign.center,
-              style: theme.textTheme.bodyLarge?.copyWith(
-                color: theme.colorScheme.onSurfaceVariant,
+              const SizedBox(height: 8),
+              Text(
+                'Error: ${error.toString()}',
+                textAlign: TextAlign.center,
+                style: theme.textTheme.bodySmall?.copyWith(
+                  color: colorScheme.error,
+                  fontStyle: FontStyle.italic,
+                ),
               ),
-            ),
-            const SizedBox(height: 8),
-            Text(
-              'Error: ${error.toString()}',
-              textAlign: TextAlign.center,
-              style: theme.textTheme.bodySmall?.copyWith(
-                color: theme.colorScheme.error,
-                fontStyle: FontStyle.italic,
+              const SizedBox(height: 32),
+              FilledButton.icon(
+                onPressed: onRetry,
+                icon: const Icon(Icons.refresh),
+                label: const Text('Try Again'),
               ),
-            ),
-            const SizedBox(height: 32),
-            FilledButton.icon(
-              onPressed: onRetry,
-              icon: const Icon(Icons.refresh),
-              label: const Text('Try Again'),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );

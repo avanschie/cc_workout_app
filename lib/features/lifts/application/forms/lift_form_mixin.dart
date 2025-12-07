@@ -4,7 +4,7 @@ import 'package:cc_workout_app/features/lifts/application/forms/lift_form_state.
 import 'package:cc_workout_app/features/lifts/application/forms/lift_form_validator.dart';
 
 /// Mixin that provides common form state management methods
-mixin LiftFormMixin on AutoDisposeNotifier<LiftFormState> {
+mixin LiftFormMixin on Notifier<LiftFormState> {
   void setLiftType(LiftType? liftType) {
     final error = LiftFormValidator.validateLiftType(liftType);
     state = state.copyWith(liftType: liftType, liftTypeError: error);

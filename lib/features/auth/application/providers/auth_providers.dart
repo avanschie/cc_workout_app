@@ -48,7 +48,7 @@ final authNotifierProvider = AsyncNotifierProvider<AuthNotifier, AuthUser?>(() {
 /// the authNotifierProvider. Most UI components should use this.
 final authStateProvider = Provider<AsyncValue<AuthUser?>>((ref) {
   return ref.watch(authNotifierProvider);
-});
+}, dependencies: [authNotifierProvider]);
 
 /// Provider that returns the current authenticated user or null.
 ///
@@ -61,8 +61,8 @@ final authStateProvider = Provider<AsyncValue<AuthUser?>>((ref) {
 /// the loading/error states.
 final currentUserProvider = Provider<AuthUser?>((ref) {
   final authState = ref.watch(authStateProvider);
-  return authState.valueOrNull;
-});
+  return authState.value;
+}, dependencies: [authStateProvider]);
 
 /// Provider that returns whether the user is currently authenticated.
 ///
@@ -74,7 +74,7 @@ final currentUserProvider = Provider<AuthUser?>((ref) {
 final isAuthenticatedProvider = Provider<bool>((ref) {
   final user = ref.watch(currentUserProvider);
   return user != null;
-});
+}, dependencies: [currentUserProvider]);
 
 /// Provider that returns whether authentication is currently loading.
 ///
@@ -82,7 +82,7 @@ final isAuthenticatedProvider = Provider<bool>((ref) {
 final isAuthLoadingProvider = Provider<bool>((ref) {
   final authState = ref.watch(authStateProvider);
   return authState.isLoading;
-});
+}, dependencies: [authStateProvider]);
 
 /// Provider that returns the current authentication error, if any.
 ///
@@ -91,7 +91,7 @@ final isAuthLoadingProvider = Provider<bool>((ref) {
 final authErrorProvider = Provider<Object?>((ref) {
   final authState = ref.watch(authStateProvider);
   return authState.error;
-});
+}, dependencies: [authStateProvider]);
 
 /// Stream provider for authentication state changes.
 ///
@@ -107,13 +107,22 @@ final authStateStreamProvider = StreamProvider<AuthUser?>((ref) {
 ///
 /// This provides a clean interface for UI components to interact with
 /// auth functionality without directly accessing the notifier.
-final authControllerProvider = Provider<AuthController>((ref) {
-  return AuthController(ref);
-});
+final authControllerProvider = Provider<AuthController>(
+  (ref) {
+    return AuthController(ref);
+  },
+  dependencies: [
+    authNotifierProvider,
+    currentUserProvider,
+    isAuthenticatedProvider,
+    isAuthLoadingProvider,
+    authErrorProvider,
+  ],
+);
 
 /// Returns provider overrides for auth providers.
 /// This should be used when initializing the app to properly wire dependencies.
-List<Override> getAuthProviderOverrides() {
+List<dynamic> getAuthProviderOverrides() {
   return [
     authRepositoryProvider.overrideWith((ref) {
       return ref.read(authRepositoryProviderImpl);

@@ -25,23 +25,20 @@ final routerProvider = Provider<GoRouter>((ref) {
       GoRoute(
         path: AppRoute.signIn.path,
         name: AppRoute.signIn.name,
-        builder: (context, state) => const NetworkStatusBanner(
-          child: SignInScreen(),
-        ),
+        builder: (context, state) =>
+            const NetworkStatusBanner(child: SignInScreen()),
       ),
       GoRoute(
         path: AppRoute.signUp.path,
         name: AppRoute.signUp.name,
-        builder: (context, state) => const NetworkStatusBanner(
-          child: SignUpScreen(),
-        ),
+        builder: (context, state) =>
+            const NetworkStatusBanner(child: SignUpScreen()),
       ),
       GoRoute(
         path: AppRoute.forgotPassword.path,
         name: AppRoute.forgotPassword.name,
-        builder: (context, state) => const NetworkStatusBanner(
-          child: ForgotPasswordScreen(),
-        ),
+        builder: (context, state) =>
+            const NetworkStatusBanner(child: ForgotPasswordScreen()),
       ),
 
       // Main app shell with bottom navigation
@@ -87,7 +84,7 @@ final routerProvider = Provider<GoRouter>((ref) {
       ),
     ],
   );
-});
+}, dependencies: [authNotifierProvider]);
 
 /// Handle route redirects based on authentication state
 String? _handleRedirect(BuildContext context, GoRouterState state, Ref ref) {
@@ -119,8 +116,8 @@ String? _handleRedirect(BuildContext context, GoRouterState state, Ref ref) {
 /// Check if the current route is an authentication route
 bool _isAuthRoute(String location) {
   return location.startsWith(AppRoute.signIn.path) ||
-         location.startsWith(AppRoute.signUp.path) ||
-         location.startsWith(AppRoute.forgotPassword.path);
+      location.startsWith(AppRoute.signUp.path) ||
+      location.startsWith(AppRoute.forgotPassword.path);
 }
 
 /// Listenable class to handle auth state changes for GoRouter

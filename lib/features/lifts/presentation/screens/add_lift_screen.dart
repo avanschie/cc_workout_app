@@ -260,7 +260,7 @@ class _AddLiftScreenState extends ConsumerState<AddLiftScreen> {
     try {
       // Get the current authenticated user
       final authState = ref.read(authStateProvider);
-      final currentUser = authState.valueOrNull;
+      final currentUser = authState.value;
 
       if (currentUser == null) {
         if (mounted) {

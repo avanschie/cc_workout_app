@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_riverpod/legacy.dart';
 
 import 'package:cc_workout_app/features/auth/application/providers/auth_providers.dart';
 import 'package:cc_workout_app/features/auth/domain/exceptions/auth_exceptions.dart';

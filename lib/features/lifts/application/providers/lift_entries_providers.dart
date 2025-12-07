@@ -34,7 +34,7 @@ final liftEntriesByTypeProvider = FutureProvider.autoDispose
       return repository.getLiftEntriesByType(liftType);
     });
 
-class CreateLiftEntryNotifier extends AutoDisposeAsyncNotifier<void> {
+class CreateLiftEntryNotifier extends AsyncNotifier<void> {
   @override
   Future<void> build() async {}
 
@@ -55,11 +55,11 @@ class CreateLiftEntryNotifier extends AutoDisposeAsyncNotifier<void> {
 }
 
 final createLiftEntryProvider =
-    AutoDisposeAsyncNotifierProvider<CreateLiftEntryNotifier, void>(() {
+    AsyncNotifierProvider<CreateLiftEntryNotifier, void>(() {
       return CreateLiftEntryNotifier();
     });
 
-class UpdateLiftEntryNotifier extends AutoDisposeAsyncNotifier<void> {
+class UpdateLiftEntryNotifier extends AsyncNotifier<void> {
   @override
   Future<void> build() async {}
 
@@ -80,11 +80,11 @@ class UpdateLiftEntryNotifier extends AutoDisposeAsyncNotifier<void> {
 }
 
 final updateLiftEntryProvider =
-    AutoDisposeAsyncNotifierProvider<UpdateLiftEntryNotifier, void>(() {
+    AsyncNotifierProvider<UpdateLiftEntryNotifier, void>(() {
       return UpdateLiftEntryNotifier();
     });
 
-class DeleteLiftEntryNotifier extends AutoDisposeAsyncNotifier<void> {
+class DeleteLiftEntryNotifier extends AsyncNotifier<void> {
   @override
   Future<void> build() async {}
 
@@ -105,6 +105,6 @@ class DeleteLiftEntryNotifier extends AutoDisposeAsyncNotifier<void> {
 }
 
 final deleteLiftEntryProvider =
-    AutoDisposeAsyncNotifierProvider<DeleteLiftEntryNotifier, void>(() {
+    AsyncNotifierProvider<DeleteLiftEntryNotifier, void>(() {
       return DeleteLiftEntryNotifier();
     });
